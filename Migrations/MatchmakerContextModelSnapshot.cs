@@ -21,16 +21,14 @@ namespace Matchmaker.Migrations
 
             modelBuilder.Entity("Matchmaker.Models.Activity", b =>
                 {
-                    b.Property<int>("ActivityId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
+                    b.Property<string>("ActivityId")
+                        .HasColumnType("text");
 
-                    b.Property<int>("AdminId")
-                        .HasColumnType("integer");
+                    b.Property<string>("AdminId")
+                        .HasColumnType("text");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer");
+                    b.Property<string>("CategoryId")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp without time zone");
@@ -41,8 +39,8 @@ namespace Matchmaker.Migrations
                     b.Property<int>("NumberOfParticipants")
                         .HasColumnType("integer");
 
-                    b.Property<int>("PlayGroundId")
-                        .HasColumnType("integer");
+                    b.Property<string>("PlayGroundId")
+                        .HasColumnType("text");
 
                     b.Property<float>("Price")
                         .HasColumnType("real");
@@ -60,10 +58,8 @@ namespace Matchmaker.Migrations
 
             modelBuilder.Entity("Matchmaker.Models.Admin", b =>
                 {
-                    b.Property<int>("AdminId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
+                    b.Property<string>("AdminId")
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
                         .HasColumnType("text");
@@ -78,10 +74,8 @@ namespace Matchmaker.Migrations
 
             modelBuilder.Entity("Matchmaker.Models.Category", b =>
                 {
-                    b.Property<int>("CategoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
+                    b.Property<string>("CategoryId")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -93,10 +87,8 @@ namespace Matchmaker.Migrations
 
             modelBuilder.Entity("Matchmaker.Models.Playground", b =>
                 {
-                    b.Property<int>("PlaygroundId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
+                    b.Property<string>("PlaygroundId")
+                        .HasColumnType("text");
 
                     b.Property<string>("NameOfPlace")
                         .HasColumnType("text");
@@ -104,8 +96,8 @@ namespace Matchmaker.Migrations
                     b.Property<int>("Size")
                         .HasColumnType("integer");
 
-                    b.Property<int>("SportsCenterId")
-                        .HasColumnType("integer");
+                    b.Property<string>("SportsCenterId")
+                        .HasColumnType("text");
 
                     b.HasKey("PlaygroundId");
 
@@ -116,12 +108,10 @@ namespace Matchmaker.Migrations
 
             modelBuilder.Entity("Matchmaker.Models.SportsCenter", b =>
                 {
-                    b.Property<int>("SportsCenterId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
+                    b.Property<string>("SportsCenterId")
+                        .HasColumnType("text");
 
-                    b.Property<string>("Adress")
+                    b.Property<string>("Address")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -134,13 +124,11 @@ namespace Matchmaker.Migrations
 
             modelBuilder.Entity("Matchmaker.Models.User", b =>
                 {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
 
-                    b.Property<int?>("ActivityId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ActivityId")
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
                         .HasColumnType("text");
@@ -165,30 +153,22 @@ namespace Matchmaker.Migrations
                 {
                     b.HasOne("Matchmaker.Models.Admin", "Admin")
                         .WithMany("Activities")
-                        .HasForeignKey("AdminId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AdminId");
 
                     b.HasOne("Matchmaker.Models.Category", "Category")
                         .WithMany("Activities")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryId");
 
                     b.HasOne("Matchmaker.Models.Playground", "Playground")
                         .WithMany("Activities")
-                        .HasForeignKey("PlayGroundId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PlayGroundId");
                 });
 
             modelBuilder.Entity("Matchmaker.Models.Playground", b =>
                 {
                     b.HasOne("Matchmaker.Models.SportsCenter", null)
                         .WithMany("Playgrounds")
-                        .HasForeignKey("SportsCenterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SportsCenterId");
                 });
 
             modelBuilder.Entity("Matchmaker.Models.User", b =>

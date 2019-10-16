@@ -29,7 +29,7 @@ namespace Matchmaker.Controllers
 
         // GET: api/Admins/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Admin>> GetAdmin(int id)
+        public async Task<ActionResult<Admin>> GetAdmin(string id)
         {
             var admin = await _context.Admins.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace Matchmaker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAdmin(int id, Admin admin)
+        public async Task<IActionResult> PutAdmin(string id, Admin admin)
         {
             if (id != admin.AdminId)
             {
@@ -79,6 +79,7 @@ namespace Matchmaker.Controllers
         [HttpPost]
         public async Task<ActionResult<Admin>> PostAdmin(Admin admin)
         {
+            admin.AdminId = Guid.NewGuid().ToString();
             _context.Admins.Add(admin);
             await _context.SaveChangesAsync();
 
@@ -87,7 +88,7 @@ namespace Matchmaker.Controllers
 
         // DELETE: api/Admins/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Admin>> DeleteAdmin(int id)
+        public async Task<ActionResult<Admin>> DeleteAdmin(string id)
         {
             var admin = await _context.Admins.FindAsync(id);
             if (admin == null)
@@ -101,7 +102,7 @@ namespace Matchmaker.Controllers
             return admin;
         }
 
-        private bool AdminExists(int id)
+        private bool AdminExists(string id)
         {
             return _context.Admins.Any(e => e.AdminId == id);
         }

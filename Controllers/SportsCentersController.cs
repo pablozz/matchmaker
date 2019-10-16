@@ -29,7 +29,7 @@ namespace Matchmaker.Controllers
 
         // GET: api/SportsCenters/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<SportsCenter>> GetSportsCenter(int id)
+        public async Task<ActionResult<SportsCenter>> GetSportsCenter(string id)
         {
             var sportsCenter = await _context.SportsCenters.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace Matchmaker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSportsCenter(int id, SportsCenter sportsCenter)
+        public async Task<IActionResult> PutSportsCenter(string id, SportsCenter sportsCenter)
         {
             if (id != sportsCenter.SportsCenterId)
             {
@@ -79,6 +79,7 @@ namespace Matchmaker.Controllers
         [HttpPost]
         public async Task<ActionResult<SportsCenter>> PostSportsCenter(SportsCenter sportsCenter)
         {
+            sportsCenter.SportsCenterId = Guid.NewGuid().ToString();
             _context.SportsCenters.Add(sportsCenter);
             await _context.SaveChangesAsync();
 
@@ -87,7 +88,7 @@ namespace Matchmaker.Controllers
 
         // DELETE: api/SportsCenters/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<SportsCenter>> DeleteSportsCenter(int id)
+        public async Task<ActionResult<SportsCenter>> DeleteSportsCenter(string id)
         {
             var sportsCenter = await _context.SportsCenters.FindAsync(id);
             if (sportsCenter == null)
@@ -101,7 +102,7 @@ namespace Matchmaker.Controllers
             return sportsCenter;
         }
 
-        private bool SportsCenterExists(int id)
+        private bool SportsCenterExists(string id)
         {
             return _context.SportsCenters.Any(e => e.SportsCenterId == id);
         }

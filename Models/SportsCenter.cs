@@ -7,9 +7,9 @@ namespace Matchmaker.Models
 {
     public class SportsCenter
     {
-        public int SportsCenterId { get; set; }
+        public string SportsCenterId { get; set; }
         public string Name { get; set; }
-        public string Adress { get; set; }
+        public string Address { get; set; }
 
         public List<Playground> Playgrounds { get; set; }
     }

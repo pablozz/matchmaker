@@ -29,7 +29,7 @@ namespace Matchmaker.Controllers
 
         // GET: api/Activities/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Activity>> GetActivity(int id)
+        public async Task<ActionResult<Activity>> GetActivity(string id)
         {
             var activity = await _context.Activities.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace Matchmaker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutActivity(int id, Activity activity)
+        public async Task<IActionResult> PutActivity(string id, Activity activity)
         {
             if (id != activity.ActivityId)
             {
@@ -79,6 +79,7 @@ namespace Matchmaker.Controllers
         [HttpPost]
         public async Task<ActionResult<Activity>> PostActivity(Activity activity)
         {
+            activity.ActivityId = Guid.NewGuid().ToString();
             _context.Activities.Add(activity);
             await _context.SaveChangesAsync();
 
@@ -87,7 +88,7 @@ namespace Matchmaker.Controllers
 
         // DELETE: api/Activities/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Activity>> DeleteActivity(int id)
+        public async Task<ActionResult<Activity>> DeleteActivity(string id)
         {
             var activity = await _context.Activities.FindAsync(id);
             if (activity == null)
@@ -101,7 +102,7 @@ namespace Matchmaker.Controllers
             return activity;
         }
 
-        private bool ActivityExists(int id)
+        private bool ActivityExists(string id)
         {
             return _context.Activities.Any(e => e.ActivityId == id);
         }

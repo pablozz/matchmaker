@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Matchmaker.Migrations
 {
@@ -12,8 +11,7 @@ namespace Matchmaker.Migrations
                 name: "Admins",
                 columns: table => new
                 {
-                    AdminId = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    AdminId = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true)
                 },
@@ -26,8 +24,7 @@ namespace Matchmaker.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    CategoryId = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    CategoryId = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -39,10 +36,9 @@ namespace Matchmaker.Migrations
                 name: "SportsCenters",
                 columns: table => new
                 {
-                    SportsCenterId = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    SportsCenterId = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: true),
-                    Adress = table.Column<string>(nullable: true)
+                    Address = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -53,11 +49,10 @@ namespace Matchmaker.Migrations
                 name: "Playgrounds",
                 columns: table => new
                 {
-                    PlaygroundId = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    PlaygroundId = table.Column<string>(nullable: false),
                     NameOfPlace = table.Column<string>(nullable: true),
                     Size = table.Column<int>(nullable: false),
-                    SportsCenterId = table.Column<int>(nullable: false)
+                    SportsCenterId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -67,22 +62,21 @@ namespace Matchmaker.Migrations
                         column: x => x.SportsCenterId,
                         principalTable: "SportsCenters",
                         principalColumn: "SportsCenterId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Activities",
                 columns: table => new
                 {
-                    ActivityId = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    ActivityId = table.Column<string>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
                     Gender = table.Column<string>(nullable: true),
                     Price = table.Column<float>(nullable: false),
                     NumberOfParticipants = table.Column<int>(nullable: false),
-                    PlayGroundId = table.Column<int>(nullable: false),
-                    CategoryId = table.Column<int>(nullable: false),
-                    AdminId = table.Column<int>(nullable: false)
+                    PlayGroundId = table.Column<string>(nullable: true),
+                    CategoryId = table.Column<string>(nullable: true),
+                    AdminId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -92,32 +86,31 @@ namespace Matchmaker.Migrations
                         column: x => x.AdminId,
                         principalTable: "Admins",
                         principalColumn: "AdminId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Activities_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "CategoryId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Activities_Playgrounds_PlayGroundId",
                         column: x => x.PlayGroundId,
                         principalTable: "Playgrounds",
                         principalColumn: "PlaygroundId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    UserId = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: true),
                     Password = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     Gender = table.Column<string>(nullable: true),
-                    ActivityId = table.Column<int>(nullable: true)
+                    ActivityId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

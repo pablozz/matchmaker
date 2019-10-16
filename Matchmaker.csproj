@@ -7,6 +7,9 @@
     <IsPackable>false</IsPackable>
     <SpaRoot>ClientApp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+    <UserSecretsId>7a9aa7c9-d5c1-440a-a218-27bfd63a3eca</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +20,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.0.1" />
   </ItemGroup>
@@ -35,6 +39,12 @@
     <Compile Remove="Migrations\20191016092925_InitialCreate.Designer.cs" />
     <Compile Remove="Migrations\20191016094138_InitialCreate.cs" />
     <Compile Remove="Migrations\20191016094138_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20191016180555_ChangedIdsToGuids.cs" />
+    <Compile Remove="Migrations\20191016180555_ChangedIdsToGuids.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="TextFile.txt" />
   </ItemGroup>
 
   <ItemGroup>

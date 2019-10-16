@@ -29,7 +29,7 @@ namespace Matchmaker.Controllers
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(int id)
+        public async Task<ActionResult<Category>> GetCategory(string id)
         {
             var category = await _context.Categories.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace Matchmaker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(int id, Category category)
+        public async Task<IActionResult> PutCategory(string id, Category category)
         {
             if (id != category.CategoryId)
             {
@@ -79,6 +79,7 @@ namespace Matchmaker.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
+            category.CategoryId = Guid.NewGuid().ToString();
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 
@@ -101,7 +102,7 @@ namespace Matchmaker.Controllers
             return category;
         }
 
-        private bool CategoryExists(int id)
+        private bool CategoryExists(string id)
         {
             return _context.Categories.Any(e => e.CategoryId == id);
         }

@@ -29,7 +29,7 @@ namespace Matchmaker.Controllers
 
         // GET: api/Playgrounds/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Playground>> GetPlayground(int id)
+        public async Task<ActionResult<Playground>> GetPlayground(string id)
         {
             var playground = await _context.Playgrounds.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace Matchmaker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlayground(int id, Playground playground)
+        public async Task<IActionResult> PutPlayground(string id, Playground playground)
         {
             if (id != playground.PlaygroundId)
             {
@@ -79,6 +79,7 @@ namespace Matchmaker.Controllers
         [HttpPost]
         public async Task<ActionResult<Playground>> PostPlayground(Playground playground)
         {
+            playground.PlaygroundId = Guid.NewGuid().ToString();
             _context.Playgrounds.Add(playground);
             await _context.SaveChangesAsync();
 
@@ -87,7 +88,7 @@ namespace Matchmaker.Controllers
 
         // DELETE: api/Playgrounds/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Playground>> DeletePlayground(int id)
+        public async Task<ActionResult<Playground>> DeletePlayground(string id)
         {
             var playground = await _context.Playgrounds.FindAsync(id);
             if (playground == null)
@@ -101,7 +102,7 @@ namespace Matchmaker.Controllers
             return playground;
         }
 
-        private bool PlaygroundExists(int id)
+        private bool PlaygroundExists(string id)
         {
             return _context.Playgrounds.Any(e => e.PlaygroundId == id);
         }
