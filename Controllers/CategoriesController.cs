@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Matchmaker.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace Matchmaker.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("_myAllowAllOrigins")]
     [ApiController]
     public class CategoriesController : ControllerBase
     {

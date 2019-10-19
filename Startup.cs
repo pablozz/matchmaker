@@ -17,11 +17,21 @@ namespace Matchmaker
             Configuration = configuration;
         }
 
+        readonly string MyAllowAllOrigins = "_myAllowAllOrigins";
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowAllOrigins,
+                builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
 
             services.AddControllersWithViews();
 
@@ -54,6 +64,8 @@ namespace Matchmaker
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors(MyAllowAllOrigins);
 
             app.UseEndpoints(endpoints =>
             {
