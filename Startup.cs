@@ -1,7 +1,9 @@
+using System;
+using Matchmaker.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,11 +17,21 @@ namespace Matchmaker
             Configuration = configuration;
         }
 
+        readonly string MyAllowAllOrigins = "_myAllowAllOrigins";
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowAllOrigins,
+                builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
 
             services.AddControllersWithViews();
 
@@ -28,6 +40,9 @@ namespace Matchmaker
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.AddDbContext<MatchmakerContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("MatchmakerContext"), o => o.SetPostgresVersion(new Version(9, 6))));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +64,8 @@ namespace Matchmaker
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors(MyAllowAllOrigins);
 
             app.UseEndpoints(endpoints =>
             {
