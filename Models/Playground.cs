@@ -12,6 +12,7 @@ namespace Matchmaker.Models
         public int Size { get; set; }
 
         public string SportsCenterId { get; set; }
+        public SportsCenter SportsCenter { get; set; }
 
         public List<Activity> Activities { get; set; }
     }

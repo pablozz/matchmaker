@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Matchmaker.Migrations
 {
     [DbContext(typeof(MatchmakerContext))]
-    [Migration("20191016183148_InitialCreate")]
+    [Migration("20191027180106_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,11 +41,17 @@ namespace Matchmaker.Migrations
                     b.Property<int>("NumberOfParticipants")
                         .HasColumnType("integer");
 
-                    b.Property<string>("PlayGroundId")
+                    b.Property<int>("PlayerLevel")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PlaygroundId")
                         .HasColumnType("text");
 
                     b.Property<float>("Price")
                         .HasColumnType("real");
+
+                    b.Property<int>("RegisteredParticipants")
+                        .HasColumnType("integer");
 
                     b.HasKey("ActivityId");
 
@@ -53,7 +59,7 @@ namespace Matchmaker.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("PlayGroundId");
+                    b.HasIndex("PlaygroundId");
 
                     b.ToTable("Activities");
                 });
@@ -163,12 +169,12 @@ namespace Matchmaker.Migrations
 
                     b.HasOne("Matchmaker.Models.Playground", "Playground")
                         .WithMany("Activities")
-                        .HasForeignKey("PlayGroundId");
+                        .HasForeignKey("PlaygroundId");
                 });
 
             modelBuilder.Entity("Matchmaker.Models.Playground", b =>
                 {
-                    b.HasOne("Matchmaker.Models.SportsCenter", null)
+                    b.HasOne("Matchmaker.Models.SportsCenter", "SportsCenter")
                         .WithMany("Playgrounds")
                         .HasForeignKey("SportsCenterId");
                 });

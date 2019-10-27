@@ -74,7 +74,9 @@ namespace Matchmaker.Migrations
                     Gender = table.Column<string>(nullable: true),
                     Price = table.Column<float>(nullable: false),
                     NumberOfParticipants = table.Column<int>(nullable: false),
-                    PlayGroundId = table.Column<string>(nullable: true),
+                    RegisteredParticipants = table.Column<int>(nullable: false),
+                    PlayerLevel = table.Column<int>(nullable: false),
+                    PlaygroundId = table.Column<string>(nullable: true),
                     CategoryId = table.Column<string>(nullable: true),
                     AdminId = table.Column<string>(nullable: true)
                 },
@@ -94,8 +96,8 @@ namespace Matchmaker.Migrations
                         principalColumn: "CategoryId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Activities_Playgrounds_PlayGroundId",
-                        column: x => x.PlayGroundId,
+                        name: "FK_Activities_Playgrounds_PlaygroundId",
+                        column: x => x.PlaygroundId,
                         principalTable: "Playgrounds",
                         principalColumn: "PlaygroundId",
                         onDelete: ReferentialAction.Restrict);
@@ -134,9 +136,9 @@ namespace Matchmaker.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Activities_PlayGroundId",
+                name: "IX_Activities_PlaygroundId",
                 table: "Activities",
-                column: "PlayGroundId");
+                column: "PlaygroundId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Playgrounds_SportsCenterId",
