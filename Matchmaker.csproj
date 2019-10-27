@@ -33,17 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20191015190326_InitialCreate.cs" />
-    <Compile Remove="Migrations\20191015190326_InitialCreate.Designer.cs" />
-    <Compile Remove="Migrations\20191016092925_InitialCreate.cs" />
-    <Compile Remove="Migrations\20191016092925_InitialCreate.Designer.cs" />
-    <Compile Remove="Migrations\20191016094138_InitialCreate.cs" />
-    <Compile Remove="Migrations\20191016094138_InitialCreate.Designer.cs" />
-    <Compile Remove="Migrations\20191016180555_ChangedIdsToGuids.cs" />
-    <Compile Remove="Migrations\20191016180555_ChangedIdsToGuids.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="TextFile.txt" />
   </ItemGroup>
 
