@@ -1,24 +1,13 @@
 import * as actions from '../constants/action-names';
 
-export interface IFetchedActivity {
-  activityId: string;
-  date: string;
-  gender: string;
-  price: number;
-  numberOfParticipants: number;
-  playgroundId: string;
-  categoryId: string;
-  adminId: string;
-  users: number;
-}
-
 export interface IActivity {
   id: string;
-  date: string;
+  date: number;
   gender: string;
   price: number;
   numberOfParticipants: number;
   playground: string;
+  playerLevel: number;
   category: string;
   admin: string;
   users: number;

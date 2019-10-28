@@ -1,3 +1,15 @@
-.table {
-  width: 100%;
+.activity {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  .activity-card {
+    margin: 10px;
+  }
+
+  .card-element {
+    padding: 10px;
+  }
+
+  .card-text-time {
+    font-weight: bold;
+  }
 }

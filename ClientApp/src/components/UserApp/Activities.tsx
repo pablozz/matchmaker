@@ -1,14 +1,14 @@
-import React, { useEffect, Dispatch } from 'react';
+import React, { useEffect, Dispatch, Fragment } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../reducers';
 import {
   IActivity,
-  IFetchedActivity,
   IActivityAction,
   IActivityActionPayload
 } from '../../types/activities';
 import { SET_ACTIVITIES } from '../../constants/action-names';
-import { ActivitiesTable } from './ActivitiesTable';
+import { ActivityCard } from './ActivityCard';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 export const Activities: React.FC = () => {
   const activities: IActivityActionPayload = useSelector(
@@ -16,22 +16,21 @@ export const Activities: React.FC = () => {
   );
   const dispatch: Dispatch<IActivityAction> = useDispatch();
 
-  const generateActivities = (data: IFetchedActivity[]) => {
-    const generatedActivities: IActivity[] = data.map(
-      (item: IFetchedActivity) => {
-        return {
-          id: item.activityId,
-          date: item.date,
-          gender: item.gender,
-          price: item.price,
-          numberOfParticipants: item.numberOfParticipants,
-          playground: item.playgroundId,
-          category: item.categoryId,
-          admin: item.adminId,
-          users: item.users
-        };
-      }
-    );
+  const generateActivities = (data: IActivity[]) => {
+    const generatedActivities: IActivity[] = data.map((item: IActivity) => {
+      return {
+        id: item.id,
+        date: item.date,
+        gender: item.gender,
+        price: item.price,
+        numberOfParticipants: item.numberOfParticipants,
+        playground: item.playground,
+        playerLevel: item.playerLevel,
+        category: item.category,
+        admin: item.admin,
+        users: item.users
+      };
+    });
     return generatedActivities;
   };
 
@@ -59,16 +58,34 @@ export const Activities: React.FC = () => {
     }
   }, [dispatch, activities.status]);
 
-  if (activities.status === 'loading') {
-    return <div>{activities.status}</div>;
-  } else if (activities.status === 'loaded') {
+  if (activities.status === 'loading')
     return (
-      <div>
-        <h1>Veiklos</h1>
-        <ActivitiesTable />
-      </div>
+      <Fragment>
+        <Skeleton width="sm" height={100} />
+        <br />
+        <Skeleton width="sm" height={100} />
+        <br />
+        <Skeleton width="sm" height={100} />
+      </Fragment>
     );
-  } else {
-    return <div>{activities.status}</div>;
+  else if (activities.status === 'loaded') {
+    return (
+      <Fragment>
+        {activities.payload.map((row: IActivity) => {
+          return (
+            <ActivityCard
+              key={row.id}
+              date={row.date}
+              category={row.category}
+              playground={row.playground}
+              playerLevel={row.playerLevel}
+              gender={row.gender}
+              participantsIn={row.users + '/' + row.numberOfParticipants}
+            />
+          );
+        })}
+      </Fragment>
+    );
   }
+  return <h2>Įvyko klaida :(</h2>;
 };
