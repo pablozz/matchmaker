@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Matchmaker.Models;
@@ -50,7 +48,7 @@ namespace Matchmaker.Controllers
 
         // GET: api/Activities/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Activity>> GetActivity(string id)
+        public async Task<ActionResult<ActivityDTO>> GetActivity(string id)
         {
             var activity = await _context.Activities.Select(a => new ActivityDTO()
             {
@@ -75,7 +73,7 @@ namespace Matchmaker.Controllers
                 return NotFound();
             }
 
-            return Ok(activity);
+            return activity;
         }
 
         // PUT: api/Activities/5
@@ -114,7 +112,7 @@ namespace Matchmaker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Activity>> PostActivity(Activity activity)
+        public async Task<ActionResult<ActivityDTO>> PostActivity(Activity activity)
         {
             activity.ActivityId = Guid.NewGuid().ToString();
             _context.Activities.Add(activity);

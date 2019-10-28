@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Matchmaker.Models;
@@ -24,16 +22,28 @@ namespace Matchmaker.Controllers
 
         // GET: api/SportsCenters
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SportsCenter>>> GetSportsCenters()
+        public IQueryable<SportsCenterDTO> GetSportsCenters()
         {
-            return await _context.SportsCenters.ToListAsync();
+            var sportsCenters = from s in _context.SportsCenters
+                             select new SportsCenterDTO()
+                             {
+                                 Id = s.SportsCenterId,
+                                 Name = s.Name,
+                                 Address = s.Address
+                             };
+            return sportsCenters;
         }
 
         // GET: api/SportsCenters/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<SportsCenter>> GetSportsCenter(string id)
+        public async Task<ActionResult<SportsCenterDTO>> GetSportsCenter(string id)
         {
-            var sportsCenter = await _context.SportsCenters.FindAsync(id);
+            var sportsCenter = await _context.SportsCenters.Select(s => new SportsCenterDTO()
+            {
+                Id = s.SportsCenterId,
+                Name = s.Name,
+                Address = s.Address
+            }).SingleOrDefaultAsync(s => s.Id == id);
 
             if (sportsCenter == null)
             {
@@ -79,13 +89,20 @@ namespace Matchmaker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<SportsCenter>> PostSportsCenter(SportsCenter sportsCenter)
+        public async Task<ActionResult<SportsCenterDTO>> PostSportsCenter(SportsCenter sportsCenter)
         {
             sportsCenter.SportsCenterId = Guid.NewGuid().ToString();
             _context.SportsCenters.Add(sportsCenter);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSportsCenter", new { id = sportsCenter.SportsCenterId }, sportsCenter);
+            var sportsCenterDTO = new SportsCenterDTO()
+            {
+                Id = sportsCenter.SportsCenterId,
+                Name = sportsCenter.Name,
+                Address = sportsCenter.Address
+            };
+
+            return CreatedAtAction("GetSportsCenter", new { id = sportsCenter.SportsCenterId }, sportsCenterDTO);
         }
 
         // DELETE: api/SportsCenters/5
