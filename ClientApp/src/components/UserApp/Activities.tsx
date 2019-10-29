@@ -6,7 +6,7 @@ import {
   IActivityAction,
   IActivityActionPayload
 } from '../../types/activities';
-import { SET_ACTIVITIES } from '../../constants/action-names';
+import { setLoadedOrErrorActivities } from '../../actions/activities';
 import { ActivityCard } from './ActivityCard';
 import Skeleton from '@material-ui/lab/Skeleton';
 
@@ -16,45 +16,9 @@ export const Activities: React.FC = () => {
   );
   const dispatch: Dispatch<IActivityAction> = useDispatch();
 
-  const generateActivities = (data: IActivity[]) => {
-    const generatedActivities: IActivity[] = data.map((item: IActivity) => {
-      return {
-        id: item.id,
-        date: item.date,
-        gender: item.gender,
-        price: item.price,
-        numberOfParticipants: item.numberOfParticipants,
-        playground: item.playground,
-        playerLevel: item.playerLevel,
-        category: item.category,
-        admin: item.admin,
-        users: item.users
-      };
-    });
-    return generatedActivities;
-  };
-
   useEffect(() => {
     if (activities.status === 'init') {
-      dispatch({
-        type: SET_ACTIVITIES,
-        payload: { payload: [], status: 'loading' }
-      });
-      fetch('https://sportmatchmaker.azurewebsites.net/api/activities')
-        .then(response => response.json())
-        .then(data => {
-          const generatedActivities: IActivity[] = generateActivities(data);
-          dispatch({
-            type: SET_ACTIVITIES,
-            payload: { payload: generatedActivities, status: 'loaded' }
-          });
-        })
-        .catch(() => {
-          dispatch({
-            type: SET_ACTIVITIES,
-            payload: { payload: [], status: 'error' }
-          });
-        });
+      (async () => dispatch(await setLoadedOrErrorActivities()))();
     }
   }, [dispatch, activities.status]);
 
@@ -87,5 +51,5 @@ export const Activities: React.FC = () => {
       </Fragment>
     );
   }
-  return <h2>Įvyko klaida :(</h2>;
+  return <h2 className="error">Įvyko klaida :(</h2>;
 };

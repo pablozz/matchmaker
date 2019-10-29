@@ -1,4 +1,4 @@
-import * as actions from '../constants/action-names';
+import { ActivityActionTypes } from '../constants/action-names';
 
 export interface IActivity {
   id: string;
@@ -21,6 +21,6 @@ export interface IActivityActionPayload {
 }
 
 export interface IActivityAction {
-  type: typeof actions.SET_ACTIVITIES;
+  type: ActivityActionTypes;
   payload: IActivityActionPayload;
 }
