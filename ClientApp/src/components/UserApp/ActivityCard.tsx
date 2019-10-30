@@ -14,7 +14,7 @@ import {
 } from '@mdi/js';
 import '../../styles/UserApp/ActivitiesTable.scss';
 
-interface CardData {
+interface ICardProps {
   key: string;
   category: string;
   date: number;
@@ -25,7 +25,7 @@ interface CardData {
   playerLevel: number;
 }
 
-export const ActivityCard: React.FC<CardData> = props => {
+export const ActivityCard: React.FC<ICardProps> = props => {
   const [brightness, changeBrightness] = useState<string>('brightness(100%)');
   const [elevation, changeElevation] = useState<number>(1);
 
@@ -52,7 +52,7 @@ export const ActivityCard: React.FC<CardData> = props => {
             <Grid container justify="space-between" alignItems="center">
               <Grid item className="card-element">
                 <Typography variant="h4" className="card-text-time">
-                  {setTime(props.date)}
+                  {getTimeString(props.date)}
                 </Typography>
               </Grid>
               <Grid item className="card-element">
@@ -80,7 +80,7 @@ export const ActivityCard: React.FC<CardData> = props => {
   );
 };
 
-const setTime = (secs: number) => {
+const getTimeString = (secs: number) => {
   const t = new Date(secs * 1000);
   let h, m;
   t.getHours() >= 10

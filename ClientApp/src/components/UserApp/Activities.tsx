@@ -2,12 +2,11 @@ import React, { useEffect, Dispatch, Fragment } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../reducers';
 import {
-  IActivity,
   IActivityAction,
   IActivityActionPayload
 } from '../../types/activities';
 import { setLoadedOrErrorActivities } from '../../actions/activities';
-import { ActivityCard } from './ActivityCard';
+import { ActivityCardsDisplay } from './ActivityCardsDisplay';
 import Skeleton from '@material-ui/lab/Skeleton';
 
 export const Activities: React.FC = () => {
@@ -22,7 +21,7 @@ export const Activities: React.FC = () => {
     }
   }, [dispatch, activities.status]);
 
-  if (activities.status === 'loading')
+  if (activities.status === 'loading' || activities.status === 'init')
     return (
       <Fragment>
         <Skeleton width="sm" height={100} />
@@ -35,19 +34,7 @@ export const Activities: React.FC = () => {
   else if (activities.status === 'loaded') {
     return (
       <Fragment>
-        {activities.payload.map((row: IActivity) => {
-          return (
-            <ActivityCard
-              key={row.id}
-              date={row.date}
-              category={row.category}
-              playground={row.playground}
-              playerLevel={row.playerLevel}
-              gender={row.gender}
-              participantsIn={row.users + '/' + row.numberOfParticipants}
-            />
-          );
-        })}
+        <ActivityCardsDisplay activities={activities.payload} />
       </Fragment>
     );
   }
