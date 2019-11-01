@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Matchmaker.Models;
 using Microsoft.AspNetCore.Cors;
-
+using System.Collections.Generic;
 
 namespace Matchmaker.Controllers
 {
@@ -23,7 +23,7 @@ namespace Matchmaker.Controllers
 
         // GET: api/Activities
         [HttpGet]
-        public IQueryable<ActivityDTO> GetActivities()
+        public IEnumerable<ActivityDTO> GetActivities()
         {
             var activities = from a in _context.Activities
                              select new ActivityDTO()
@@ -38,12 +38,15 @@ namespace Matchmaker.Controllers
                                  Playground = a.Playground.NameOfPlace,
                                  SportsCenter = new SportsCenterDTO()
                                  {
+                                     Id = a.Playground.SportsCenter.SportsCenterId,
                                      Name = a.Playground.SportsCenter.Name,
                                      Address = a.Playground.SportsCenter.Address
                                  },
                                  Category = a.Category.Name
                              };
-            return activities;
+            var orderedActivities = activities.ToList().OrderBy(activity => activity.Date);
+
+            return orderedActivities;
         }
 
         // GET: api/Activities/5
@@ -62,6 +65,7 @@ namespace Matchmaker.Controllers
                 Playground = a.Playground.NameOfPlace,
                 SportsCenter = new SportsCenterDTO()
                 {
+                    Id = a.Playground.SportsCenter.SportsCenterId,
                     Name = a.Playground.SportsCenter.Name,
                     Address = a.Playground.SportsCenter.Address
                 },
@@ -127,6 +131,7 @@ namespace Matchmaker.Controllers
 
             var sportsCenterDTO = new SportsCenterDTO()
             {
+                Id = activity.Playground.SportsCenter.SportsCenterId,
                 Name = activity.Playground.SportsCenter.Name,
                 Address = activity.Playground.SportsCenter.Address
             };
