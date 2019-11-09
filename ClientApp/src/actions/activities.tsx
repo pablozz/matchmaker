@@ -1,5 +1,5 @@
 import * as actions from '../constants/action-names';
-import { IActivityAction, IActivity } from '../types/activities';
+import {IActivity, IActivityAction} from '../types/activities';
 
 export const setInitActivities = (): IActivityAction => {
   return {
@@ -23,8 +23,7 @@ export const setLoadedOrErrorActivities = async (): Promise<
   )
     .then(response => response.json())
     .then(data => {
-      const generatedActivities: IActivity[] = generateActivities(data);
-      return generatedActivities;
+      return generateActivities(data);
     })
     .catch(() => {
       return null;
