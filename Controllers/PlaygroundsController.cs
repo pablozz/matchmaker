@@ -4,12 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Matchmaker.Models;
-using Microsoft.AspNetCore.Cors;
+using Matchmaker.Dtos;
 
 namespace Matchmaker.Controllers
 {
     [Route("api/[controller]")]
-    [EnableCors("_myAllowAllOrigins")]
     [ApiController]
     public class PlaygroundsController : ControllerBase
     {
@@ -22,10 +21,10 @@ namespace Matchmaker.Controllers
 
         // GET: api/Playgrounds
         [HttpGet]
-        public IQueryable<PlaygroundDTO> GetPlaygrounds()
+        public IQueryable<PlaygroundDto> GetPlaygrounds()
         {
             var playgrounds = from p in _context.Playgrounds
-                              select new PlaygroundDTO()
+                              select new PlaygroundDto()
                               {
                                   Id = p.PlaygroundId,
                                   Name = p.NameOfPlace,
@@ -36,9 +35,9 @@ namespace Matchmaker.Controllers
 
         // GET: api/Playgrounds/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PlaygroundDTO>> GetPlayground(string id)
+        public async Task<ActionResult<PlaygroundDto>> GetPlayground(string id)
         {
-            var playground = await _context.Playgrounds.Select(p => new PlaygroundDTO()
+            var playground = await _context.Playgrounds.Select(p => new PlaygroundDto()
             {
                 Id = p.PlaygroundId,
                 Name = p.NameOfPlace,
@@ -89,20 +88,20 @@ namespace Matchmaker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<PlaygroundDTO>> PostPlayground(Playground playground)
+        public async Task<ActionResult<PlaygroundDto>> PostPlayground(Playground playground)
         {
             playground.PlaygroundId = Guid.NewGuid().ToString();
             _context.Playgrounds.Add(playground);
             await _context.SaveChangesAsync();
 
-            var playgroundDTO = new PlaygroundDTO()
+            var playgroundDto = new PlaygroundDto()
             {
                 Id = playground.PlaygroundId,
                 Name = playground.NameOfPlace,
                 Size = playground.Size
             };
 
-            return CreatedAtAction("GetPlayground", new { id = playground.PlaygroundId }, playgroundDTO);
+            return CreatedAtAction("GetPlayground", new { id = playground.PlaygroundId }, playgroundDto);
         }
 
         // DELETE: api/Playgrounds/5

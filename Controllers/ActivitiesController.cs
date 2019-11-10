@@ -1,16 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Matchmaker.Models;
-using Microsoft.AspNetCore.Cors;
-using System.Collections.Generic;
+using Matchmaker.Dtos;
 
 namespace Matchmaker.Controllers
 {
     [Route("api/[controller]")]
-    [EnableCors("_myAllowAllOrigins")]
     [ApiController]
     public class ActivitiesController : ControllerBase
     {
@@ -23,20 +22,20 @@ namespace Matchmaker.Controllers
 
         // GET: api/Activities
         [HttpGet]
-        public IEnumerable<ActivityDTO> GetActivities()
+        public IEnumerable<ActivityDto> GetActivities()
         {
             var activities = from a in _context.Activities
-                             select new ActivityDTO()
+                             select new ActivityDto()
                              {
                                  Id = a.ActivityId,
                                  Date = a.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
                                  Gender = a.Gender,
                                  Price = a.Price,
-                                 Users = a.Users.Count(),
+                                 Users = a.UserActivities != null ? a.UserActivities.Count() : 0,
                                  NumberOfParticipants = a.NumberOfParticipants,
                                  PlayerLevel = a.PlayerLevel,
                                  Playground = a.Playground.NameOfPlace,
-                                 SportsCenter = new SportsCenterDTO()
+                                 SportsCenter = new SportsCenterDto()
                                  {
                                      Id = a.Playground.SportsCenter.SportsCenterId,
                                      Name = a.Playground.SportsCenter.Name,
@@ -51,19 +50,19 @@ namespace Matchmaker.Controllers
 
         // GET: api/Activities/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ActivityDTO>> GetActivity(string id)
+        public async Task<ActionResult<ActivityDto>> GetActivity(string id)
         {
-            var activity = await _context.Activities.Select(a => new ActivityDTO()
+            var activity = await _context.Activities.Select(a => new ActivityDto()
             {
                 Id = a.ActivityId,
                 Date = a.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
                 Gender = a.Gender,
                 Price = a.Price,
-                Users = a.Users.Count(),
+                Users = a.UserActivities != null ? a.UserActivities.Count() : 0,
                 NumberOfParticipants = a.NumberOfParticipants,
                 PlayerLevel = a.PlayerLevel,
                 Playground = a.Playground.NameOfPlace,
-                SportsCenter = new SportsCenterDTO()
+                SportsCenter = new SportsCenterDto()
                 {
                     Id = a.Playground.SportsCenter.SportsCenterId,
                     Name = a.Playground.SportsCenter.Name,
@@ -116,7 +115,7 @@ namespace Matchmaker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<ActivityDTO>> PostActivity(Activity activity)
+        public async Task<ActionResult<ActivityDto>> PostActivity(Activity activity)
         {
             activity.ActivityId = Guid.NewGuid().ToString();
             _context.Activities.Add(activity);
@@ -129,27 +128,27 @@ namespace Matchmaker.Controllers
               .Load();
             _context.Entry(activity).Reference(a => a.Category).Load();
 
-            var sportsCenterDTO = new SportsCenterDTO()
+            var sportsCenterDto = new SportsCenterDto()
             {
                 Id = activity.Playground.SportsCenter.SportsCenterId,
                 Name = activity.Playground.SportsCenter.Name,
                 Address = activity.Playground.SportsCenter.Address
             };
 
-            var activityDTO = new ActivityDTO()
+            var activityDto = new ActivityDto()
             {
                 Id = activity.ActivityId,
                 Date = activity.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
                 Gender = activity.Gender,
                 Price = activity.Price,
-                Users = activity.Users != null ? activity.Users.Count() : 0,
+                Users = activity.UserActivities != null ? activity.UserActivities.Count() : 0,
                 NumberOfParticipants = activity.NumberOfParticipants,
                 PlayerLevel = activity.PlayerLevel,
                 Playground = activity.Playground.NameOfPlace,
-                SportsCenter = sportsCenterDTO,
+                SportsCenter = sportsCenterDto,
                 Category = activity.Category.Name
             };
-            return CreatedAtAction(nameof(GetActivity), new { id = activity.ActivityId }, activityDTO);
+            return CreatedAtAction(nameof(GetActivity), new { id = activity.ActivityId }, activityDto);
         }
 
         // DELETE: api/Activities/5

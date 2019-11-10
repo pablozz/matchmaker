@@ -4,12 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Matchmaker.Models;
-using Microsoft.AspNetCore.Cors;
+using Matchmaker.Dtos;
 
 namespace Matchmaker.Controllers
 {
     [Route("api/[controller]")]
-    [EnableCors("_myAllowAllOrigins")]
     [ApiController]
     public class CategoriesController : ControllerBase
     {
@@ -22,10 +21,10 @@ namespace Matchmaker.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        public IQueryable<CategoryDTO> GetCategories()
+        public IQueryable<CategoryDto> GetCategories()
         {
             var categories = from c in _context.Categories
-                             select new CategoryDTO()
+                             select new CategoryDto()
                              {
                                  Id = c.CategoryId,
                                  Name = c.Name
@@ -35,9 +34,9 @@ namespace Matchmaker.Controllers
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<CategoryDTO>> GetCategory(string id)
+        public async Task<ActionResult<CategoryDto>> GetCategory(string id)
         {
-            var category = await _context.Categories.Select(c => new CategoryDTO()
+            var category = await _context.Categories.Select(c => new CategoryDto()
             {
                 Id = c.CategoryId,
                 Name = c.Name
@@ -87,19 +86,19 @@ namespace Matchmaker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<CategoryDTO>> PostCategory(Category category)
+        public async Task<ActionResult<CategoryDto>> PostCategory(Category category)
         {
             category.CategoryId = Guid.NewGuid().ToString();
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 
-            var categoryDTO = new CategoryDTO()
+            var categoryDto = new CategoryDto()
             {
                 Id = category.CategoryId,
                 Name = category.Name
             };
 
-            return CreatedAtAction("GetCategory", new { id = category.CategoryId }, categoryDTO);
+            return CreatedAtAction("GetCategory", new { id = category.CategoryId }, categoryDto);
         }
 
         // DELETE: api/Categories/5

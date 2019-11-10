@@ -1,6 +1,6 @@
-﻿namespace Matchmaker.Models
+﻿namespace Matchmaker.Dtos
 {
-    public class SportsCenterDTO
+    public class SportsCenterDto
     {
         public string Id { get; set; }
         public string Name { get; set; }

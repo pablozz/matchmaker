@@ -1,5 +1,4 @@
 using System;
-using Matchmaker.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -7,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Matchmaker.Data;
+using Matchmaker.Models;
 
 namespace Matchmaker
 {
@@ -42,6 +43,8 @@ namespace Matchmaker
 
             services.AddDbContext<MatchmakerContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("MatchmakerContext"), o => o.SetPostgresVersion(new Version(9, 6))));
+
+            services.AddScoped<IAuthRepository, AuthRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
