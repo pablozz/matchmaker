@@ -1,34 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Matchmaker.Data;
 using Matchmaker.Dtos;
+using Matchmaker.Helpers;
 using Matchmaker.Models;
-using Microsoft.Extensions.Configuration;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 
 namespace Matchmaker.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
         private readonly IAuthRepository _repo;
-        private readonly IConfiguration _config;
+        private readonly AppSettings _appSettings;
 
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        public AuthController(IAuthRepository repo, IOptions<AppSettings> appSettings)
         {
             _repo = repo;
-            _config = config;
+            _appSettings = appSettings.Value;
         }
 
-        [HttpPost("register")] //<host>/api/auth/register
+        [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegisterUserDto registerUserDto)
         { 
             if (!ModelState.IsValid)
@@ -46,7 +44,8 @@ namespace Matchmaker.Controllers
                 UserId = Guid.NewGuid().ToString(),
                 Email = registerUserDto.Email,
                 Name = registerUserDto.Name,
-                Gender = registerUserDto.Gender
+                Gender = registerUserDto.Gender,
+                Role = Role.User
             };
 
             await _repo.Register(user, registerUserDto.Password);
@@ -54,25 +53,26 @@ namespace Matchmaker.Controllers
             return StatusCode(201);
         }
 
-        [HttpPost("login")]
+        [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginUserDto loginUserDto)
         {
-            var existingUser = await _repo.Login(loginUserDto.Email, loginUserDto.Password);
-            if (existingUser == null)
+            var user = await _repo.Login(loginUserDto.Email, loginUserDto.Password);
+            if (user == null)
             {
                 return Unauthorized();
             }
 
             //generate JWT
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_config.GetSection("AppSettings:Token").Value);
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]{
-                    new Claim(ClaimTypes.NameIdentifier, existingUser.UserId),
-                    new Claim(ClaimTypes.Email, existingUser.Email)
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Role, user.Role)
                 }),
-                Expires = DateTime.Now.AddDays(1),
+                Expires = DateTime.Now.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
             };
 
