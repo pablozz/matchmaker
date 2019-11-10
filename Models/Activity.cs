@@ -19,6 +19,6 @@ namespace Matchmaker.Models
         public Category Category { get; set; }
         public string AdminId { get; set; }
         public Admin Admin { get; set; }
-        public List<User> Users { get; set; }
+        public List<UserActivity> UserActivities { get; set; }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Matchmaker.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Matchmaker.Migrations
 {
     [DbContext(typeof(MatchmakerContext))]
-    partial class MatchmakerContextModelSnapshot : ModelSnapshot
+    [Migration("20191110130935_AddedRelationshipBetweenUsersAndActivitites")]
+    partial class AddedRelationshipBetweenUsersAndActivitites
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

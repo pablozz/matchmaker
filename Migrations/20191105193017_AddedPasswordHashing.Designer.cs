@@ -3,15 +3,17 @@ using System;
 using Matchmaker.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Matchmaker.Migrations
 {
     [DbContext(typeof(MatchmakerContext))]
-    partial class MatchmakerContextModelSnapshot : ModelSnapshot
+    [Migration("20191105193017_AddedPasswordHashing")]
+    partial class AddedPasswordHashing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,6 +135,9 @@ namespace Matchmaker.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("text");
 
+                    b.Property<string>("ActivityId")
+                        .HasColumnType("text");
+
                     b.Property<string>("Email")
                         .HasColumnType("text");
 
@@ -150,22 +155,9 @@ namespace Matchmaker.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Matchmaker.Models.UserActivity", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ActivityId")
-                        .HasColumnType("text");
-
-                    b.HasKey("UserId", "ActivityId");
-
                     b.HasIndex("ActivityId");
 
-                    b.ToTable("UserActivity");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Matchmaker.Models.Activity", b =>
@@ -190,19 +182,11 @@ namespace Matchmaker.Migrations
                         .HasForeignKey("SportsCenterId");
                 });
 
-            modelBuilder.Entity("Matchmaker.Models.UserActivity", b =>
+            modelBuilder.Entity("Matchmaker.Models.User", b =>
                 {
-                    b.HasOne("Matchmaker.Models.Activity", "Activity")
-                        .WithMany("UserActivities")
-                        .HasForeignKey("ActivityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Matchmaker.Models.User", "User")
-                        .WithMany("UserActivities")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Matchmaker.Models.Activity", null)
+                        .WithMany("Users")
+                        .HasForeignKey("ActivityId");
                 });
 #pragma warning restore 612, 618
         }
