@@ -103,7 +103,7 @@ namespace Matchmaker.Controllers
 
         // DELETE: api/Categories/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Category>> DeleteCategory(int id)
+        public async Task<ActionResult<Category>> DeleteCategory(string id)
         {
             var category = await _context.Categories.FindAsync(id);
             if (category == null)
