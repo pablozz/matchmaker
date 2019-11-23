@@ -7,53 +7,34 @@ interface ICardsDisplayProps {
   activities: IActivity[];
 }
 
-interface IDate {
-  year: number;
-  month: number;
-  day: number;
-}
-
-interface IDateState {
-  date: IDate;
-  isNew: boolean;
-}
-
 export const ActivityCardsDisplay: React.FC<ICardsDisplayProps> = props => {
   const activities: IActivity[] = props.activities;
 
-  let prevDate: IDate = { year: 0, month: 0, day: 0 };
+  let previousDate: number = 0;
 
-  const dates: IDate[] = activities
-    .map((item: IActivity) => {
-      const newDate: IDate = {
-        year: getYear(item.date),
-        month: getMonth(item.date),
-        day: getDay(item.date)
-      };
+  const dates: number[] = activities
+    .filter((activity: IActivity) => {
       const isNew: boolean =
-        newDate.year !== prevDate.year ||
-        newDate.month !== prevDate.month ||
-        newDate.day !== prevDate.day;
-      prevDate = newDate;
-      return { date: newDate, isNew: isNew };
+        getYear(activity.date) !== getYear(previousDate) ||
+        getMonth(activity.date) !== getMonth(previousDate) ||
+        getDay(activity.date) !== getDay(previousDate);
+      previousDate = activity.date;
+      return isNew;
     })
-    .filter((item: IDateState) => {
-      return item.isNew;
-    })
-    .map((item: IDateState) => {
-      return item.date;
+    .map((activity: IActivity) => {
+      return activity.date;
     });
 
   return (
     <Fragment>
-      {dates.map((date: IDate, index: number) => {
+      {dates.map((date: number, index: number) => {
         return (
           <Fragment key={index}>
-            <h2>{getDateString(date.month, date.day)}</h2>
+            <h2>{getDateString(date)}</h2>
             {activities.map((activity: IActivity) => {
-              return date.year === getYear(activity.date) &&
-                date.month === getMonth(activity.date) &&
-                date.day === getDay(activity.date) ? (
+              return getYear(date) === getYear(activity.date) &&
+                getMonth(date) === getMonth(activity.date) &&
+                getDay(date) === getDay(activity.date) ? (
                 <ActivityCard
                   key={activity.id}
                   date={activity.date}
@@ -83,7 +64,7 @@ const getYear = (secs: number) => {
 const getMonth = (secs: number) => {
   const date = new Date();
   date.setTime(secs * 1000);
-  return date.getMonth();
+  return date.getMonth() + 1;
 };
 
 const getDay = (secs: number) => {
@@ -92,10 +73,47 @@ const getDay = (secs: number) => {
   return date.getDate();
 };
 
-const getDateString = (months: number, days: number) => {
+const getWeekday = (secs: number) => {
+  const date = new Date();
+  date.setTime(secs * 1000);
+  const weekday = date.getDay();
+  switch (weekday) {
+    case 0:
+      return 'pirmadienis';
+    case 1:
+      return 'antradienis';
+    case 2:
+      return 'trečiadienis';
+    case 3:
+      return 'ketvirtadienis';
+    case 4:
+      return 'penktadienis';
+    case 5:
+      return 'šeštadienis';
+    case 6:
+      return 'sekmadienis';
+    default:
+      return '';
+  }
+};
+
+const getDateString = (date: number) => {
   let m: string;
   let d: string;
-  months >= 10 ? (m = months.toString()) : (m = '0' + months);
-  days >= 10 ? (d = days.toString()) : (d = '0' + days);
-  return m + '-' + d;
+
+  const today = new Date();
+
+  if (
+    today.getFullYear() === getYear(date) &&
+    today.getMonth() + 1 === getMonth(date)
+  ) {
+    if (today.getDate() === getDay(date)) return 'Šiandien';
+    if (today.getDate() + 1 === getDay(date)) return 'Rytoj';
+  }
+
+  getMonth(date) >= 10
+    ? (m = getMonth(date).toString())
+    : (m = '0' + getMonth(date));
+  getDay(date) >= 10 ? (d = getDay(date).toString()) : (d = '0' + getDay(date));
+  return m + '-' + d + ', ' + getWeekday(date);
 };

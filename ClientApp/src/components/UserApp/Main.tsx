@@ -9,7 +9,7 @@ import { setLoadedOrErrorActivities } from '../../actions/activities';
 import { ActivityCardsDisplay } from './ActivityCardsDisplay';
 import Skeleton from '@material-ui/lab/Skeleton';
 
-export const Activities: React.FC = () => {
+export const Main: React.FC = () => {
   const activities: IActivityActionPayload = useSelector(
     (state: AppState) => state.activities
   );
