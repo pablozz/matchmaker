@@ -7,7 +7,6 @@ import {
 } from '../../types/activities';
 import { setLoadedOrErrorActivities } from '../../actions/activities';
 import { ActivityCardsDisplay } from './ActivityCardsDisplay';
-import Skeleton from '@material-ui/lab/Skeleton';
 
 export const Main: React.FC = () => {
   const activities: IActivityActionPayload = useSelector(
@@ -21,22 +20,10 @@ export const Main: React.FC = () => {
     }
   }, [dispatch, activities.status]);
 
-  if (activities.status === 'loading' || activities.status === 'init')
-    return (
-      <Fragment>
-        <Skeleton width="sm" height={100} />
-        <br />
-        <Skeleton width="sm" height={100} />
-        <br />
-        <Skeleton width="sm" height={100} />
-      </Fragment>
-    );
-  else if (activities.status === 'loaded') {
-    return (
-      <Fragment>
-        <ActivityCardsDisplay activities={activities.payload} />
-      </Fragment>
-    );
-  }
-  return <h2 className="error">Įvyko klaida :(</h2>;
+  return (
+    <Fragment>
+      <h1>Veiklos</h1>
+      <ActivityCardsDisplay activities={activities} />
+    </Fragment>
+  );
 };

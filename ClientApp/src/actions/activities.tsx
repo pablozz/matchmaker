@@ -1,23 +1,21 @@
 import * as actions from '../constants/action-names';
-import {IActivity, IActivityAction} from '../types/activities';
+import { IActivity, IActivityAction } from '../types/activities';
 
 export const setInitActivities = (): IActivityAction => {
   return {
     type: actions.INIT_ACTVIVITIES,
-    payload: { status: 'init', payload: [] }
+    payload: { status: 'init', data: [] }
   };
 };
 
 export const setLoadingActivities = (): IActivityAction => {
   return {
     type: actions.LOADING_ACTIVITIES,
-    payload: { status: 'loading', payload: [] }
+    payload: { status: 'loading', data: [] }
   };
 };
 
-export const setLoadedOrErrorActivities = async (): Promise<
-  IActivityAction
-> => {
+export const setLoadedOrErrorActivities = async (): Promise<IActivityAction> => {
   const fData: IActivity[] | null = await fetch(
     'https://sportmatchmaker.azurewebsites.net/api/activities'
   )
@@ -31,12 +29,12 @@ export const setLoadedOrErrorActivities = async (): Promise<
   if (fData) {
     return {
       type: actions.LOADED_ACTIVITIES,
-      payload: { status: 'loaded', payload: fData }
+      payload: { status: 'loaded', data: fData }
     };
   } else {
     return {
       type: actions.LOADED_ACTIVITIES,
-      payload: { status: 'error', payload: [] }
+      payload: { status: 'error', data: [] }
     };
   }
 };

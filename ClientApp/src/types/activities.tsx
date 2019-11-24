@@ -17,7 +17,7 @@ export type ActivityActionStatus = 'loading' | 'loaded' | 'error' | 'init';
 
 export interface IActivityActionPayload {
   status: ActivityActionStatus;
-  payload: IActivity[];
+  data: IActivity[];
 }
 
 export interface IActivityAction {
