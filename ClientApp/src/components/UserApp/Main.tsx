@@ -1,4 +1,4 @@
-import React, { useEffect, Dispatch, Fragment } from 'react';
+import React, { useEffect, Dispatch } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../reducers';
 import {
@@ -21,9 +21,8 @@ export const Main: React.FC = () => {
   }, [dispatch, activities.status]);
 
   return (
-    <Fragment>
-      <h1>Veiklos</h1>
+    <div>
       <ActivityCardsDisplay activities={activities} />
-    </Fragment>
+    </div>
   );
 };

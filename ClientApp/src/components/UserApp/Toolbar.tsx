@@ -1,6 +1,20 @@
 import React from 'react';
-import { Toolbar as MaterialToolbar } from '@material-ui/core';
+import {
+  AppBar,
+  Toolbar as MaterialToolbar,
+  Button,
+  Typography
+} from '@material-ui/core';
 
 export const Toolbar: React.FC = () => {
-  return <MaterialToolbar />;
+  return (
+    <AppBar color="default" position="relative">
+      <MaterialToolbar>
+        <Typography variant="h6">Veiklos</Typography>
+        <Button style={{ marginLeft: 'auto' }} color="inherit">
+          Prisijungti
+        </Button>
+      </MaterialToolbar>
+    </AppBar>
+  );
 };

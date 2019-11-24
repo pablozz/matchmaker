@@ -12,7 +12,7 @@ import {
   mdiSignalCellular2,
   mdiSignalCellular3
 } from '@mdi/js';
-import '../../styles/UserApp/ActivitiesTable.scss';
+import '../../styles/UserApp/Main/Activities.scss';
 
 interface ICardProps {
   key: string;
