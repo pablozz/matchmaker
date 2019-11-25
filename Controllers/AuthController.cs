@@ -88,7 +88,7 @@ namespace Matchmaker.Controllers
             return Ok(new { tokenString });
         }
 
-        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
+        [Authorize(Roles = Role.SuperAdmin)]
         [HttpGet]
         public async Task<IEnumerable<UserProfileDto>> Users()
         {
@@ -125,7 +125,7 @@ namespace Matchmaker.Controllers
 
             return null;
         }
-        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
+        [Authorize(Roles = Role.SuperAdmin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(string id, UserProfileDto user)
         {
