@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Matchmaker.Dtos;
 using Matchmaker.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,6 +41,31 @@ namespace Matchmaker.Data
             await _context.Users.AddAsync(user); // Adding the user to context of users.
             await _context.SaveChangesAsync(); // Save changes to database.
 
+            return user;
+        }
+
+        public async Task<List<User>> GetUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
+
+        public async Task<User> GetCurrentUser(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(user => user.Email == email);
+        }
+
+        public async Task<User> UpdateUser(string id, UserProfileDto userProfile)
+        {
+            if (id != userProfile.Id)
+            {
+                return null;
+            }
+            var user = await _context.Users.FirstOrDefaultAsync(user => user.UserId == id);
+            user.Email = userProfile.Email;
+            user.Name = userProfile.Name;
+            user.Gender = userProfile.Gender;
+            user.Role = userProfile.Role;
+            await _context.SaveChangesAsync();
             return user;
         }
 

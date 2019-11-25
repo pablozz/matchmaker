@@ -7,7 +7,7 @@ namespace Matchmaker.Dtos
         [Required]
         public string Email { get; set; }
         [Required]
-        [StringLength(32, MinimumLength = 8, ErrorMessage = "You must specify a password between 8 and 32 characters.")]
+        [MinLength(8, ErrorMessage = "You must specify a password with at least 8 characters")]
         public string Password { get; set; }
         [Required]
         public string Name { get; set; }

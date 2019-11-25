@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Matchmaker.Models;
 using Matchmaker.Dtos;
-using Microsoft.AspNetCore.Cors;
 
 namespace Matchmaker.Controllers
 {
