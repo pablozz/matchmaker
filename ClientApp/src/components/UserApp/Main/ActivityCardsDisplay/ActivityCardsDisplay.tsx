@@ -1,7 +1,11 @@
 import React, { Fragment } from 'react';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { IActivity, IActivityActionPayload } from '../../types/activities';
+import {
+  IActivity,
+  IActivityActionPayload
+} from '../../../../types/activities';
 import { ActivityCard } from './ActivityCard';
+import { Typography } from '@material-ui/core';
 
 interface ICardsDisplayProps {
   activities: IActivityActionPayload;
@@ -44,7 +48,7 @@ export const ActivityCardsDisplay: React.FC<ICardsDisplayProps> = props => {
         {dates.map((date: number, index: number) => {
           return (
             <Fragment key={index}>
-              <h2>{getDateString(date)}</h2>
+              <Typography variant="h5">{getDateString(date)}</Typography>
               {activities.data.map((activity: IActivity) => {
                 return getYear(date) === getYear(activity.date) &&
                   getMonth(date) === getMonth(activity.date) &&
@@ -68,7 +72,11 @@ export const ActivityCardsDisplay: React.FC<ICardsDisplayProps> = props => {
       </Fragment>
     );
   }
-  return <h2 className="error">Įvyko klaida :(</h2>;
+  return (
+    <Typography className="error" variant="h2">
+      Įvyko klaida :(
+    </Typography>
+  );
 };
 
 const getYear = (secs: number) => {

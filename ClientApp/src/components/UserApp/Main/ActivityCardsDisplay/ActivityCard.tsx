@@ -12,7 +12,22 @@ import {
   mdiSignalCellular2,
   mdiSignalCellular3
 } from '@mdi/js';
-import '../../styles/UserApp/Main/Activities.scss';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(theme => ({
+  activity: {
+    cursor: 'pointer'
+  },
+  activityCard: {
+    margin: theme.spacing(2)
+  },
+  cardElement: {
+    padding: theme.spacing(1)
+  },
+  cardTextTime: {
+    fontWeight: 'bold'
+  }
+}));
 
 interface ICardProps {
   key: string;
@@ -26,12 +41,14 @@ interface ICardProps {
 }
 
 export const ActivityCard: React.FC<ICardProps> = props => {
+  const classes = useStyles();
+
   const [brightness, changeBrightness] = useState<string>('brightness(100%)');
   const [elevation, changeElevation] = useState<number>(1);
 
   return (
     <Link
-      className="activity"
+      className={classes.activity}
       underline="none"
       onMouseOver={() => {
         changeBrightness('brightness(90%)');
@@ -43,19 +60,19 @@ export const ActivityCard: React.FC<ICardProps> = props => {
       }}
     >
       <Paper
-        className="activity-card"
+        className={classes.activityCard}
         style={{ filter: brightness }}
         elevation={elevation}
       >
         <Grid container justify="space-between" direction="column">
           <Grid item>
             <Grid container justify="space-between" alignItems="center">
-              <Grid item className="card-element">
-                <Typography variant="h4" className="card-text-time">
+              <Grid item className={classes.cardElement}>
+                <Typography variant="h5" className={classes.cardTextTime}>
                   {getTimeString(props.date)}
                 </Typography>
               </Grid>
-              <Grid item className="card-element">
+              <Grid item className={classes.cardElement}>
                 <Grid container spacing={2}>
                   <Grid item>{pickCategoryIcon(props.category)}</Grid>
                   <Grid item>{pickGenderIcon(props.gender)}</Grid>
@@ -66,10 +83,10 @@ export const ActivityCard: React.FC<ICardProps> = props => {
           </Grid>
           <Grid item>
             <Grid container justify="space-between" alignItems="center">
-              <Grid item className="card-element">
+              <Grid item className={classes.cardElement}>
                 <Typography variant="h6">{props.participantsIn}</Typography>
               </Grid>
-              <Grid item className="card-element">
+              <Grid item className={classes.cardElement}>
                 <Typography>{props.playground}</Typography>
               </Grid>
             </Grid>

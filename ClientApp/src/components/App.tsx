@@ -9,7 +9,7 @@ export const App: React.FC = () => {
     <Router>
       <Switch>
         <Route path="/admin">There is going to be an admin app</Route>
-        <Route path='/'>
+        <Route path="/">
           <UserApp />
         </Route>
       </Switch>
