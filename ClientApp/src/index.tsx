@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import './index.scss';
 import { App } from './components/App';
 import * as serviceWorker from './serviceWorker';
@@ -9,9 +10,20 @@ import { rootReducer } from './reducers';
 
 const store = createStore(rootReducer);
 
+const theme = createMuiTheme({
+  palette: {
+    primary: { main: '#FFA726' },
+    secondary: {
+      main: '#E33E7F'
+    }
+  }
+});
+
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <MuiThemeProvider theme={theme}>
+      <App />
+    </MuiThemeProvider>
   </Provider>,
   document.getElementById('root')
 );

@@ -1,6 +1,13 @@
 import React, { Fragment, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Toolbar } from './Toolbar';
-import { Button, TextField, Link, Grid, Container } from '@material-ui/core';
+import {
+  Button,
+  TextField,
+  Grid,
+  Container,
+  Typography
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ROUTES } from '../../constants/routes';
 
@@ -11,26 +18,41 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     alignItems: 'center'
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
-  },
   form: {
     width: '100%',
     marginTop: theme.spacing(3)
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
+  },
+  link: {
+    color: theme.palette.primary.main,
+    textDecorationColor: theme.palette.primary.main
   }
 }));
 
-export function SignUp() {
+interface ITextField {
+  value: string;
+  error: boolean;
+}
+
+export const SignUp = () => {
   const classes = useStyles();
 
-  const [fname, setFName] = useState<string>('');
-  const [lname, setLName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [fname, setFName] = useState<ITextField>({ value: '', error: false });
+  const [lname, setLName] = useState<ITextField>({ value: '', error: false });
+  const [email, setEmail] = useState<ITextField>({ value: '', error: false });
+  const [password, setPassword] = useState<ITextField>({
+    value: '',
+    error: false
+  });
+
+  const handleSubmit = () => {
+    if (!fname.value) setFName({ value: fname.value, error: true });
+    if (!lname.value) setLName({ value: lname.value, error: true });
+    if (!email.value) setEmail({ value: email.value, error: true });
+    if (!password.value) setPassword({ value: password.value, error: true });
+  };
 
   return (
     <Fragment>
@@ -41,52 +63,64 @@ export function SignUp() {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  error={fname.error}
                   name="firstName"
                   variant="outlined"
                   fullWidth
                   id="firstName"
-                  label="Vardas"
+                  label="Vardas*"
                   autoComplete="fname"
                   autoFocus
-                  value={fname}
-                  onChange={e => setFName(e.target.value)}
+                  value={fname.value}
+                  onChange={e =>
+                    setFName({ value: e.target.value, error: false })
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  error={lname.error}
                   variant="outlined"
                   fullWidth
                   id="lastName"
-                  label="Pavardė"
+                  label="Pavardė*"
                   name="lastName"
                   autoComplete="lname"
-                  value={lname}
-                  onChange={e => setLName(e.target.value)}
+                  value={lname.value}
+                  onChange={e =>
+                    setLName({ value: e.target.value, error: false })
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  error={email.error}
                   variant="outlined"
                   fullWidth
                   id="email"
-                  label="El. paštas"
+                  label="El. paštas*"
                   name="email"
                   autoComplete="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
+                  value={email.value}
+                  onChange={e =>
+                    setEmail({ value: e.target.value, error: false })
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  error={password.error}
                   variant="outlined"
                   fullWidth
                   name="password"
-                  label="Password"
+                  label="Slaptažodis*"
                   type="password"
                   id="password"
                   autoComplete="current-password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
+                  value={password.value}
+                  onChange={e =>
+                    setPassword({ value: e.target.value, error: false })
+                  }
                 />
               </Grid>
             </Grid>
@@ -95,13 +129,16 @@ export function SignUp() {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={() => handleSubmit()}
             >
               Registruoti
             </Button>
             <Grid container justify="flex-end">
               <Grid item>
-                <Link href={ROUTES.Login} variant="body2">
-                  Turi paskyrą? Prisijunk
+                <Link className={classes.link} to={ROUTES.Login}>
+                  <Typography variant="body2">
+                    Turi paskyrą? Prisijunk
+                  </Typography>
                 </Link>
               </Grid>
             </Grid>
@@ -110,4 +147,4 @@ export function SignUp() {
       </Container>
     </Fragment>
   );
-}
+};

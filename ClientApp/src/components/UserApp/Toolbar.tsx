@@ -15,7 +15,7 @@ interface IToolbarProps {
 
 export const Toolbar: React.FC<IToolbarProps> = props => {
   return (
-    <AppBar color="default" position="relative">
+    <AppBar color="primary" position="relative">
       <MaterialToolbar>
         <Typography className="toolbar-title" component="h1" variant="h4">
           {props.title}
@@ -23,9 +23,8 @@ export const Toolbar: React.FC<IToolbarProps> = props => {
         <Link
           to={ROUTES.Login}
           style={{ textDecoration: 'none', marginLeft: 'auto' }}
-          color="inherit"
         >
-          {props.login && <Button>Prisijungti</Button>}
+          {props.login && <Button color="secondary">Prisijungti</Button>}
         </Link>
       </MaterialToolbar>
     </AppBar>
