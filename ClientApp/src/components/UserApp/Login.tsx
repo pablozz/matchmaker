@@ -52,7 +52,7 @@ export const Login: React.FC = () => {
 
   return (
     <Fragment>
-      <Toolbar title="Prisijungimas" login={false}></Toolbar>
+      <Toolbar title="Prisijungimas" login={false} />
       <Container maxWidth="xs">
         <div className={classes.paper}>
           <div className={classes.form}>
@@ -97,7 +97,7 @@ export const Login: React.FC = () => {
               className={classes.submit}
               onClick={() => handleSubmit()}
             >
-              Registruoti
+              Prisijungti
             </Button>
             <Grid container justify="flex-end">
               <Grid item>

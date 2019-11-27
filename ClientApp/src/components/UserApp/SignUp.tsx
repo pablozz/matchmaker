@@ -6,7 +6,12 @@ import {
   TextField,
   Grid,
   Container,
-  Typography
+  Typography,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ROUTES } from '../../constants/routes';
@@ -21,6 +26,13 @@ const useStyles = makeStyles(theme => ({
   form: {
     width: '100%',
     marginTop: theme.spacing(3)
+  },
+  formControl: {
+    margin: theme.spacing(2, 2, 1, 2),
+    width: '100%'
+  },
+  radioGroup: {
+    margin: theme.spacing(1)
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
@@ -46,6 +58,7 @@ export const SignUp = () => {
     value: '',
     error: false
   });
+  const [gender, setGender] = useState<string>('male');
 
   const handleSubmit = () => {
     if (!fname.value) setFName({ value: fname.value, error: true });
@@ -56,7 +69,7 @@ export const SignUp = () => {
 
   return (
     <Fragment>
-      <Toolbar title="Registracija" login={false}></Toolbar>
+      <Toolbar title="Registracija" login={false} />
       <Container maxWidth="xs">
         <div className={classes.paper}>
           <div className={classes.form}>
@@ -92,6 +105,36 @@ export const SignUp = () => {
                   }
                 />
               </Grid>
+              <FormControl className={classes.formControl}>
+                <FormLabel component="legend">Lytis</FormLabel>
+                <RadioGroup
+                  aria-label="gender"
+                  name="gender"
+                  value={gender}
+                  onChange={e => setGender(e.target.value)}
+                  row
+                  className={classes.radioGroup}
+                >
+                  <Grid container justify="space-around">
+                    <FormControlLabel
+                      value="male"
+                      control={<Radio color="primary" />}
+                      label="Vyras"
+                    />
+                    <FormControlLabel
+                      value="female"
+                      control={<Radio color="primary" />}
+                      label="Moteris"
+                    />
+                    <FormControlLabel
+                      value="other"
+                      control={<Radio color="primary" />}
+                      label="Kita"
+                    />
+                  </Grid>
+                </RadioGroup>
+              </FormControl>
+
               <Grid item xs={12}>
                 <TextField
                   error={email.error}
@@ -131,7 +174,7 @@ export const SignUp = () => {
               className={classes.submit}
               onClick={() => handleSubmit()}
             >
-              Registruoti
+              Registruotis
             </Button>
             <Grid container justify="flex-end">
               <Grid item>
