@@ -1,4 +1,5 @@
 import * as actions from '../constants/action-names';
+import { GET_ACTIVITIES_URL } from '../constants/urls';
 import { IActivity, IActivityAction } from '../types/activities';
 
 export const setInitActivities = (): IActivityAction => {
@@ -16,9 +17,7 @@ export const setLoadingActivities = (): IActivityAction => {
 };
 
 export const setLoadedOrErrorActivities = async (): Promise<IActivityAction> => {
-  const fData: IActivity[] | null = await fetch(
-    'https://sportmatchmaker.azurewebsites.net/api/activities'
-  )
+  const fData: IActivity[] | null = await fetch(GET_ACTIVITIES_URL)
     .then(response => response.json())
     .then(data => {
       return generateActivities(data);

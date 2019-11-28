@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Toolbar } from './Toolbar';
+import { Link, Redirect } from 'react-router-dom';
+import { Toolbar } from '../UserApp/Toolbar';
 import {
   Button,
   TextField,
@@ -15,6 +15,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ROUTES } from '../../constants/routes';
+import { REGISTER_URL } from '../../constants/urls';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -38,14 +39,22 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2)
   },
   link: {
-    color: theme.palette.primary.main,
-    textDecorationColor: theme.palette.primary.main
+    color: theme.palette.secondary.main,
+    textDecorationColor: theme.palette.secondary.main
   }
 }));
 
 interface ITextField {
   value: string;
   error: boolean;
+}
+
+interface IRegisterProfile {
+  Name: string;
+  Email: string;
+  Password: string;
+  // Vyras | Moteris | Kita
+  Gender: string;
 }
 
 export const SignUp = () => {
@@ -58,17 +67,36 @@ export const SignUp = () => {
     value: '',
     error: false
   });
-  const [gender, setGender] = useState<string>('male');
+  const [gender, setGender] = useState<string>('Vyras');
+  const [redirect, setRedirect] = useState<boolean>(false);
 
-  const handleSubmit = () => {
-    if (!fname.value) setFName({ value: fname.value, error: true });
-    if (!lname.value) setLName({ value: lname.value, error: true });
-    if (!email.value) setEmail({ value: email.value, error: true });
-    if (!password.value) setPassword({ value: password.value, error: true });
+  const handleSubmit = async () => {
+    if (!fname.value) setFName({ value: '', error: true });
+    if (!lname.value) setLName({ value: '', error: true });
+    if (!email.value) setEmail({ value: '', error: true });
+    if (password.value.length < 8) setPassword({ value: '', error: true });
+
+    const registerObj: IRegisterProfile = {
+      Name: fname.value + ' ' + lname.value,
+      Email: email.value,
+      Password: password.value,
+      Gender: gender
+    };
+
+    if (
+      fname.value &&
+      lname.value &&
+      email.value &&
+      password.value.length >= 8
+    ) {
+      const response: string = await register(REGISTER_URL, registerObj);
+      if (response === 'Created') setRedirect(true);
+    }
   };
 
   return (
     <Fragment>
+      {redirect && <Redirect to={ROUTES.SuccesfulRedirectFromSignUp} />}
       <Toolbar title="Registracija" login={false} />
       <Container maxWidth="xs">
         <div className={classes.paper}>
@@ -117,17 +145,17 @@ export const SignUp = () => {
                 >
                   <Grid container justify="space-around">
                     <FormControlLabel
-                      value="male"
+                      value="Vyras"
                       control={<Radio color="primary" />}
                       label="Vyras"
                     />
                     <FormControlLabel
-                      value="female"
+                      value="Moteris"
                       control={<Radio color="primary" />}
                       label="Moteris"
                     />
                     <FormControlLabel
-                      value="other"
+                      value="Kita"
                       control={<Radio color="primary" />}
                       label="Kita"
                     />
@@ -153,6 +181,11 @@ export const SignUp = () => {
               <Grid item xs={12}>
                 <TextField
                   error={password.error}
+                  helperText={
+                    password.error
+                      ? 'Slaptažodį turi sudaryti ne mažiau kaip 8 simboliai'
+                      : ''
+                  }
                   variant="outlined"
                   fullWidth
                   name="password"
@@ -170,7 +203,7 @@ export const SignUp = () => {
             <Button
               fullWidth
               variant="contained"
-              color="primary"
+              color="secondary"
               className={classes.submit}
               onClick={() => handleSubmit()}
             >
@@ -190,4 +223,15 @@ export const SignUp = () => {
       </Container>
     </Fragment>
   );
+};
+
+const register = async (url: string, obj: Object): Promise<string> => {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(obj)
+  });
+  return response.statusText;
 };
