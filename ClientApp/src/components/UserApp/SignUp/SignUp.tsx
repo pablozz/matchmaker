@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { Toolbar } from '../UserApp/Toolbar';
+import { Toolbar } from '../Toolbar';
 import {
   Button,
   TextField,
@@ -14,8 +14,8 @@ import {
   Radio
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { ROUTES } from '../../constants/routes';
-import { REGISTER_URL } from '../../constants/urls';
+import { ROUTES } from '../../../constants/routes';
+import { REGISTER_URL } from '../../../constants/urls';
 
 const useStyles = makeStyles(theme => ({
   paper: {

@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Toolbar } from '../UserApp/Toolbar';
+import { Toolbar } from '../Toolbar';
 import { LoginForm } from './LoginForm';
 
 export const Login: React.FC = () => {
