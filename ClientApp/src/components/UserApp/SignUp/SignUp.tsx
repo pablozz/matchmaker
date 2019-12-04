@@ -47,6 +47,7 @@ const useStyles = makeStyles(theme => ({
 interface ITextField {
   value: string;
   error: boolean;
+  helperText?: string | undefined;
 }
 
 interface IRegisterProfile {
@@ -62,7 +63,11 @@ export const SignUp = () => {
 
   const [fname, setFName] = useState<ITextField>({ value: '', error: false });
   const [lname, setLName] = useState<ITextField>({ value: '', error: false });
-  const [email, setEmail] = useState<ITextField>({ value: '', error: false });
+  const [email, setEmail] = useState<ITextField>({
+    value: '',
+    error: false,
+    helperText: undefined
+  });
   const [password, setPassword] = useState<ITextField>({
     value: '',
     error: false
@@ -73,7 +78,12 @@ export const SignUp = () => {
   const handleSubmit = async () => {
     if (!fname.value) setFName({ value: '', error: true });
     if (!lname.value) setLName({ value: '', error: true });
-    if (!email.value) setEmail({ value: '', error: true });
+    if (!isEmail(email.value))
+      setEmail({
+        value: email.value,
+        error: true,
+        helperText: 'Nėra tokio el. pašto adreso'
+      });
     if (password.value.length < 8) setPassword({ value: '', error: true });
 
     const registerObj: IRegisterProfile = {
@@ -86,11 +96,23 @@ export const SignUp = () => {
     if (
       fname.value &&
       lname.value &&
-      email.value &&
+      isEmail(email.value) &&
       password.value.length >= 8
     ) {
-      const response: string = await register(REGISTER_URL, registerObj);
-      if (response === 'Created') setRedirect(true);
+      const response: Response = await register(REGISTER_URL, registerObj);
+
+      const text = await response.text();
+      if (response.statusText === 'Created') setRedirect(true);
+      if (
+        response.statusText === 'Bad Request' &&
+        text === 'Email is already taken'
+      ) {
+        setEmail({
+          value: email.value,
+          error: true,
+          helperText: 'Šis el. pašto adresas jau užimtas'
+        });
+      }
     }
   };
 
@@ -166,6 +188,7 @@ export const SignUp = () => {
               <Grid item xs={12}>
                 <TextField
                   error={email.error}
+                  helperText={email.helperText}
                   variant="outlined"
                   fullWidth
                   id="email"
@@ -225,7 +248,7 @@ export const SignUp = () => {
   );
 };
 
-const register = async (url: string, obj: Object): Promise<string> => {
+const register = async (url: string, obj: Object): Promise<Response> => {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -233,5 +256,10 @@ const register = async (url: string, obj: Object): Promise<string> => {
     },
     body: JSON.stringify(obj)
   });
-  return response.statusText;
+  return response;
+};
+
+const isEmail = (email: string) => {
+  const re = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email.toLowerCase());
 };
