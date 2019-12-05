@@ -32,7 +32,7 @@ export const Main: React.FC = () => {
   }, [dispatch, activities.status]);
   return (
     <Fragment>
-      <Toolbar title="Veiklos" login />
+      <Toolbar title="Veiklos" />
       <Container className={classes.containerMain} maxWidth="xs">
         <ActivityCardsDisplay activities={activities} />
       </Container>

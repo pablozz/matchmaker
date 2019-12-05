@@ -1,17 +1,21 @@
-import * as actions from '../constants/action-names';
+import {
+  INIT_ACTVIVITIES,
+  LOADING_ACTIVITIES,
+  LOADED_ACTIVITIES
+} from '../constants/action-names';
 import { GET_ACTIVITIES_URL } from '../constants/urls';
 import { IActivity, IActivityAction } from '../types/activities';
 
 export const setInitActivities = (): IActivityAction => {
   return {
-    type: actions.INIT_ACTVIVITIES,
+    type: INIT_ACTVIVITIES,
     payload: { status: 'init', data: [] }
   };
 };
 
 export const setLoadingActivities = (): IActivityAction => {
   return {
-    type: actions.LOADING_ACTIVITIES,
+    type: LOADING_ACTIVITIES,
     payload: { status: 'loading', data: [] }
   };
 };
@@ -27,12 +31,12 @@ export const setLoadedOrErrorActivities = async (): Promise<IActivityAction> => 
     });
   if (fData) {
     return {
-      type: actions.LOADED_ACTIVITIES,
+      type: LOADED_ACTIVITIES,
       payload: { status: 'loaded', data: fData }
     };
   } else {
     return {
-      type: actions.LOADED_ACTIVITIES,
+      type: LOADED_ACTIVITIES,
       payload: { status: 'error', data: [] }
     };
   }

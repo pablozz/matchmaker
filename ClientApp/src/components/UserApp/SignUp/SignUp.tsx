@@ -50,7 +50,7 @@ interface ITextField {
   helperText?: string | undefined;
 }
 
-interface IRegisterProfile {
+interface IRegisterData {
   Name: string;
   Email: string;
   Password: string;
@@ -70,7 +70,8 @@ export const SignUp = () => {
   });
   const [password, setPassword] = useState<ITextField>({
     value: '',
-    error: false
+    error: false,
+    helperText: undefined
   });
   const [gender, setGender] = useState<string>('Vyras');
   const [redirect, setRedirect] = useState<boolean>(false);
@@ -82,11 +83,16 @@ export const SignUp = () => {
       setEmail({
         value: email.value,
         error: true,
-        helperText: 'Nėra tokio el. pašto adreso'
+        helperText: 'Toks el. pašto adresas neegzistuoja'
       });
-    if (password.value.length < 8) setPassword({ value: '', error: true });
+    if (password.value.length < 8)
+      setPassword({
+        value: '',
+        error: true,
+        helperText: 'Slaptažodį privalo sudaryti ne mažiau nei 8 simboliai'
+      });
 
-    const registerObj: IRegisterProfile = {
+    const registerObj: IRegisterData = {
       Name: fname.value + ' ' + lname.value,
       Email: email.value,
       Password: password.value,
@@ -100,10 +106,10 @@ export const SignUp = () => {
       password.value.length >= 8
     ) {
       const response: Response = await register(REGISTER_URL, registerObj);
-
       const text = await response.text();
+
       if (response.statusText === 'Created') setRedirect(true);
-      if (
+      else if (
         response.statusText === 'Bad Request' &&
         text === 'Email is already taken'
       ) {
@@ -119,7 +125,7 @@ export const SignUp = () => {
   return (
     <Fragment>
       {redirect && <Redirect to={ROUTES.SuccesfulRedirectFromSignUp} />}
-      <Toolbar title="Registracija" login={false} />
+      <Toolbar title="Registracija" />
       <Container maxWidth="xs">
         <div className={classes.paper}>
           <div className={classes.form}>
@@ -204,11 +210,7 @@ export const SignUp = () => {
               <Grid item xs={12}>
                 <TextField
                   error={password.error}
-                  helperText={
-                    password.error
-                      ? 'Slaptažodį turi sudaryti ne mažiau kaip 8 simboliai'
-                      : ''
-                  }
+                  helperText={password.helperText}
                   variant="outlined"
                   fullWidth
                   name="password"
@@ -248,8 +250,8 @@ export const SignUp = () => {
   );
 };
 
-const register = async (url: string, obj: Object): Promise<Response> => {
-  const response = await fetch(url, {
+const register = async (url: string, obj: IRegisterData): Promise<Response> => {
+  const response: Response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

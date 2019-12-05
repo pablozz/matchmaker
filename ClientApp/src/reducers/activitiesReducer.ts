@@ -4,7 +4,7 @@ import {
   LOADED_ACTIVITIES,
   ERROR_ACTIVITIES
 } from '../constants/action-names';
-import { AppState } from './';
+import { AppState } from '.';
 import { IActivityAction } from '../types/activities';
 
 export const activitiesReducer = (

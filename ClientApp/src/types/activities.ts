@@ -1,4 +1,9 @@
-import { ActivityActionTypes } from '../constants/action-names';
+import {
+  LOADED_ACTIVITIES,
+  LOADING_ACTIVITIES,
+  INIT_ACTVIVITIES,
+  ERROR_ACTIVITIES
+} from '../constants/action-names';
 
 export interface IActivity {
   id: string;
@@ -14,6 +19,12 @@ export interface IActivity {
 }
 
 export type ActivityActionStatus = 'loading' | 'loaded' | 'error' | 'init';
+
+type ActivityActionTypes =
+  | typeof INIT_ACTVIVITIES
+  | typeof LOADING_ACTIVITIES
+  | typeof LOADED_ACTIVITIES
+  | typeof ERROR_ACTIVITIES;
 
 export interface IActivityActionPayload {
   status: ActivityActionStatus;

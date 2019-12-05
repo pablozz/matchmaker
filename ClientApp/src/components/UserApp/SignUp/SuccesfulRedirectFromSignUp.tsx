@@ -19,7 +19,9 @@ export const SuccesfulRedirectFromSignUp: React.FC = () => {
         Registracija sėkminga
       </Typography>
       <br />
-      <LoginForm linkToRegister={false} />
+      <Container maxWidth="xs">
+        <LoginForm />
+      </Container>
     </Container>
   );
 };

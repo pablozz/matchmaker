@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
   AppBar,
@@ -6,14 +7,16 @@ import {
   Button,
   Typography
 } from '@material-ui/core';
+import { AppState } from '../../reducers';
 import { ROUTES } from '../../constants/routes';
 
 interface IToolbarProps {
   title: string;
-  login: boolean;
 }
 
 export const Toolbar: React.FC<IToolbarProps> = props => {
+  const loginToken: string = useSelector((state: AppState) => state.loginToken);
+
   return (
     <AppBar color="primary" position="relative">
       <MaterialToolbar>
@@ -24,7 +27,7 @@ export const Toolbar: React.FC<IToolbarProps> = props => {
           to={ROUTES.Login}
           style={{ textDecoration: 'none', marginLeft: 'auto' }}
         >
-          {props.login && <Button color="secondary">Prisijungti</Button>}
+          {!loginToken && <Button color="secondary">Prisijungti</Button>}
         </Link>
       </MaterialToolbar>
     </AppBar>
