@@ -1,10 +1,8 @@
-import React, { useState, Dispatch } from 'react';
-import { useDispatch } from 'react-redux';
-import { Button, TextField, Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { LOGIN_URL } from '../../../constants/urls';
-import { setLoginToken } from '../../../actions/login';
-import { ILoginToken } from '../../../types/login';
+import React, {useState} from 'react';
+import {Button, Grid, TextField} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core/styles';
+import {LOGIN_URL} from '../../../constants/urls';
+import {useCookies} from 'react-cookie';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -34,13 +32,13 @@ interface ILoginData {
 
 export const LoginForm: React.FC = () => {
   const classes = useStyles();
-  const dispatch: Dispatch<ILoginToken> = useDispatch();
 
   const [email, setEmail] = useState<ITextField>({ value: '', error: false });
   const [password, setPassword] = useState<ITextField>({
     value: '',
     error: false
   });
+  const [, setCookies] = useCookies(['loginToken']);
 
   const handleSubmit = async () => {
     if (!email.value) setEmail({ value: email.value, error: true });
@@ -52,13 +50,12 @@ export const LoginForm: React.FC = () => {
     };
 
     if (email.value && password.value) {
-      const response = await login(LOGIN_URL, loginObj);
+      const response = await getResponse(LOGIN_URL, loginObj);
       if (response.statusText === 'OK') {
         const json = await response.json();
         const token = await json.tokenString;
-        dispatch(setLoginToken(token));
+        setCookies('loginToken', token, { path: '/' });
       } else if (response.statusText === 'Unauthorized') {
-        dispatch(setLoginToken(null));
         alert('Neteisingas el. pašto adresas arba slaptažodis');
       }
     }
@@ -113,13 +110,12 @@ export const LoginForm: React.FC = () => {
   );
 };
 
-const login = async (url: string, obj: ILoginData): Promise<Response> => {
-  const response: Response = await fetch(url, {
+const getResponse = async (url: string, obj: ILoginData): Promise<Response> => {
+  return await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(obj)
   });
-  return response;
 };

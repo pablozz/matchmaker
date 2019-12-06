@@ -19,7 +19,7 @@ export const UserApp: React.FC = () => {
       <Route path={ROUTES.SuccesfulRedirectFromSignUp}>
         <SuccesfulRedirectFromSignUp />
       </Route>
-      <Route path={ROUTES.Home}>
+      <Route path={ROUTES.Main}>
         <Main />
       </Route>
     </Switch>

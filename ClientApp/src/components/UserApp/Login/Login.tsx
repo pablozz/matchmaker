@@ -1,10 +1,11 @@
 import React, { Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Grid, Typography, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Toolbar } from '../Toolbar';
 import { LoginForm } from './LoginForm';
 import { ROUTES } from '../../../constants/routes';
+import { useCookies } from 'react-cookie';
 
 const useStyles = makeStyles(theme => ({
   linkToRegister: {
@@ -15,8 +16,10 @@ const useStyles = makeStyles(theme => ({
 
 export const Login: React.FC = () => {
   const classes = useStyles();
+  const [cookies] = useCookies(['loginToken']);
   return (
     <Fragment>
+      {cookies.loginToken !== '' && <Redirect to={ROUTES.Main} />}
       <Toolbar title="Prisijungimas" />
       <Container maxWidth="xs">
         <LoginForm />

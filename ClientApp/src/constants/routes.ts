@@ -1,5 +1,5 @@
 export const ROUTES = {
-  Home: '/',
+  Main: '/',
   Login: '/login',
   SignUp: '/signup',
   SuccesfulRedirectFromSignUp: '/registered',
