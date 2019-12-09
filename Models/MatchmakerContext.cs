@@ -10,7 +10,6 @@ namespace Matchmaker.Models
         }
 
         public DbSet<Activity> Activities { get; set; }
-        public DbSet<Admin> Admins { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Playground> Playgrounds { get; set; }
         public DbSet<SportsCenter> SportsCenters { get; set; }
@@ -30,6 +29,11 @@ namespace Matchmaker.Models
                 .HasOne(ua => ua.Activity)
                 .WithMany(a => a.UserActivities)
                 .HasForeignKey(ua => ua.ActivityId);
+
+            modelBuilder.Entity<Activity>()
+                .HasOne(a => a.Admin)
+                .WithMany()
+                .HasForeignKey(a => a.AdminId);
         }
     }
 }

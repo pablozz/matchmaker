@@ -3,15 +3,17 @@ using System;
 using Matchmaker.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Matchmaker.Migrations
 {
     [DbContext(typeof(MatchmakerContext))]
-    partial class MatchmakerContextModelSnapshot : ModelSnapshot
+    [Migration("20191209133611_MergedAdminEntityWithUser1")]
+    partial class MergedAdminEntityWithUser1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,9 +24,6 @@ namespace Matchmaker.Migrations
             modelBuilder.Entity("Matchmaker.Models.Activity", b =>
                 {
                     b.Property<string>("ActivityId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("AdminId")
                         .HasColumnType("text");
 
                     b.Property<string>("CategoryId")
@@ -52,8 +51,6 @@ namespace Matchmaker.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("ActivityId");
-
-                    b.HasIndex("AdminId");
 
                     b.HasIndex("CategoryId");
 
@@ -157,10 +154,6 @@ namespace Matchmaker.Migrations
 
             modelBuilder.Entity("Matchmaker.Models.Activity", b =>
                 {
-                    b.HasOne("Matchmaker.Models.User", "Admin")
-                        .WithMany()
-                        .HasForeignKey("AdminId");
-
                     b.HasOne("Matchmaker.Models.Category", "Category")
                         .WithMany("Activities")
                         .HasForeignKey("CategoryId");
