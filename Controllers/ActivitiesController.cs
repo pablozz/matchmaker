@@ -30,7 +30,7 @@ namespace Matchmaker.Controllers
         [HttpGet]
         public async Task<List<ActivityDto>> GetActivities()
         {
-            var activities = await _context.Activities.Select(a => new ActivityDto()
+            var activities = await _context.Activities.Where(a => a.Date > DateTime.Now).Select(a => new ActivityDto()
             {
                 Id = a.ActivityId,
                 Date = a.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
@@ -92,7 +92,38 @@ namespace Matchmaker.Controllers
 
             var user = await _repo.GetCurrentUser(email);
 
-            var activities = await _context.Activities.Where(a => a.UserActivities.Any(u => u.UserId == user.UserId)).Select(a => new ActivityDto()
+            var activities = await _context.Activities.Where(a => a.UserActivities.Any(u => u.UserId == user.UserId) && a.Date >= DateTime.Now).Select(a => new ActivityDto()
+            {
+                Id = a.ActivityId,
+                Date = a.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
+                Gender = a.Gender,
+                Price = a.Price,
+                Users = a.RegisteredParticipants,
+                NumberOfParticipants = a.NumberOfParticipants,
+                PlayerLevel = a.PlayerLevel,
+                Playground = a.Playground.NameOfPlace,
+                SportsCenter = new SportsCenterDto()
+                {
+                    Id = a.Playground.SportsCenter.SportsCenterId,
+                    Name = a.Playground.SportsCenter.Name,
+                    Address = a.Playground.SportsCenter.Address
+                },
+                Category = a.Category.Name
+            }).ToListAsync();
+            var orderedActivities = activities.OrderBy(activity => activity.Date);
+
+            return orderedActivities;
+        }
+
+        [Authorize]
+        [HttpGet("user/history")]
+        public async Task<IEnumerable<ActivityDto>> GetUserActivitiesHistory()
+        {
+            var email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+
+            var user = await _repo.GetCurrentUser(email);
+
+            var activities = await _context.Activities.Where(a => a.UserActivities.Any(u => u.UserId == user.UserId) && a.Date < DateTime.Now).Select(a => new ActivityDto()
             {
                 Id = a.ActivityId,
                 Date = a.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
