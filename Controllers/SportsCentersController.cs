@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Matchmaker.Models;
 using Matchmaker.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace Matchmaker.Controllers
 {
@@ -20,20 +22,22 @@ namespace Matchmaker.Controllers
         }
 
         // GET: api/SportsCenters
+        [AllowAnonymous]
         [HttpGet]
-        public IQueryable<SportsCenterDto> GetSportsCenters()
+        public async Task<List<SportsCenterDto>> GetSportsCenters()
         {
-            var sportsCenters = from s in _context.SportsCenters
-                             select new SportsCenterDto()
-                             {
-                                 Id = s.SportsCenterId,
-                                 Name = s.Name,
-                                 Address = s.Address
-                             };
+            var sportsCenters = await _context.SportsCenters.Select(s => new SportsCenterDto()
+            {
+                Id = s.SportsCenterId,
+                Name = s.Name,
+                Address = s.Address
+            }).ToListAsync();
+
             return sportsCenters;
         }
 
         // GET: api/SportsCenters/5
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<SportsCenterDto>> GetSportsCenter(string id)
         {
@@ -55,6 +59,7 @@ namespace Matchmaker.Controllers
         // PUT: api/SportsCenters/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
+        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSportsCenter(string id, SportsCenter sportsCenter)
         {
@@ -87,6 +92,7 @@ namespace Matchmaker.Controllers
         // POST: api/SportsCenters
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
+        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
         [HttpPost]
         public async Task<ActionResult<SportsCenterDto>> PostSportsCenter(SportsCenter sportsCenter)
         {
@@ -105,6 +111,7 @@ namespace Matchmaker.Controllers
         }
 
         // DELETE: api/SportsCenters/5
+        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<SportsCenter>> DeleteSportsCenter(string id)
         {

@@ -5,9 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Matchmaker.Models;
 using Matchmaker.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace Matchmaker.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoriesController : ControllerBase
@@ -20,19 +23,21 @@ namespace Matchmaker.Controllers
         }
 
         // GET: api/Categories
+        [AllowAnonymous]
         [HttpGet]
-        public IQueryable<CategoryDto> GetCategories()
+        public Task<List<CategoryDto>> GetCategories()
         {
-            var categories = from c in _context.Categories
-                             select new CategoryDto()
-                             {
-                                 Id = c.CategoryId,
-                                 Name = c.Name
-                             };
+            var categories = _context.Categories.Select(c => new CategoryDto()
+            {
+                Id = c.CategoryId,
+                Name = c.Name
+            }).ToListAsync();
+                             
             return categories;
         }
 
         // GET: api/Categories/5
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoryDto>> GetCategory(string id)
         {
@@ -53,6 +58,7 @@ namespace Matchmaker.Controllers
         // PUT: api/Categories/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
+        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCategory(string id, Category category)
         {
@@ -85,6 +91,7 @@ namespace Matchmaker.Controllers
         // POST: api/Categories
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
+        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
         [HttpPost]
         public async Task<ActionResult<CategoryDto>> PostCategory(Category category)
         {
@@ -102,6 +109,7 @@ namespace Matchmaker.Controllers
         }
 
         // DELETE: api/Categories/5
+        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Category>> DeleteCategory(string id)
         {

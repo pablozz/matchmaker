@@ -90,17 +90,17 @@ namespace Matchmaker.Controllers
 
         [Authorize(Roles = Role.SuperAdmin)]
         [HttpGet]
-        public async Task<IEnumerable<UserProfileDto>> Users()
+        public async Task<List<UserProfileDto>> Users()
         {
-            return from user in await _repo.GetUsers()
-                   select new UserProfileDto
-                   {
-                       Id = user.UserId,
-                       Email = user.Email,
-                       Name = user.Name,
-                       Gender = user.Gender,
-                       Role = user.Role
-                   };
+            var users = await _repo.GetUsers();
+            return users.Select(user => new UserProfileDto
+            {
+                Id = user.UserId,
+                Email = user.Email,
+                Name = user.Name,
+                Gender = user.Gender,
+                Role = user.Role
+            }).ToList();
         }
 
         [AllowAnonymous]

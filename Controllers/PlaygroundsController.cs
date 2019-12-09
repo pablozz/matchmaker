@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Matchmaker.Models;
 using Matchmaker.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace Matchmaker.Controllers
 {
@@ -20,20 +22,22 @@ namespace Matchmaker.Controllers
         }
 
         // GET: api/Playgrounds
+        [AllowAnonymous]
         [HttpGet]
-        public IQueryable<PlaygroundDto> GetPlaygrounds()
+        public async Task<List<PlaygroundDto>> GetPlaygrounds()
         {
-            var playgrounds = from p in _context.Playgrounds
-                              select new PlaygroundDto()
-                              {
-                                  Id = p.PlaygroundId,
-                                  Name = p.NameOfPlace,
-                                  Size = p.Size
-                              };
+            var playgrounds = await _context.Playgrounds.Select(p => new PlaygroundDto()
+            {
+                Id = p.PlaygroundId,
+                Name = p.NameOfPlace,
+                Size = p.Size
+            }).ToListAsync();
+
             return playgrounds;
         }
 
         // GET: api/Playgrounds/5
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<PlaygroundDto>> GetPlayground(string id)
         {
@@ -55,6 +59,7 @@ namespace Matchmaker.Controllers
         // PUT: api/Playgrounds/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
+        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPlayground(string id, Playground playground)
         {
@@ -87,6 +92,7 @@ namespace Matchmaker.Controllers
         // POST: api/Playgrounds
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
+        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
         [HttpPost]
         public async Task<ActionResult<PlaygroundDto>> PostPlayground(Playground playground)
         {
@@ -105,6 +111,7 @@ namespace Matchmaker.Controllers
         }
 
         // DELETE: api/Playgrounds/5
+        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Playground>> DeletePlayground(string id)
         {

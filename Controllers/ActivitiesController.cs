@@ -2,53 +2,59 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Matchmaker.Models;
 using Matchmaker.Dtos;
+using System.Security.Claims;
+using Matchmaker.Data;
 
 namespace Matchmaker.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ActivitiesController : ControllerBase
     {
         private readonly MatchmakerContext _context;
-
-        public ActivitiesController(MatchmakerContext context)
+        private readonly IAuthRepository _repo;
+        public ActivitiesController(MatchmakerContext context, IAuthRepository repo)
         {
             _context = context;
+            _repo = repo;
         }
 
         // GET: api/Activities
+        [AllowAnonymous]
         [HttpGet]
-        public IEnumerable<ActivityDto> GetActivities()
+        public async Task<List<ActivityDto>> GetActivities()
         {
-            var activities = from a in _context.Activities
-                             select new ActivityDto()
-                             {
-                                 Id = a.ActivityId,
-                                 Date = a.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
-                                 Gender = a.Gender,
-                                 Price = a.Price,
-                                 Users = a.UserActivities != null ? a.UserActivities.Count() : 0,
-                                 NumberOfParticipants = a.NumberOfParticipants,
-                                 PlayerLevel = a.PlayerLevel,
-                                 Playground = a.Playground.NameOfPlace,
-                                 SportsCenter = new SportsCenterDto()
-                                 {
-                                     Id = a.Playground.SportsCenter.SportsCenterId,
-                                     Name = a.Playground.SportsCenter.Name,
-                                     Address = a.Playground.SportsCenter.Address
-                                 },
-                                 Category = a.Category.Name
-                             };
-            var orderedActivities = activities.ToList().OrderBy(activity => activity.Date);
+            var activities = await _context.Activities.Select(a => new ActivityDto()
+            {
+                Id = a.ActivityId,
+                Date = a.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
+                Gender = a.Gender,
+                Price = a.Price,
+                Users = a.RegisteredParticipants,
+                NumberOfParticipants = a.NumberOfParticipants,
+                PlayerLevel = a.PlayerLevel,
+                Playground = a.Playground.NameOfPlace,
+                SportsCenter = new SportsCenterDto()
+                {
+                    Id = a.Playground.SportsCenter.SportsCenterId,
+                    Name = a.Playground.SportsCenter.Name,
+                    Address = a.Playground.SportsCenter.Address
+                },
+                Category = a.Category.Name
+            }).ToListAsync();
+            var orderedActivities = activities.OrderBy(activity => activity.Date).ToList();
 
             return orderedActivities;
         }
 
         // GET: api/Activities/5
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<ActivityDto>> GetActivity(string id)
         {
@@ -58,7 +64,7 @@ namespace Matchmaker.Controllers
                 Date = a.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
                 Gender = a.Gender,
                 Price = a.Price,
-                Users = a.UserActivities != null ? a.UserActivities.Count() : 0,
+                Users = a.RegisteredParticipants,
                 NumberOfParticipants = a.NumberOfParticipants,
                 PlayerLevel = a.PlayerLevel,
                 Playground = a.Playground.NameOfPlace,
@@ -76,12 +82,64 @@ namespace Matchmaker.Controllers
                 return NotFound();
             }
 
-            return activity;
+            return Ok(activity);
+        }
+        [Authorize]
+        [HttpGet("user")]
+        public async Task<IEnumerable<ActivityDto>> GetUsersActivitiesAsync()
+        {
+            var email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+
+            var user = await _repo.GetCurrentUser(email);
+
+            var activities = _context.Activities.Where(a => a.UserActivities.Any(u => u.UserId == user.UserId)).Select(a => new ActivityDto()
+            {
+                Id = a.ActivityId,
+                Date = a.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
+                Gender = a.Gender,
+                Price = a.Price,
+                Users = a.RegisteredParticipants,
+                NumberOfParticipants = a.NumberOfParticipants,
+                PlayerLevel = a.PlayerLevel,
+                Playground = a.Playground.NameOfPlace,
+                SportsCenter = new SportsCenterDto()
+                {
+                    Id = a.Playground.SportsCenter.SportsCenterId,
+                    Name = a.Playground.SportsCenter.Name,
+                    Address = a.Playground.SportsCenter.Address
+                },
+                Category = a.Category.Name
+            });
+            var orderedActivities = activities.OrderBy(activity => activity.Date);
+
+            return orderedActivities;
+        }
+
+        [Authorize]
+        [HttpPost("register/{id}")]
+        public async Task<IActionResult> RegisterToActivity(string id)
+        {
+            var email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+
+            var user = await _repo.GetCurrentUser(email);
+
+            var activity = await _context.Activities.FirstOrDefaultAsync(a => a.ActivityId == id);
+
+            if (activity is null)
+            {
+                return BadRequest();
+            }
+
+            activity.UserActivities.Add(new UserActivity { Activity = activity, User = user });
+            activity.RegisteredParticipants++;
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
         // PUT: api/Activities/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
+        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutActivity(string id, Activity activity)
         {
@@ -114,10 +172,28 @@ namespace Matchmaker.Controllers
         // POST: api/Activities
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
+        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
         [HttpPost]
-        public async Task<ActionResult<ActivityDto>> PostActivity(Activity activity)
+        public async Task<ActionResult<ActivityDto>> PostActivity(AddActivityDto addActivityDto)
         {
-            activity.ActivityId = Guid.NewGuid().ToString();
+            var email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+
+            var user = await _repo.GetCurrentUser(email);
+
+            var activity = new Activity()
+            {
+                ActivityId = Guid.NewGuid().ToString(),
+                Date = addActivityDto.Date,
+                Gender = addActivityDto.Gender,
+                Price = addActivityDto.Price,
+                NumberOfParticipants = addActivityDto.NumberOfParticipants,
+                RegisteredParticipants = 0,
+                PlayerLevel = addActivityDto.PlayerLevel,
+                PlaygroundId = addActivityDto.PlaygroundId,
+                CategoryId = addActivityDto.CategoryId,
+                AdminId = user.UserId
+            };
+            
             _context.Activities.Add(activity);
             await _context.SaveChangesAsync();
 
@@ -141,7 +217,7 @@ namespace Matchmaker.Controllers
                 Date = activity.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
                 Gender = activity.Gender,
                 Price = activity.Price,
-                Users = activity.UserActivities != null ? activity.UserActivities.Count() : 0,
+                Users = activity.RegisteredParticipants,
                 NumberOfParticipants = activity.NumberOfParticipants,
                 PlayerLevel = activity.PlayerLevel,
                 Playground = activity.Playground.NameOfPlace,
@@ -152,6 +228,7 @@ namespace Matchmaker.Controllers
         }
 
         // DELETE: api/Activities/5
+        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Activity>> DeleteActivity(string id)
         {
