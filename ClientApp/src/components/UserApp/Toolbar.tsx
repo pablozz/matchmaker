@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
   AppBar,
@@ -6,8 +7,13 @@ import {
   Button,
   Typography
 } from '@material-ui/core';
+import { IUserActivityAction, IActivityAction } from '../../types/activities';
 import { ROUTES } from '../../constants/routes';
 import { useCookies } from 'react-cookie';
+import {
+  setLoadedOrErrorActivities,
+  setUserActivities
+} from '../../actions/activities';
 
 interface IToolbarProps {
   title: string;
@@ -15,6 +21,15 @@ interface IToolbarProps {
 
 export const Toolbar: React.FC<IToolbarProps> = props => {
   const [cookies, setCookies] = useCookies(['loginToken']);
+
+  const userActivityDispatch: Dispatch<IUserActivityAction> = useDispatch();
+  const activityDispatch: Dispatch<IActivityAction> = useDispatch();
+
+  const handleLogOut = async () => {
+    setCookies('loginToken', '', { path: '/' });
+    userActivityDispatch(await setUserActivities(''));
+    activityDispatch(await setLoadedOrErrorActivities());
+  };
 
   return (
     <AppBar color="primary" position="relative">
@@ -26,7 +41,7 @@ export const Toolbar: React.FC<IToolbarProps> = props => {
           <Button
             color="secondary"
             style={{ marginLeft: 'auto' }}
-            onClick={() => setCookies('loginToken', '', { path: '/' })}
+            onClick={() => handleLogOut()}
           >
             Atsijungti
           </Button>

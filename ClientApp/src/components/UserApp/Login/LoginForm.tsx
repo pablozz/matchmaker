@@ -1,8 +1,17 @@
-import React, {useState} from 'react';
-import {Button, Grid, TextField} from '@material-ui/core';
-import {makeStyles} from '@material-ui/core/styles';
-import {LOGIN_URL} from '../../../constants/urls';
-import {useCookies} from 'react-cookie';
+import React, { useState, Fragment, Dispatch } from 'react';
+import { useDispatch } from 'react-redux';
+import { Button, Grid, TextField, Snackbar } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { LOGIN_URL } from '../../../constants/urls';
+import {
+  IUserActivityAction,
+  IActivityAction
+} from '../../../types/activities';
+import { useCookies } from 'react-cookie';
+import {
+  setLoadedOrErrorActivities,
+  setUserActivities
+} from '../../../actions/activities';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -33,12 +42,18 @@ interface ILoginData {
 export const LoginForm: React.FC = () => {
   const classes = useStyles();
 
+  const userActivityDispatch: Dispatch<IUserActivityAction> = useDispatch();
+  const activityDispatch: Dispatch<IActivityAction> = useDispatch();
+
   const [email, setEmail] = useState<ITextField>({ value: '', error: false });
   const [password, setPassword] = useState<ITextField>({
     value: '',
     error: false
   });
   const [, setCookies] = useCookies(['loginToken']);
+  const [unauthorizedSnackbarState, setUnauthorizedSnackbarState] = useState<
+    boolean
+  >(false);
 
   const handleSubmit = async () => {
     if (!email.value) setEmail({ value: email.value, error: true });
@@ -50,67 +65,83 @@ export const LoginForm: React.FC = () => {
     };
 
     if (email.value && password.value) {
-      const response = await getResponse(LOGIN_URL, loginObj);
+      const response = await sendForm(LOGIN_URL, loginObj);
       if (response.statusText === 'OK') {
         const json = await response.json();
         const token = await json.tokenString;
         setCookies('loginToken', token, { path: '/' });
+        userActivityDispatch(await setUserActivities(token));
+        activityDispatch(await setLoadedOrErrorActivities());
       } else if (response.statusText === 'Unauthorized') {
-        alert('Neteisingas el. pašto adresas arba slaptažodis');
+        setUnauthorizedSnackbarState(true);
       }
     }
   };
 
   return (
-    <div className={classes.paper}>
-      <div className={classes.form}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              error={email.error}
-              variant="outlined"
-              fullWidth
-              autoFocus
-              id="email"
-              label="El. paštas"
-              name="email"
-              autoComplete="email"
-              value={email.value}
-              onChange={e => setEmail({ value: e.target.value, error: false })}
-            />
+    <Fragment>
+      <div className={classes.paper}>
+        <div className={classes.form}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                error={email.error}
+                variant="outlined"
+                fullWidth
+                autoFocus
+                id="email"
+                label="El. paštas"
+                name="email"
+                autoComplete="email"
+                value={email.value}
+                onChange={e =>
+                  setEmail({ value: e.target.value, error: false })
+                }
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                error={password.error}
+                variant="outlined"
+                fullWidth
+                name="password"
+                label="Slaptažodis"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={password.value}
+                onChange={e =>
+                  setPassword({ value: e.target.value, error: false })
+                }
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <TextField
-              error={password.error}
-              variant="outlined"
-              fullWidth
-              name="password"
-              label="Slaptažodis"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={password.value}
-              onChange={e =>
-                setPassword({ value: e.target.value, error: false })
-              }
-            />
-          </Grid>
-        </Grid>
-        <Button
-          fullWidth
-          color="secondary"
-          variant="contained"
-          className={classes.submit}
-          onClick={() => handleSubmit()}
-        >
-          Prisijungti
-        </Button>
+          <Button
+            fullWidth
+            color="secondary"
+            variant="contained"
+            className={classes.submit}
+            onClick={() => handleSubmit()}
+          >
+            Prisijungti
+          </Button>
+        </div>
       </div>
-    </div>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center'
+        }}
+        open={unauthorizedSnackbarState}
+        autoHideDuration={6000}
+        onClose={() => setUnauthorizedSnackbarState(false)}
+        message={<span>Neteisingas el. pašto adresas arba slaptažodis</span>}
+      />
+    </Fragment>
   );
 };
 
-const getResponse = async (url: string, obj: ILoginData): Promise<Response> => {
+const sendForm = async (url: string, obj: ILoginData): Promise<Response> => {
   return await fetch(url, {
     method: 'POST',
     headers: {

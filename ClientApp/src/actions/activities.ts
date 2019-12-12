@@ -1,10 +1,15 @@
 import {
   INIT_ACTVIVITIES,
   LOADING_ACTIVITIES,
-  LOADED_ACTIVITIES
+  LOADED_ACTIVITIES,
+  LOAD_USER_ACTIVITIES
 } from '../constants/action-names';
-import { GET_ACTIVITIES_URL } from '../constants/urls';
-import { IActivity, IActivityAction } from '../types/activities';
+import { GET_ACTIVITIES_URL, GET_USER_ACTIVITIES_URL } from '../constants/urls';
+import {
+  IActivity,
+  IActivityAction,
+  IUserActivityAction
+} from '../types/activities';
 
 export const setInitActivities = (): IActivityAction => {
   return {
@@ -40,6 +45,36 @@ export const setLoadedOrErrorActivities = async (): Promise<IActivityAction> => 
       payload: { status: 'error', data: [] }
     };
   }
+};
+
+export const setUserActivities = async (
+  loginToken: string
+): Promise<IUserActivityAction> => {
+  if (loginToken) {
+    const userActivities: IActivity[] = await fetch(GET_USER_ACTIVITIES_URL, {
+      headers: {
+        Authorization: 'Bearer ' + loginToken
+      }
+    })
+      .then(response => response.text())
+      .then(data => {
+        return generateActivities(JSON.parse(data));
+      });
+    if (userActivities) {
+      return {
+        type: LOAD_USER_ACTIVITIES,
+        payload: userActivities
+      };
+    }
+    return {
+      type: LOAD_USER_ACTIVITIES,
+      payload: []
+    };
+  }
+  return {
+    type: LOAD_USER_ACTIVITIES,
+    payload: []
+  };
 };
 
 //not an action

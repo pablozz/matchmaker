@@ -2,7 +2,8 @@ import {
   LOADED_ACTIVITIES,
   LOADING_ACTIVITIES,
   INIT_ACTVIVITIES,
-  ERROR_ACTIVITIES
+  ERROR_ACTIVITIES,
+  LOAD_USER_ACTIVITIES
 } from '../constants/action-names';
 
 export interface IActivity {
@@ -34,4 +35,9 @@ export interface IActivityActionPayload {
 export interface IActivityAction {
   type: ActivityActionTypes;
   payload: IActivityActionPayload;
+}
+
+export interface IUserActivityAction {
+  type: typeof LOAD_USER_ACTIVITIES;
+  payload: IActivity[] | null;
 }

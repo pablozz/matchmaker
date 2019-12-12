@@ -1,9 +1,11 @@
 import React, { Fragment } from 'react';
+import { AppState } from '../../../../reducers';
 import Skeleton from '@material-ui/lab/Skeleton';
 import {
   IActivity,
   IActivityActionPayload
 } from '../../../../types/activities';
+import { useSelector } from 'react-redux';
 import { ActivityCard } from './ActivityCard';
 import { Typography } from '@material-ui/core';
 
@@ -13,6 +15,10 @@ interface ICardsDisplayProps {
 
 export const ActivityCardsDisplay: React.FC<ICardsDisplayProps> = props => {
   const activities: IActivityActionPayload = props.activities;
+
+  const userActivities: IActivity[] = useSelector(
+    (state: AppState) => state.userActivities
+  );
 
   let previousDate: number = 0;
 
@@ -31,6 +37,8 @@ export const ActivityCardsDisplay: React.FC<ICardsDisplayProps> = props => {
         return activity.date;
       });
   }
+
+  const userActivityIds: string[] = userActivities.map(item => item.id);
 
   if (activities.status === 'loading' || activities.status === 'init')
     return (
@@ -55,6 +63,7 @@ export const ActivityCardsDisplay: React.FC<ICardsDisplayProps> = props => {
                   getDay(date) === getDay(activity.date) ? (
                   <ActivityCard
                     key={activity.id}
+                    id={activity.id}
                     date={activity.date}
                     category={activity.category}
                     playground={activity.playground}
@@ -63,6 +72,7 @@ export const ActivityCardsDisplay: React.FC<ICardsDisplayProps> = props => {
                     participantsIn={
                       activity.users + '/' + activity.numberOfParticipants
                     }
+                    userRegistered={userActivityIds.includes(activity.id)}
                   />
                 ) : null;
               })}
