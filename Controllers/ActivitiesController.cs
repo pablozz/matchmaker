@@ -159,15 +159,21 @@ namespace Matchmaker.Controllers
             {
                 return BadRequest();
             }
+
             if (activity.UserActivities is null)
             {
                 activity.UserActivities = new List<UserActivity>();
             }
 
-            activity.UserActivities.Add(new UserActivity { Activity = activity, User = user });
-            activity.RegisteredParticipants++;
-            await _context.SaveChangesAsync();
-            return Ok();
+            bool alreadyRegistered = activity.UserActivities.Any(a => a.UserId == user.UserId && a.ActivityId == id);
+            if (!alreadyRegistered)
+            {
+                activity.UserActivities.Add(new UserActivity { Activity = activity, User = user });
+                activity.RegisteredParticipants++;
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            return StatusCode(403, "User is already registered to this activity");
         }
 
         // PUT: api/Activities/5
