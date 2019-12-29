@@ -165,7 +165,7 @@ namespace Matchmaker.Controllers
                 activity.UserActivities = new List<UserActivity>();
             }
 
-            bool alreadyRegistered = activity.UserActivities.Any(ua => ua.UserId == user.UserId && ua.ActivityId == id);
+            bool alreadyRegistered = activity.UserActivities.Any(a => a.UserId == user.UserId && a.ActivityId == id);
             if (!alreadyRegistered)
             {
                 activity.UserActivities.Add(new UserActivity { Activity = activity, User = user });
@@ -174,30 +174,6 @@ namespace Matchmaker.Controllers
                 return Ok();
             }
             return StatusCode(403, "User is already registered to this activity");
-        }
-
-        [Authorize]
-        [HttpPost("unregister/{id}")]
-        public async Task<IActionResult> UnregisterFromActivity(string id)
-        {
-            var email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
-
-            var user = await _repo.GetCurrentUser(email);
-
-            var activity = await _context.Activities.Include(a => a.UserActivities).SingleAsync(a => a.ActivityId == id);
-            if (activity is null)
-            {
-                return BadRequest("Activity with such an id does not exist.");
-            }
-            bool alreadyRegistered = activity.UserActivities.Any(ua => ua.UserId == user.UserId && ua.ActivityId == id);
-            if (alreadyRegistered)
-            {
-                user.UserActivities.Remove(activity.UserActivities.Single(ua => ua.UserId == user.UserId));
-                activity.RegisteredParticipants--;
-                await _context.SaveChangesAsync();
-                return Ok();
-            }
-            return BadRequest("User is not registered to this activity");
         }
 
         // PUT: api/Activities/5
