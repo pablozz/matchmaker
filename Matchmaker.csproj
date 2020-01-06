@@ -33,11 +33,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\components\UserApp\AddActivity\ActivityForm.js" />
+    <None Remove="ClientApp\src\components\UserApp\AddActivity\AddActivityForm.tsx" />
+    <None Remove="ClientApp\src\components\UserApp\Main\ActivityCardsDisplay\file.js" />
+    <None Remove="ClientApp\src\components\UserApp\Main\ActivityCardsDisplay\file.js.map" />
+    <None Remove="ClientApp\src\components\UserApp\Main\ActivityCardsDisplay\file.tsx" />
     <None Remove="TextFile.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ClientApp\" />
+    <Folder Include="ClientApp\src\components\UserApp\NewFolder\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\components\UserApp\AddActivity\AddActivityForm.tsx" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
@@ -65,5 +74,21 @@
       </ResolvedFileToPublish>
     </ItemGroup>
   </Target>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptTarget>ES2019</TypeScriptTarget>
+    <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
+    <TypeScriptModuleKind>ES6</TypeScriptModuleKind>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>False</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot></TypeScriptSourceRoot>
+  </PropertyGroup>
 
 </Project>
