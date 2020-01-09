@@ -7,6 +7,7 @@ import '../../styles/UserApp/UserApp.scss';
 import { Main } from './Main/Main';
 import { Login } from './Login/Login';
 import { SignUp } from './SignUp/SignUp';
+import { AddActivityForm } from './AddActivity/AddActivityForm';
 import { SuccesfulRedirectFromSignUp } from './SignUp/SuccesfulRedirectFromSignUp';
 import { ROUTES } from '../../constants/routes';
 import { IUserActivityAction } from '../../types/activities';
@@ -33,6 +34,9 @@ export const UserApp: React.FC = () => {
         </Route>
         <Route path={ROUTES.SuccesfulRedirectFromSignUp}>
           <SuccesfulRedirectFromSignUp />
+        </Route>
+        <Route path={ROUTES.AddActivity}>
+          <AddActivityForm />
         </Route>
         <Route path={ROUTES.Main}>
           <Main />

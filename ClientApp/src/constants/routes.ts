@@ -3,5 +3,6 @@ export const ROUTES = {
   Login: '/login',
   SignUp: '/signup',
   SuccesfulRedirectFromSignUp: '/registered',
-  Admin: '/admin'
+  Admin: '/admin',
+  AddActivity: '/activities/add'
 };
