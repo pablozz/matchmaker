@@ -4,7 +4,7 @@ import {
   LOADED_ACTIVITIES,
   LOAD_USER_ACTIVITIES
 } from '../constants/action-names';
-import { GET_ACTIVITIES_URL, GET_USER_ACTIVITIES_URL } from '../constants/urls';
+import { ACTIVITIES_URL, GET_USER_ACTIVITIES_URL } from '../constants/urls';
 import {
   IActivity,
   IActivityAction,
@@ -26,7 +26,7 @@ export const setLoadingActivities = (): IActivityAction => {
 };
 
 export const setLoadedOrErrorActivities = async (): Promise<IActivityAction> => {
-  const fData: IActivity[] | null = await fetch(GET_ACTIVITIES_URL)
+  const fData: IActivity[] | null = await fetch(ACTIVITIES_URL)
     .then(response => response.json())
     .then(data => {
       return generateActivities(data);

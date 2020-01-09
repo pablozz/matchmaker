@@ -18,6 +18,11 @@ import { ICategory } from '../../../types/categories';
 import { IPlayground } from '../../../types/playgrounds';
 import { useCookies } from 'react-cookie';
 import { ROUTES } from '../../../constants/routes';
+import {
+  CATEGORIES_URL,
+  PLAYGROUNDS_URL,
+  ACTIVITIES_URL
+} from '../../../constants/urls';
 import { Redirect } from 'react-router-dom';
 //import { Formik } from "formik";
 //import * as yup from "yup";
@@ -28,7 +33,7 @@ let FormSchema = yup.object().shape({
   date: yup.string().required("Pasirinkite datą."),
 */
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(2),
     display: 'flex',
@@ -56,8 +61,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface IPlayerLevel {
-  value: number | number[],
-  error: string
+  value: number | number[];
+  error: string;
 }
 
 export const AddActivityForm: React.FC = () => {
@@ -94,28 +99,25 @@ export const AddActivityForm: React.FC = () => {
   const adjustSpellingOfPlace = (size: number): string => {
     if (size === 1) {
       return ' vieta';
-    }
-    else if (size > 1 && size < 10) {
+    } else if (size > 1 && size < 10) {
       return ' vietos';
     }
     return ' vietų';
-  }
+  };
 
   async function fetchData() {
     try {
-      const resCategories = await fetch("https://sportmatchmaker.azurewebsites.net/api/categories");
+      const resCategories = await fetch(CATEGORIES_URL);
       const categories = await resCategories.json();
       setCategories(categories);
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error);
     }
     try {
-      const resPlaygrounds = await fetch("https://sportmatchmaker.azurewebsites.net/api/playgrounds");
+      const resPlaygrounds = await fetch(PLAYGROUNDS_URL);
       const playgrounds = await resPlaygrounds.json();
       setPlaygrounds(playgrounds);
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error);
     }
   }
@@ -145,8 +147,15 @@ export const AddActivityForm: React.FC = () => {
       setPlayerLevel({ value: 2, error: 'Pasirinkite žaidėjų lygį' });
       return;
     }
-    if (numberOfParticipants.value === '' || parseInt(numberOfParticipants.value) <= 0 || numberOfParticipants.error !== '') {
-      setNumberOfParticipants({ value: '0', error: 'Įveskite žaidėjų skaičių' });
+    if (
+      numberOfParticipants.value === '' ||
+      parseInt(numberOfParticipants.value) <= 0 ||
+      numberOfParticipants.error !== ''
+    ) {
+      setNumberOfParticipants({
+        value: '0',
+        error: 'Įveskite žaidėjų skaičių'
+      });
       return;
     }
     const activity = {
@@ -158,21 +167,23 @@ export const AddActivityForm: React.FC = () => {
       numberOfParticipants: parseInt(numberOfParticipants.value),
       price: 0
     };
-    console.log("Activity: ", activity);
+    console.log('Activity: ', activity);
     try {
-      const response = await fetch('https://sportmatchmaker.azurewebsites.net/api/activities', {
+      const response = await fetch(ACTIVITIES_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cookies.loginToken },
-        body: JSON.stringify(activity),
-      })
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + cookies.loginToken
+        },
+        body: JSON.stringify(activity)
+      });
       console.log(response);
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error);
     }
   };
 
-  return ( 
+  return (
     <Fragment>
       {cookies.loginToken === '' && <Redirect to={ROUTES.Main} />}
       <Toolbar title="Pridėti naują veiklą" />
@@ -194,11 +205,12 @@ export const AddActivityForm: React.FC = () => {
                   }
                   helperText={category.error}
                 >
-                  {categories.map((category) => (
-                    <MenuItem value={category.id} key={category.id}>{category.name}</MenuItem>
+                  {categories.map(category => (
+                    <MenuItem value={category.id} key={category.id}>
+                      {category.name}
+                    </MenuItem>
                   ))}
                 </TextField>
-
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -214,9 +226,15 @@ export const AddActivityForm: React.FC = () => {
                   }
                   helperText={playground.error}
                 >
-                  {playgrounds && playgrounds.map((playground) => (
-                    <MenuItem value={playground.id} key={playground.id}>{playground.name + ' ' + playground.size + adjustSpellingOfPlace(playground.size)}</MenuItem>
-                  ))}
+                  {playgrounds &&
+                    playgrounds.map(playground => (
+                      <MenuItem value={playground.id} key={playground.id}>
+                        {playground.name +
+                          ' ' +
+                          playground.size +
+                          adjustSpellingOfPlace(playground.size)}
+                      </MenuItem>
+                    ))}
                 </TextField>
               </Grid>
               <Grid item xs={12}>
@@ -229,15 +247,12 @@ export const AddActivityForm: React.FC = () => {
                   name="date"
                   type="datetime-local"
                   InputLabelProps={{
-                    shrink: true,
+                    shrink: true
                   }}
                   value={date.value}
-                  onChange={e =>
-                    setDate({ value: e.target.value, error: '' })
-                  }
+                  onChange={e => setDate({ value: e.target.value, error: '' })}
                   helperText={date.error}
                 />
-
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -246,7 +261,10 @@ export const AddActivityForm: React.FC = () => {
                   fullWidth
                   value={numberOfParticipants.value}
                   onChange={e =>
-                    setNumberOfParticipants({ value: e.target.value, error: '' })
+                    setNumberOfParticipants({
+                      value: e.target.value,
+                      error: ''
+                    })
                   }
                   name="numberOfParticipants"
                   label="Žaidėjų kiekis"
@@ -257,14 +275,28 @@ export const AddActivityForm: React.FC = () => {
               </Grid>
               <Grid item xs={12}>
                 <FormLabel>Žaidėjų lytis</FormLabel>
-                <RadioGroup 
-                  aria-label="Žaidėjų lytis" 
-                  name="gender" 
-                  onChange={e => setGender({ value: e.target.value, error: '' })}
+                <RadioGroup
+                  aria-label="Žaidėjų lytis"
+                  name="gender"
+                  onChange={e =>
+                    setGender({ value: e.target.value, error: '' })
+                  }
                 >
-                  <FormControlLabel value="Moterys" control={<Radio />} label="Moterys" />
-                  <FormControlLabel value="Vyrai" control={<Radio />} label="Vyrai" />
-                  <FormControlLabel value="Mišri grupė" control={<Radio />} label="Mišri grupė" />
+                  <FormControlLabel
+                    value="Moterys"
+                    control={<Radio />}
+                    label="Moterys"
+                  />
+                  <FormControlLabel
+                    value="Vyrai"
+                    control={<Radio />}
+                    label="Vyrai"
+                  />
+                  <FormControlLabel
+                    value="Mišri grupė"
+                    control={<Radio />}
+                    label="Mišri grupė"
+                  />
                 </RadioGroup>
               </Grid>
               <Grid item xs={12}>
