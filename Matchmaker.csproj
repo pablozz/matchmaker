@@ -27,12 +27,22 @@
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="ClientApp\.idea\**" />
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="ClientApp\.idea\**" />
+    <EmbeddedResource Remove="ClientApp\.idea\**" />
     <None Remove="$(SpaRoot)**" />
+    <None Remove="ClientApp\.idea\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\.idea\.gitignore" />
+    <None Remove="ClientApp\.idea\ClientApp.iml" />
+    <None Remove="ClientApp\.idea\inspectionProfiles\Project_Default.xml" />
+    <None Remove="ClientApp\.idea\misc.xml" />
+    <None Remove="ClientApp\.idea\modules.xml" />
+    <None Remove="ClientApp\.idea\vcs.xml" />
     <None Remove="ClientApp\src\components\UserApp\AddActivity\ActivityForm.js" />
     <None Remove="ClientApp\src\components\UserApp\AddActivity\AddActivityForm.tsx" />
     <None Remove="ClientApp\src\components\UserApp\Main\ActivityCardsDisplay\file.js" />
