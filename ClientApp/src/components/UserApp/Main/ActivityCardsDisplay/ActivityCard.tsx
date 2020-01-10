@@ -15,7 +15,10 @@ import {
 } from '@mdi/js';
 import { makeStyles } from '@material-ui/core/styles';
 import { useCookies } from 'react-cookie';
-import { REGISTER_ACTIVITY_URL } from '../../../../constants/urls';
+import { 
+  REGISTER_ACTIVITY_URL,
+  UNREGISTER_ACTIVITY_URL
+} from '../../../../constants/urls';
 import {
   IUserActivityAction,
   IActivityAction
@@ -67,7 +70,19 @@ export const ActivityCard: React.FC<ICardProps> = props => {
   const handleClick = async () => {
     if (cookies.loginToken) {
       if (props.userRegistered) {
-        setSnackbarText('Jūs jau esate užsiregistravęs į šią veiklą ');
+        await fetch(UNREGISTER_ACTIVITY_URL + props.id, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + cookies.loginToken
+          }
+        }).catch(() => {
+          alert('Įvyko klaida');
+        });
+        userActivityDispatch(await setUserActivities(cookies.loginToken));
+        activityDispatch(await setLoadedOrErrorActivities());
+        setSnackbarText('Registracija atšaukta');
+      }
       } else {
         await fetch(REGISTER_ACTIVITY_URL + props.id, {
           method: 'POST',
