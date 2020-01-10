@@ -19,7 +19,7 @@ export const Login: React.FC = () => {
   const [cookies] = useCookies(['loginToken']);
   return (
     <Fragment>
-      {cookies.loginToken !== '' && <Redirect to={ROUTES.Main} />}
+      {cookies.loginToken && <Redirect to={ROUTES.Main} />}
       <Toolbar title="Prisijungimas" />
       <Container maxWidth="xs">
         <LoginForm />

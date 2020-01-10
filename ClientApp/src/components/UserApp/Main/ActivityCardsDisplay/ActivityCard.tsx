@@ -15,7 +15,10 @@ import {
 } from '@mdi/js';
 import { makeStyles } from '@material-ui/core/styles';
 import { useCookies } from 'react-cookie';
-import { REGISTER_ACTIVITY_URL } from '../../../../constants/urls';
+import {
+  REGISTER_ACTIVITY_URL,
+  UNREGISTER_ACTIVITY_URL
+} from '../../../../constants/urls';
 import {
   IUserActivityAction,
   IActivityAction
@@ -66,21 +69,45 @@ export const ActivityCard: React.FC<ICardProps> = props => {
 
   const handleClick = async () => {
     if (cookies.loginToken) {
+      // unregister from activity
       if (props.userRegistered) {
-        setSnackbarText('Jūs jau esate užsiregistravęs į šią veiklą ');
-      } else {
+        await fetch(UNREGISTER_ACTIVITY_URL + props.id, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + cookies.loginToken
+          }
+        })
+          .then(async () => {
+            userActivityDispatch(await setUserActivities(cookies.loginToken));
+            activityDispatch(await setLoadedOrErrorActivities());
+          })
+          .then(() => {
+            setSnackbarText('Registracija atšaukta');
+          })
+          .catch(() => {
+            alert('Įvyko klaida');
+          });
+      }
+      // register to activity
+      else {
         await fetch(REGISTER_ACTIVITY_URL + props.id, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: 'Bearer ' + cookies.loginToken
           }
-        }).catch(() => {
-          alert('Įvyko klaida');
-        });
-        userActivityDispatch(await setUserActivities(cookies.loginToken));
-        activityDispatch(await setLoadedOrErrorActivities());
-        setSnackbarText('Užregistruota');
+        })
+          .then(async () => {
+            userActivityDispatch(await setUserActivities(cookies.loginToken));
+            activityDispatch(await setLoadedOrErrorActivities());
+          })
+          .then(() => {
+            setSnackbarText('Registracija įvyko');
+          })
+          .catch(() => {
+            alert('Įvyko klaida');
+          });
       }
     } else {
       setSnackbarText(

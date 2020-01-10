@@ -17,12 +17,12 @@ export const UserApp: React.FC = () => {
   const [cookies] = useCookies(['loginToken']);
 
   const dispatch: Dispatch<IUserActivityAction> = useDispatch();
-
   useEffect(() => {
     if (cookies.loginToken) {
       (async () => dispatch(await setUserActivities(cookies.loginToken)))();
     }
   }, [cookies.loginToken, dispatch]);
+
   return (
     <CookiesProvider>
       <Switch>

@@ -69,7 +69,7 @@ export const LoginForm: React.FC = () => {
       if (response.statusText === 'OK') {
         const json = await response.json();
         const token = await json.tokenString;
-        setCookies('loginToken', token, { path: '/' });
+        setCookies('loginToken', token, { path: '/', maxAge: 31536000 });
         userActivityDispatch(await setUserActivities(token));
         activityDispatch(await setLoadedOrErrorActivities());
       } else if (response.statusText === 'Unauthorized') {
