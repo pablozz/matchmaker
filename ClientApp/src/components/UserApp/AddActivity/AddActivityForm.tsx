@@ -94,6 +94,7 @@ export const AddActivityForm: React.FC = () => {
     value: '',
     error: ''
   });
+  const [created, setCreated] = useState(false);
   const [cookies] = useCookies(['loginToken']);
 
   const adjustSpellingOfPlace = (size: number): string => {
@@ -159,15 +160,15 @@ export const AddActivityForm: React.FC = () => {
       return;
     }
     const activity = {
-      category: category.value,
+      categoryId: category.value,
       date: date.value,
       gender: gender.value,
-      playground: playground.value,
+      playgroundId: playground.value,
       playerLevel: playerLevel.value,
       numberOfParticipants: parseInt(numberOfParticipants.value),
       price: 0
     };
-    console.log('Activity: ', activity);
+    console.log(activity);
     try {
       const response = await fetch(ACTIVITIES_URL, {
         method: 'POST',
@@ -178,6 +179,7 @@ export const AddActivityForm: React.FC = () => {
         body: JSON.stringify(activity)
       });
       console.log(response);
+      setCreated(true);
     } catch (error) {
       console.error(error);
     }
@@ -185,7 +187,7 @@ export const AddActivityForm: React.FC = () => {
 
   return (
     <Fragment>
-      {cookies.loginToken === '' && <Redirect to={ROUTES.Main} />}
+      {(cookies.loginToken === '' || created) && <Redirect to={ROUTES.Main} />}
       <Toolbar title="Pridėti naują veiklą" />
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
