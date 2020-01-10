@@ -37,7 +37,7 @@ export const Toolbar: React.FC<IToolbarProps> = props => {
         <Typography className="toolbar-title" component="h1" variant="h4">
           {props.title}
         </Typography>
-        {cookies.loginToken !== '' ? (
+        {cookies.loginToken ? (
           <Button
             color="secondary"
             style={{ marginLeft: 'auto' }}

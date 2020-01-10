@@ -10,6 +10,7 @@ import { ActivityCard } from './ActivityCard';
 import { Typography } from '@material-ui/core';
 import { AddActivity } from './AddActivity';
 import { useCookies } from 'react-cookie';
+
 interface ICardsDisplayProps {
   activities: IActivityActionPayload;
 }
@@ -56,7 +57,7 @@ export const ActivityCardsDisplay: React.FC<ICardsDisplayProps> = props => {
   else if (activities.status === 'loaded') {
     return (
       <Fragment>
-        { cookies.loginToken !== '' && <AddActivity />}
+        {cookies.loginToken && <AddActivity />}
         {dates.map((date: number, index: number) => {
           return (
             <Fragment key={index}>
