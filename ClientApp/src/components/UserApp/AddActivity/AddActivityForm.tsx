@@ -187,7 +187,7 @@ export const AddActivityForm: React.FC = () => {
 
   return (
     <Fragment>
-      {(cookies.loginToken === '' || created) && <Redirect to={ROUTES.Main} />}
+      {(!cookies.loginToken || created) && <Redirect to={ROUTES.Main} />}
       <Toolbar title="Pridėti naują veiklą" />
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
