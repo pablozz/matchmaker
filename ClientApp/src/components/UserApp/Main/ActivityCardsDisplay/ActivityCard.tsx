@@ -15,7 +15,7 @@ import {
 } from '@mdi/js';
 import { makeStyles } from '@material-ui/core/styles';
 import { useCookies } from 'react-cookie';
-import { 
+import {
   REGISTER_ACTIVITY_URL,
   UNREGISTER_ACTIVITY_URL
 } from '../../../../constants/urls';
@@ -69,6 +69,7 @@ export const ActivityCard: React.FC<ICardProps> = props => {
 
   const handleClick = async () => {
     if (cookies.loginToken) {
+      // unregister from activity
       if (props.userRegistered) {
         await fetch(UNREGISTER_ACTIVITY_URL + props.id, {
           method: 'POST',
@@ -76,26 +77,37 @@ export const ActivityCard: React.FC<ICardProps> = props => {
             'Content-Type': 'application/json',
             Authorization: 'Bearer ' + cookies.loginToken
           }
-        }).catch(() => {
-          alert('Įvyko klaida');
-        });
-        userActivityDispatch(await setUserActivities(cookies.loginToken));
-        activityDispatch(await setLoadedOrErrorActivities());
-        setSnackbarText('Registracija atšaukta');
+        })
+          .then(async () => {
+            userActivityDispatch(await setUserActivities(cookies.loginToken));
+            activityDispatch(await setLoadedOrErrorActivities());
+          })
+          .then(() => {
+            setSnackbarText('Registracija atšaukta');
+          })
+          .catch(() => {
+            alert('Įvyko klaida');
+          });
       }
-      } else {
+      // register to activity
+      else {
         await fetch(REGISTER_ACTIVITY_URL + props.id, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: 'Bearer ' + cookies.loginToken
           }
-        }).catch(() => {
-          alert('Įvyko klaida');
-        });
-        userActivityDispatch(await setUserActivities(cookies.loginToken));
-        activityDispatch(await setLoadedOrErrorActivities());
-        setSnackbarText('Užregistruota');
+        })
+          .then(async () => {
+            userActivityDispatch(await setUserActivities(cookies.loginToken));
+            activityDispatch(await setLoadedOrErrorActivities());
+          })
+          .then(() => {
+            setSnackbarText('Registracija įvyko');
+          })
+          .catch(() => {
+            alert('Įvyko klaida');
+          });
       }
     } else {
       setSnackbarText(
