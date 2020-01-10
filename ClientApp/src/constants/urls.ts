@@ -1,7 +1,7 @@
 export const BASE_URL = 'https://sportmatchmaker.azurewebsites.net';
 export const ACTIVITIES_URL = BASE_URL + '/api/activities';
-export const CATEGORIES_URL = BASE_URL + './api/categories';
-export const PLAYGROUNDS_URL = BASE_URL + './api/playgrounds';
+export const CATEGORIES_URL = BASE_URL + '/api/categories';
+export const PLAYGROUNDS_URL = BASE_URL + '/api/playgrounds';
 export const REGISTER_URL = BASE_URL + '/api/auth/register';
 export const LOGIN_URL = BASE_URL + '/api/auth/login';
 export const REGISTER_ACTIVITY_URL = BASE_URL + '/api/activities/register/';
