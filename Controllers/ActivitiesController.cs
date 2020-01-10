@@ -244,6 +244,15 @@ namespace Matchmaker.Controllers
 
             var user = await _repo.GetCurrentUser(email);
 
+            if(!_context.Playgrounds.Any(p => p.PlaygroundId == addActivityDto.PlaygroundId))
+            {
+                return BadRequest("Playground with specified ID not found");
+            }
+            if (!_context.Categories.Any(c => c.CategoryId == addActivityDto.CategoryId))
+            {
+                return BadRequest("Category with specified ID not found");
+            }
+
             var activity = new Activity()
             {
                 ActivityId = Guid.NewGuid().ToString(),
