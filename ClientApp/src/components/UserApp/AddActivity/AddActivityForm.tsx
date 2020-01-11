@@ -170,7 +170,6 @@ export const AddActivityForm: React.FC = () => {
       numberOfParticipants: parseInt(numberOfParticipants.value),
       price: 0
     };
-    console.log(activity);
     try {
       const response = await fetch(ACTIVITIES_URL, {
         method: 'POST',
@@ -180,8 +179,9 @@ export const AddActivityForm: React.FC = () => {
         },
         body: JSON.stringify(activity)
       });
-      console.log(response);
-      setCreated(true);
+      if (response.ok) {
+        setCreated(true);
+      }
     } catch (error) {
       console.error(error);
     }
