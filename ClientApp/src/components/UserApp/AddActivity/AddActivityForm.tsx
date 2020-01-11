@@ -24,14 +24,9 @@ import {
   ACTIVITIES_URL
 } from '../../../constants/urls';
 import { Redirect } from 'react-router-dom';
-//import { Formik } from "formik";
-//import * as yup from "yup";
+import { DateTimePicker } from '@material-ui/pickers';
+import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 
-/* unfinished yup validation
-let FormSchema = yup.object().shape({
-  category: yup.string().required("Pasirinkite kategoriją"),
-  date: yup.string().required("Pasirinkite datą."),
-*/
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -65,6 +60,11 @@ interface IPlayerLevel {
   error: string;
 }
 
+interface IDate {
+  value: Date | MaterialUiPickersDate;
+  error: string;
+}
+
 export const AddActivityForm: React.FC = () => {
   const classes = useStyles();
 
@@ -74,8 +74,8 @@ export const AddActivityForm: React.FC = () => {
     value: '',
     error: ''
   });
-  const [date, setDate] = useState({
-    value: '',
+  const [date, setDate] = useState<IDate>({
+    value: new Date(),
     error: ''
   });
   const [gender, setGender] = useState({
@@ -127,13 +127,15 @@ export const AddActivityForm: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     if (category.value === '' || category.error !== '') {
       setCategory({ value: '', error: 'Įveskite kategoriją' });
       return;
     }
-    if (date.value === '' || date.error !== '') {
-      setDate({ value: '', error: 'Pateikite datą' });
+    if (!date.value || date.error !== '') {
+      setDate({ value: new Date(), error: 'Pateikite datą' });
       return;
     }
     if (gender.value === '' || gender.error !== '') {
@@ -191,7 +193,7 @@ export const AddActivityForm: React.FC = () => {
       <Toolbar title="Pridėti naują veiklą" />
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
-          <form className={classes.form} onSubmit={() => handleSubmit()}>
+          <form className={classes.form} onSubmit={handleSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -240,19 +242,16 @@ export const AddActivityForm: React.FC = () => {
                 </TextField>
               </Grid>
               <Grid item xs={12}>
-                <TextField
+                <DateTimePicker
                   error={date.error.length > 0}
                   fullWidth
-                  variant="outlined"
+                  variant="inline"
                   id="date"
                   label="Data"
                   name="date"
-                  type="datetime-local"
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  value={date.value}
-                  onChange={e => setDate({ value: e.target.value, error: '' })}
+                  ampm={false}
+                  value={date.value} 
+                  onChange={(date) => setDate({ value: date, error: ''})}
                   helperText={date.error}
                 />
               </Grid>
@@ -319,14 +318,18 @@ export const AddActivityForm: React.FC = () => {
                 />
               </Grid>
             </Grid>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Sukurti
-            </Button>
+            <Grid item xs={12}>
+              <Button
+                fullWidth
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sukurti
+              </Button>
+            </Grid>
+            
           </form>
         </div>
       </Container>

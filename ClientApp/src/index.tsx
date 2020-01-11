@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import ltLocale from "date-fns/locale/lt";
 import './index.scss';
 import { App } from './components/App';
 import * as serviceWorker from './serviceWorker';
@@ -22,7 +25,9 @@ const theme = createMuiTheme({
 ReactDOM.render(
   <Provider store={store}>
     <MuiThemeProvider theme={theme}>
-      <App />
+      <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ltLocale}>
+        <App />
+      </MuiPickersUtilsProvider>
     </MuiThemeProvider>
   </Provider>,
   document.getElementById('root')
