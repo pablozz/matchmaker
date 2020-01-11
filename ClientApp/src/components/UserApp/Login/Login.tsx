@@ -16,10 +16,10 @@ const useStyles = makeStyles(theme => ({
 
 export const Login: React.FC = () => {
   const classes = useStyles();
-  const [cookies] = useCookies(['loginToken']);
+  const [cookies] = useCookies(['user']);
   return (
     <Fragment>
-      {cookies.loginToken && <Redirect to={ROUTES.Main} />}
+      {cookies.user.token && <Redirect to={ROUTES.Main} />}
       <Toolbar title="Prisijungimas" />
       <Container maxWidth="xs">
         <LoginForm />

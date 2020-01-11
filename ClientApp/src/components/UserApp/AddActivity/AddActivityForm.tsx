@@ -143,7 +143,10 @@ export const AddActivityForm: React.FC = () => {
       return;
     }
     if (playground.value === '' || playground.error !== '') {
-      setPlayground({ value: '', error: 'Pasirinkite aikštelę' });
+      setPlayground({
+        value: '',
+        error: 'Pasirinkite aikštelę'
+      });
       return;
     }
     if (!playerLevel.value || playerLevel.error !== '') {
@@ -189,7 +192,7 @@ export const AddActivityForm: React.FC = () => {
 
   return (
     <Fragment>
-      {(!cookies.loginToken || created) && <Redirect to={ROUTES.Main} />}
+      {(!cookies.user.token || created) && <Redirect to={ROUTES.Main} />}
       <Toolbar title="Pridėti naują veiklą" />
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>

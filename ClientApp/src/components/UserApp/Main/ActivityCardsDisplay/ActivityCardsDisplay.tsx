@@ -22,7 +22,7 @@ export const ActivityCardsDisplay: React.FC<ICardsDisplayProps> = props => {
     (state: AppState) => state.userActivities
   );
 
-  const [cookies] = useCookies(['loginToken']);
+  const [cookies] = useCookies(['user']);
 
   let previousDate: number = 0;
 
@@ -57,7 +57,7 @@ export const ActivityCardsDisplay: React.FC<ICardsDisplayProps> = props => {
   else if (activities.status === 'loaded') {
     return (
       <Fragment>
-        {cookies.loginToken && <AddActivity />}
+        {cookies.user.token && <AddActivity />}
         {dates.map((date: number, index: number) => {
           return (
             <Fragment key={index}>
