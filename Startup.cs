@@ -22,21 +22,12 @@ namespace Matchmaker
             Configuration = configuration;
         }
 
-        //readonly string MyAllowAllOrigins = "_myAllowAllOrigins";
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(/*options =>
-            {
-                options.AddPolicy(MyAllowAllOrigins,
-                builder =>
-                {
-                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-                });
-            }*/);
+            services.AddCors();
 
             services.AddControllersWithViews();
             // In production, the React files will be served from this directory
@@ -81,6 +72,10 @@ namespace Matchmaker
                 app.UseHsts();
             }
 
+            app.UseCors(
+                options => options.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader()
+            );
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
@@ -91,10 +86,7 @@ namespace Matchmaker
 
             app.UseAuthorization();
 
-            app.UseCors(
-                /*MyAllowAllOrigins*/
-                options => options.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader()
-            );
+            
 
             app.UseEndpoints(endpoints =>
             {
