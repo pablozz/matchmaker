@@ -28,7 +28,7 @@ export const Toolbar: React.FC<IToolbarProps> = props => {
           >
             <Icon title="Menu" color="white" size={1.5} path={mdiMenu} />
           </IconButton>
-          <Typography component="h1" variant="h4">
+          <Typography component="h1" variant="h5">
             {props.title}
           </Typography>
         </MaterialToolbar>

@@ -35,9 +35,13 @@ interface IDrawerMenuProps {
 }
 
 export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
-  const [cookie,, removeCookie] = useCookies(['user']);
+  const [cookie, , removeCookie] = useCookies(['user']);
+
   const [redirectToMain, setRedirectToMain] = useState<boolean>(false);
   const [redirectToLogin, setRedirectToLogin] = useState<boolean>(false);
+  const [redirectToUserActivities, setRedirectToUserActivities] = useState<
+    boolean
+  >(false);
 
   const userActivityDispatch: Dispatch<IUserActivityAction> = useDispatch();
   const activityDispatch: Dispatch<IActivityAction> = useDispatch();
@@ -54,6 +58,8 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
     <Fragment>
       {redirectToMain && <Redirect to="/" />}
       {redirectToLogin && <Redirect to="/login" />}
+      {redirectToUserActivities && <Redirect to="/my-activities" />}
+
       <Drawer open={props.isOpen} onClose={props.onClose}>
         {cookie.user && (
           <div className={classes.userData}>
@@ -71,14 +77,13 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
               <ListItemText primary="Pagrindinis" />
             </ListItem>
             {cookie.user && (
-              <ListItem button>
+              <ListItem button onClick={() => setRedirectToUserActivities(true)}>
                 <ListItemIcon>
                   <Icon title="Activities" size={1} path={mdiBasketball} />
                 </ListItemIcon>
                 <ListItemText primary="Mano veiklos" />
               </ListItem>
             )}
-            <Divider />
             {cookie.user ? (
               <ListItem button onClick={() => handleLogOut()}>
                 <ListItemIcon>
