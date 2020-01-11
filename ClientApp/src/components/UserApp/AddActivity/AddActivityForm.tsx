@@ -95,7 +95,7 @@ export const AddActivityForm: React.FC = () => {
     error: ''
   });
   const [created, setCreated] = useState(false);
-  const [cookies] = useCookies(['loginToken']);
+  const [cookies] = useCookies(['user']);
 
   const adjustSpellingOfPlace = (size: number): string => {
     if (size === 1) {
@@ -178,7 +178,7 @@ export const AddActivityForm: React.FC = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + cookies.loginToken
+          Authorization: 'Bearer ' + cookies.user.token
         },
         body: JSON.stringify(activity)
       });
