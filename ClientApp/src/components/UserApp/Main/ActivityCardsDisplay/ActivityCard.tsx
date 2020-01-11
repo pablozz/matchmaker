@@ -64,22 +64,22 @@ export const ActivityCard: React.FC<ICardProps> = props => {
 
   const [brightness, changeBrightness] = useState<string>('brightness(100%)');
   const [elevation, changeElevation] = useState<number>(1);
-  const [cookies] = useCookies(['user']);
+  const [cookie] = useCookies(['user']);
   const [snackbarText, setSnackbarText] = useState<string>('');
 
   const handleClick = async () => {
-    if (cookies.user.token) {
+    if (cookie.user) {
       // unregister from activity
       if (props.userRegistered) {
         await fetch(UNREGISTER_ACTIVITY_URL + props.id, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + cookies.user.token
+            Authorization: 'Bearer ' + cookie.user.token
           }
         })
           .then(async () => {
-            userActivityDispatch(await setUserActivities(cookies.user.token));
+            userActivityDispatch(await setUserActivities(cookie.user.token));
             activityDispatch(await setLoadedOrErrorActivities());
           })
           .then(() => {
@@ -95,11 +95,11 @@ export const ActivityCard: React.FC<ICardProps> = props => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + cookies.user.token
+            Authorization: 'Bearer ' + cookie.user.token
           }
         })
           .then(async () => {
-            userActivityDispatch(await setUserActivities(cookies.user.token));
+            userActivityDispatch(await setUserActivities(cookie.user.token));
             activityDispatch(await setLoadedOrErrorActivities());
           })
           .then(() => {

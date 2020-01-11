@@ -35,7 +35,7 @@ interface IDrawerMenuProps {
 }
 
 export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
-  const [cookies, setCookies] = useCookies(['user']);
+  const [cookie,, removeCookie] = useCookies(['user']);
   const [redirectToMain, setRedirectToMain] = useState<boolean>(false);
   const [redirectToLogin, setRedirectToLogin] = useState<boolean>(false);
 
@@ -45,7 +45,7 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
   const classes = useStyles();
 
   const handleLogOut = async () => {
-    setCookies('user', {}, { path: '/' });
+    removeCookie('user');
     userActivityDispatch(await setUserActivities(''));
     activityDispatch(await setLoadedOrErrorActivities());
   };
@@ -55,10 +55,10 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
       {redirectToMain && <Redirect to="/" />}
       {redirectToLogin && <Redirect to="/login" />}
       <Drawer open={props.isOpen} onClose={props.onClose}>
-        {cookies.user.token && (
+        {cookie.user && (
           <div className={classes.userData}>
-            <Typography variant="h5">{cookies.user.name}</Typography>
-            <Typography variant="subtitle2">{cookies.user.email}</Typography>
+            <Typography variant="h5">{cookie.user.name}</Typography>
+            <Typography variant="subtitle2">{cookie.user.email}</Typography>
           </div>
         )}
         <Divider />
@@ -70,7 +70,7 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
               </ListItemIcon>
               <ListItemText primary="Pagrindinis" />
             </ListItem>
-            {cookies.user.token && (
+            {cookie.user && (
               <ListItem button>
                 <ListItemIcon>
                   <Icon title="Activities" size={1} path={mdiBasketball} />
@@ -79,7 +79,7 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
               </ListItem>
             )}
             <Divider />
-            {cookies.user.token ? (
+            {cookie.user ? (
               <ListItem button onClick={() => handleLogOut()}>
                 <ListItemIcon>
                   <Icon title="Logout" size={1} path={mdiLogout} />

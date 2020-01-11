@@ -14,14 +14,14 @@ import { IUserActivityAction } from '../../types/activities';
 import { setUserActivities } from '../../actions/activities';
 
 export const UserApp: React.FC = () => {
-  const [cookies] = useCookies(['user']);
+  const [cookie] = useCookies(['user']);
 
   const dispatch: Dispatch<IUserActivityAction> = useDispatch();
   useEffect(() => {
-    if (cookies.user.token) {
-      (async () => dispatch(await setUserActivities(cookies.user.token)))();
+    if (cookie.user) {
+      (async () => dispatch(await setUserActivities(cookie.user.token)))();
     }
-  }, [cookies.user.token, dispatch]);
+  }, [cookie.user, dispatch]);
 
   return (
     <CookiesProvider>

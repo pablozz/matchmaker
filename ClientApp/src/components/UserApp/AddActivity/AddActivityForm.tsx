@@ -95,7 +95,7 @@ export const AddActivityForm: React.FC = () => {
     error: ''
   });
   const [created, setCreated] = useState(false);
-  const [cookies] = useCookies(['user']);
+  const [cookie] = useCookies(['user']);
 
   const adjustSpellingOfPlace = (size: number): string => {
     if (size === 1) {
@@ -178,7 +178,7 @@ export const AddActivityForm: React.FC = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + cookies.user.token
+          Authorization: 'Bearer ' + cookie.user.token
         },
         body: JSON.stringify(activity)
       });
@@ -192,7 +192,7 @@ export const AddActivityForm: React.FC = () => {
 
   return (
     <Fragment>
-      {(!cookies.user.token || created) && <Redirect to={ROUTES.Main} />}
+      {(!cookie.user || created) && <Redirect to={ROUTES.Main} />}
       <Toolbar title="Pridėti naują veiklą" />
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
