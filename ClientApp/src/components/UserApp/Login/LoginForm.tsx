@@ -2,10 +2,7 @@ import React, { useState, Fragment, Dispatch } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button, Grid, TextField, Snackbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  LOGIN_URL,
-  GET_CURRENT_USER
-} from '../../../constants/urls';
+import { LOGIN_URL, GET_CURRENT_USER } from '../../../constants/urls';
 import {
   IUserActivityAction,
   IActivityAction
@@ -24,8 +21,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center'
   },
   form: {
-    width: '100%',
-    marginTop: theme.spacing(3)
+    width: '100%'
   },
   submit: {
     margin: theme.spacing(3, 0, 2)

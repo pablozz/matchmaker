@@ -11,7 +11,8 @@ import {
   FormLabel,
   RadioGroup,
   FormControlLabel,
-  Radio
+  Radio,
+  Paper
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ROUTES } from '../../../constants/routes';
@@ -19,14 +20,8 @@ import { REGISTER_URL } from '../../../constants/urls';
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    marginTop: theme.spacing(2),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  form: {
-    width: '100%',
-    marginTop: theme.spacing(3)
+    padding: theme.spacing(2),
+    margin: theme.spacing(3)
   },
   formControl: {
     margin: theme.spacing(2, 2, 1, 2),
@@ -91,7 +86,7 @@ export const SignUp = () => {
         error: true,
         helperText: 'Slaptažodį privalo sudaryti ne mažiau nei 8 simboliai'
       });
-      
+
     const registerObj: IRegisterData = {
       Name: fname.value + ' ' + lname.value,
       Email: email.value,
@@ -127,8 +122,7 @@ export const SignUp = () => {
       {redirect && <Redirect to={ROUTES.SuccesfulRedirectFromSignUp} />}
       <Toolbar title="Registracija" />
       <Container maxWidth="xs">
-        <div className={classes.paper}>
-          <div className={classes.form}>
+        <Paper className={classes.paper}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -243,8 +237,7 @@ export const SignUp = () => {
                 </Link>
               </Grid>
             </Grid>
-          </div>
-        </div>
+        </Paper>
       </Container>
     </Fragment>
   );

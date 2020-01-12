@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { Grid, Typography, Container } from '@material-ui/core';
+import { Grid, Typography, Container, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Toolbar } from '../Toolbar';
 import { LoginForm } from './LoginForm';
@@ -11,6 +11,10 @@ const useStyles = makeStyles(theme => ({
   linkToRegister: {
     color: theme.palette.secondary.main,
     textDecorationColor: theme.palette.secondary.main
+  },
+  paper: {
+    padding: theme.spacing(2),
+    margin: theme.spacing(3)
   }
 }));
 
@@ -22,16 +26,18 @@ export const Login: React.FC = () => {
       {cookie.user && <Redirect to={ROUTES.Main} />}
       <Toolbar title="Prisijungimas" />
       <Container maxWidth="xs">
-        <LoginForm />
-        <Grid container justify="flex-end">
-          <Grid item>
-            <Link className={classes.linkToRegister} to={ROUTES.SignUp}>
-              <Typography variant="body2">
-                Neturi paskyros? Registruokis
-              </Typography>
-            </Link>
+        <Paper className={classes.paper}>
+          <LoginForm />
+          <Grid container justify="flex-end">
+            <Grid item>
+              <Link className={classes.linkToRegister} to={ROUTES.SignUp}>
+                <Typography variant="body2">
+                  Neturi paskyros? Registruokis
+                </Typography>
+              </Link>
+            </Grid>
           </Grid>
-        </Grid>
+        </Paper>
       </Container>
     </Fragment>
   );
