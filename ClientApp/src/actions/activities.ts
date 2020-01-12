@@ -25,7 +25,9 @@ export const setLoadingActivities = (): IActivityAction => {
   };
 };
 
-export const setLoadedOrErrorActivities = async (): Promise<IActivityAction> => {
+export const setLoadedOrErrorActivities = async (): Promise<
+  IActivityAction
+> => {
   const fData: IActivity[] | null = await fetch(ACTIVITIES_URL)
     .then(response => response.json())
     .then(data => {

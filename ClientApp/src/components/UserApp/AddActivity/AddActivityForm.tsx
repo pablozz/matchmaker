@@ -28,11 +28,10 @@ import { Redirect } from 'react-router-dom';
 import { DateTimePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 
-
 const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2),
-    margin: theme.spacing(3)
+    margin: theme.spacing(3, 0, 0, 0)
   },
   radioGroup: {
     margin: theme.spacing(1)
@@ -245,8 +244,8 @@ export const AddActivityForm: React.FC = () => {
                   label="Data"
                   name="date"
                   ampm={false}
-                  value={date.value} 
-                  onChange={(date) => setDate({ value: date, error: ''})}
+                  value={date.value}
+                  onChange={date => setDate({ value: date, error: '' })}
                   helperText={date.error}
                 />
               </Grid>
@@ -324,7 +323,6 @@ export const AddActivityForm: React.FC = () => {
                 Sukurti
               </Button>
             </Grid>
-            
           </form>
         </Paper>
       </Container>

@@ -10,6 +10,12 @@ import { ActivityCard } from './ActivityCard';
 import { Typography } from '@material-ui/core';
 import { AddActivity } from './AddActivity';
 import { useCookies } from 'react-cookie';
+import {
+  getYear,
+  getMonth,
+  getDay,
+  getMonthDayString
+} from '../../../../scripts/datetime-formats';
 
 interface ICardsDisplayProps {
   activities: IActivityActionPayload;
@@ -61,7 +67,7 @@ export const ActivityCardsDisplay: React.FC<ICardsDisplayProps> = props => {
         {dates.map((date: number, index: number) => {
           return (
             <Fragment key={index}>
-              <Typography variant="h5">{getDateString(date)}</Typography>
+              <Typography variant="h5">{getMonthDayString(date)}</Typography>
               {activities.data.map((activity: IActivity) => {
                 return getYear(date) === getYear(activity.date) &&
                   getMonth(date) === getMonth(activity.date) &&
@@ -92,67 +98,4 @@ export const ActivityCardsDisplay: React.FC<ICardsDisplayProps> = props => {
       Įvyko klaida :(
     </Typography>
   );
-};
-
-const getYear = (secs: number) => {
-  const date = new Date();
-  date.setTime(secs * 1000);
-  return date.getFullYear();
-};
-
-const getMonth = (secs: number) => {
-  const date = new Date();
-  date.setTime(secs * 1000);
-  return date.getMonth() + 1;
-};
-
-const getDay = (secs: number) => {
-  const date = new Date();
-  date.setTime(secs * 1000);
-  return date.getDate();
-};
-
-const getWeekday = (secs: number) => {
-  const date = new Date();
-  date.setTime(secs * 1000);
-  const weekday = date.getDay();
-  switch (weekday) {
-    case 0:
-      return 'pirmadienis';
-    case 1:
-      return 'antradienis';
-    case 2:
-      return 'trečiadienis';
-    case 3:
-      return 'ketvirtadienis';
-    case 4:
-      return 'penktadienis';
-    case 5:
-      return 'šeštadienis';
-    case 6:
-      return 'sekmadienis';
-    default:
-      return '';
-  }
-};
-
-const getDateString = (date: number) => {
-  let m: string;
-  let d: string;
-
-  const today = new Date();
-
-  if (
-    today.getFullYear() === getYear(date) &&
-    today.getMonth() + 1 === getMonth(date)
-  ) {
-    if (today.getDate() === getDay(date)) return 'Šiandien';
-    if (today.getDate() + 1 === getDay(date)) return 'Rytoj';
-  }
-
-  getMonth(date) >= 10
-    ? (m = getMonth(date).toString())
-    : (m = '0' + getMonth(date));
-  getDay(date) >= 10 ? (d = getDay(date).toString()) : (d = '0' + getDay(date));
-  return m + '-' + d + ', ' + getWeekday(date);
 };
