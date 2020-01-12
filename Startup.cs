@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Matchmaker.Data;
 using Matchmaker.Helpers;
 using Matchmaker.Models;
+using Matchmaker.Services;
 
 namespace Matchmaker
 {
@@ -40,6 +41,8 @@ namespace Matchmaker
                 options.UseNpgsql(Configuration.GetConnectionString("MatchmakerContext"), o => o.SetPostgresVersion(new Version(9, 6))));
 
             services.AddScoped<IAuthRepository, AuthRepository>();
+
+            services.AddTransient<IEmailSender, EmailSender>();
 
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);

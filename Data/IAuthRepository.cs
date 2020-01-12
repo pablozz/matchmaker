@@ -8,6 +8,8 @@ namespace Matchmaker.Data
     public interface IAuthRepository
     {
         Task<User> Register(User user, string password);
+        Task<ActivationToken> GenerateActivationToken(string UserId);
+        Task<User> ActivateUser(string tokenId);
         Task<User> Login(string email, string password);
         Task<List<User>> GetUsers();
         Task<User> GetCurrentUser(string email);

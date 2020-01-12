@@ -44,6 +44,28 @@ namespace Matchmaker.Data
             return user;
         }
 
+        public async Task<ActivationToken> GenerateActivationToken(string UserId)
+        {
+            var token = new ActivationToken()
+            {   
+                Id = Guid.NewGuid().ToString(),
+                UserId = UserId,
+            };
+
+            await _context.ActivationTokens.AddAsync(token);
+            await _context.SaveChangesAsync();
+            return token;
+        }
+
+        public async Task<User> ActivateUser(string tokenId)
+        {
+            var token = await _context.ActivationTokens.SingleAsync(a => a.Id == tokenId);
+            var user = await _context.Users.FindAsync(token.UserId);
+            user.Activated = true;
+            await _context.SaveChangesAsync();
+            return user;
+        }
+
         public async Task<List<User>> GetUsers()
         {
             return await _context.Users.ToListAsync();

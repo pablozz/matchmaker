@@ -13,6 +13,7 @@ using Matchmaker.Dtos;
 using Matchmaker.Helpers;
 using Matchmaker.Models;
 using Microsoft.AspNetCore.Authorization;
+using Matchmaker.Services;
 
 namespace Matchmaker.Controllers
 {
@@ -23,11 +24,13 @@ namespace Matchmaker.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly AppSettings _appSettings;
+        private readonly IEmailSender _sender;
 
-        public AuthController(IAuthRepository repo, IOptions<AppSettings> appSettings)
+        public AuthController(IAuthRepository repo, IOptions<AppSettings> appSettings, IEmailSender sender)
         {
             _repo = repo;
             _appSettings = appSettings.Value;
+            _sender = sender;
         }
 
         [AllowAnonymous]
@@ -50,10 +53,15 @@ namespace Matchmaker.Controllers
                 Email = registerUserDto.Email,
                 Name = registerUserDto.Name,
                 Gender = registerUserDto.Gender,
-                Role = Role.User
+                Role = Role.User,
+                Activated = false
             };
 
-            await _repo.Register(user, registerUserDto.Password);
+            var createdUser = await _repo.Register(user, registerUserDto.Password);
+
+            var token = await _repo.GenerateActivationToken(user.UserId);
+
+            await _sender.SendEmail(createdUser, token);
 
             return StatusCode(201);
         }
@@ -68,7 +76,12 @@ namespace Matchmaker.Controllers
                 return Unauthorized();
             }
 
-            //generate JWT
+            if (!user.Activated)
+            {
+                return BadRequest("User's account is not activated");
+            }
+
+            // generate JWT
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -86,6 +99,17 @@ namespace Matchmaker.Controllers
             var tokenString = tokenHandler.WriteToken(token);
 
             return Ok(new { tokenString });
+        }
+
+        [HttpGet("{tokenId}")]
+        public async Task<IActionResult> Activate(string tokenId)
+        {
+            var user = await _repo.ActivateUser(tokenId);
+            if (user.Activated)
+            {
+                return Redirect("https://sportmatchmaker.azurewebsites.net/login");
+            }
+            return BadRequest("Wrong activation token");
         }
 
         [Authorize(Roles = Role.SuperAdmin)]

@@ -14,6 +14,7 @@ namespace Matchmaker.Models
         public DbSet<Playground> Playgrounds { get; set; }
         public DbSet<SportsCenter> SportsCenters { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<ActivationToken> ActivationTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

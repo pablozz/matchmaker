@@ -91,7 +91,7 @@ export const SignUp = () => {
         error: true,
         helperText: 'Slaptažodį privalo sudaryti ne mažiau nei 8 simboliai'
       });
-
+      
     const registerObj: IRegisterData = {
       Name: fname.value + ' ' + lname.value,
       Email: email.value,

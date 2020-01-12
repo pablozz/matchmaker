@@ -11,6 +11,7 @@ namespace Matchmaker.Models
         public string Name { get; set; }
         public string Gender { get; set; }
         public string Role { get; set; }
+        public bool Activated { get; set; }
 
         public List<UserActivity> UserActivities { get; set; }
     }
