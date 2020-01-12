@@ -79,7 +79,10 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
               <ListItemText primary="Pagrindinis" />
             </ListItem>
             {cookie.user && (
-              <ListItem button onClick={() => setRedirectToUserActivities(true)}>
+              <ListItem
+                button
+                onClick={() => setRedirectToUserActivities(true)}
+              >
                 <ListItemIcon>
                   <Icon title="Activities" size={1} path={mdiBasketball} />
                 </ListItemIcon>

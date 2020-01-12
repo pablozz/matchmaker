@@ -9,7 +9,7 @@ import { Login } from './Login/Login';
 import { SignUp } from './SignUp/SignUp';
 import { AddActivityForm } from './AddActivity/AddActivityForm';
 import { SuccesfulRedirectFromSignUp } from './SignUp/SuccesfulRedirectFromSignUp';
-import { MyActivities } from './User/MyActivities';
+import { MyActivities } from './User/MyActivities/MyActivities';
 import { MyAccount } from './User/MyAccount/MyAccount';
 import { ROUTES } from '../../constants/routes';
 import { IUserActivityAction } from '../../types/activities';
