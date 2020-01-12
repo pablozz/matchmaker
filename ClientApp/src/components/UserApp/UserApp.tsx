@@ -9,19 +9,20 @@ import { Login } from './Login/Login';
 import { SignUp } from './SignUp/SignUp';
 import { AddActivityForm } from './AddActivity/AddActivityForm';
 import { SuccesfulRedirectFromSignUp } from './SignUp/SuccesfulRedirectFromSignUp';
+import { MyActivities } from './User/MyActivities';
 import { ROUTES } from '../../constants/routes';
 import { IUserActivityAction } from '../../types/activities';
 import { setUserActivities } from '../../actions/activities';
 
 export const UserApp: React.FC = () => {
-  const [cookies] = useCookies(['loginToken']);
+  const [cookie] = useCookies(['user']);
 
   const dispatch: Dispatch<IUserActivityAction> = useDispatch();
   useEffect(() => {
-    if (cookies.loginToken) {
-      (async () => dispatch(await setUserActivities(cookies.loginToken)))();
+    if (cookie.user) {
+      (async () => dispatch(await setUserActivities(cookie.user.token)))();
     }
-  }, [cookies.loginToken, dispatch]);
+  }, [cookie.user, dispatch]);
 
   return (
     <CookiesProvider>
@@ -37,6 +38,9 @@ export const UserApp: React.FC = () => {
         </Route>
         <Route path={ROUTES.AddActivity}>
           <AddActivityForm />
+        </Route>
+        <Route path={ROUTES.MyActivities}>
+          <MyActivities />
         </Route>
         <Route path={ROUTES.Main}>
           <Main />

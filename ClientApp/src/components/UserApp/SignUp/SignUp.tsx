@@ -105,7 +105,7 @@ export const SignUp = () => {
       isEmail(email.value) &&
       password.value.length >= 8
     ) {
-      const response: Response = await register(REGISTER_URL, registerObj);
+      const response: Response = await sendForm(REGISTER_URL, registerObj);
       const text = await response.text();
 
       if (response.statusText === 'Created') setRedirect(true);
@@ -250,7 +250,7 @@ export const SignUp = () => {
   );
 };
 
-const register = async (url: string, obj: IRegisterData): Promise<Response> => {
+const sendForm = async (url: string, obj: IRegisterData): Promise<Response> => {
   const response: Response = await fetch(url, {
     method: 'POST',
     headers: {

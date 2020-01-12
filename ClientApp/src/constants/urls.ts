@@ -4,6 +4,7 @@ export const CATEGORIES_URL = BASE_URL + '/api/categories';
 export const PLAYGROUNDS_URL = BASE_URL + '/api/playgrounds';
 export const REGISTER_URL = BASE_URL + '/api/auth/register';
 export const LOGIN_URL = BASE_URL + '/api/auth/login';
+export const GET_CURRENT_USER = BASE_URL + '/api/auth/currentuser';
 export const REGISTER_ACTIVITY_URL = BASE_URL + '/api/activities/register/';
 export const UNREGISTER_ACTIVITY_URL = BASE_URL + '/api/activities/unregister/';
 export const GET_USER_ACTIVITIES_URL = BASE_URL + '/api/activities/user';

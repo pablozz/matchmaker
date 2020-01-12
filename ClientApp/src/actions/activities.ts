@@ -79,7 +79,7 @@ export const setUserActivities = async (
 
 //not an action
 const generateActivities = (data: IActivity[]) => {
-  const generatedActivities: IActivity[] = data.map((item: IActivity) => {
+  return data.map((item: IActivity) => {
     return {
       id: item.id,
       date: item.date,
@@ -93,5 +93,4 @@ const generateActivities = (data: IActivity[]) => {
       users: item.users
     };
   });
-  return generatedActivities;
 };

@@ -2,7 +2,10 @@ import React, { useState, Fragment, Dispatch } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button, Grid, TextField, Snackbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { LOGIN_URL } from '../../../constants/urls';
+import {
+  LOGIN_URL,
+  GET_CURRENT_USER
+} from '../../../constants/urls';
 import {
   IUserActivityAction,
   IActivityAction
@@ -50,7 +53,7 @@ export const LoginForm: React.FC = () => {
     value: '',
     error: false
   });
-  const [, setCookies] = useCookies(['loginToken']);
+  const [, setCookies] = useCookies(['user']);
   const [unauthorizedSnackbarState, setUnauthorizedSnackbarState] = useState<
     boolean
   >(false);
@@ -69,9 +72,28 @@ export const LoginForm: React.FC = () => {
       if (response.statusText === 'OK') {
         const json = await response.json();
         const token = await json.tokenString;
-        setCookies('loginToken', token, { path: '/', maxAge: 31536000 });
-        userActivityDispatch(await setUserActivities(token));
-        activityDispatch(await setLoadedOrErrorActivities());
+        await fetch(GET_CURRENT_USER, {
+          headers: {
+            Authorization: 'Bearer ' + token
+          }
+        })
+          .then(response => response.json())
+          .then(async user => {
+            setCookies(
+              'user',
+              {
+                token: token,
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                gender: user.gender,
+                role: user.role
+              },
+              { path: '/', maxAge: 31536000 }
+            );
+            userActivityDispatch(await setUserActivities(token));
+            activityDispatch(await setLoadedOrErrorActivities());
+          });
       } else if (response.statusText === 'Unauthorized') {
         setUnauthorizedSnackbarState(true);
       }

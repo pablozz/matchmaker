@@ -95,7 +95,7 @@ export const AddActivityForm: React.FC = () => {
     error: ''
   });
   const [created, setCreated] = useState(false);
-  const [cookies] = useCookies(['loginToken']);
+  const [cookie] = useCookies(['user']);
 
   const adjustSpellingOfPlace = (size: number): string => {
     if (size === 1) {
@@ -143,7 +143,10 @@ export const AddActivityForm: React.FC = () => {
       return;
     }
     if (playground.value === '' || playground.error !== '') {
-      setPlayground({ value: '', error: 'Pasirinkite aikštelę' });
+      setPlayground({
+        value: '',
+        error: 'Pasirinkite aikštelę'
+      });
       return;
     }
     if (!playerLevel.value || playerLevel.error !== '') {
@@ -175,7 +178,7 @@ export const AddActivityForm: React.FC = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + cookies.loginToken
+          Authorization: 'Bearer ' + cookie.user.token
         },
         body: JSON.stringify(activity)
       });
@@ -189,7 +192,7 @@ export const AddActivityForm: React.FC = () => {
 
   return (
     <Fragment>
-      {(!cookies.loginToken || created) && <Redirect to={ROUTES.Main} />}
+      {(!cookie.user || created) && <Redirect to={ROUTES.Main} />}
       <Toolbar title="Pridėti naują veiklą" />
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>

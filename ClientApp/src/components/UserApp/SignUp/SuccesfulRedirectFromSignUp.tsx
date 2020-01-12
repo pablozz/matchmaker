@@ -16,10 +16,10 @@ const useStyles = makeStyles(theme => ({
 
 export const SuccesfulRedirectFromSignUp: React.FC = () => {
   const classes = useStyles();
-  const [cookies] = useCookies(['loginToken']);
+  const [cookie] = useCookies(['user']);
   return (
     <Fragment>
-      {cookies.loginToken && <Redirect to={ROUTES.Main} />}
+      {cookie.user && <Redirect to={ROUTES.Main} />}
       <Container className={classes.container} maxWidth="sm">
         <Typography component="h1" variant="h3">
           Registracija sėkminga

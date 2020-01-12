@@ -1,59 +1,39 @@
-import React, { Dispatch } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import React, { useState, Fragment } from 'react';
 import {
   AppBar,
   Toolbar as MaterialToolbar,
-  Button,
-  Typography
+  Typography,
+  IconButton
 } from '@material-ui/core';
-import { IUserActivityAction, IActivityAction } from '../../types/activities';
-import { ROUTES } from '../../constants/routes';
-import { useCookies } from 'react-cookie';
-import {
-  setLoadedOrErrorActivities,
-  setUserActivities
-} from '../../actions/activities';
+import { mdiMenu } from '@mdi/js';
+import Icon from '@mdi/react';
+import { DrawerMenu } from './DrawerMenu';
 
 interface IToolbarProps {
   title: string;
 }
 
 export const Toolbar: React.FC<IToolbarProps> = props => {
-  const [cookies, setCookies] = useCookies(['loginToken']);
-
-  const userActivityDispatch: Dispatch<IUserActivityAction> = useDispatch();
-  const activityDispatch: Dispatch<IActivityAction> = useDispatch();
-
-  const handleLogOut = async () => {
-    setCookies('loginToken', '', { path: '/' });
-    userActivityDispatch(await setUserActivities(''));
-    activityDispatch(await setLoadedOrErrorActivities());
-  };
+  const [isDrawerOpen, setDrawerOpen] = useState<boolean>(false);
 
   return (
-    <AppBar color="primary" position="relative">
-      <MaterialToolbar>
-        <Typography className="toolbar-title" component="h1" variant="h4">
-          {props.title}
-        </Typography>
-        {cookies.loginToken ? (
-          <Button
-            color="secondary"
-            style={{ marginLeft: 'auto' }}
-            onClick={() => handleLogOut()}
+    <Fragment>
+      <AppBar color="primary" position="relative">
+        <MaterialToolbar>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            onClick={() => setDrawerOpen(true)}
           >
-            Atsijungti
-          </Button>
-        ) : (
-          <Link
-            to={ROUTES.Login}
-            style={{ textDecoration: 'none', marginLeft: 'auto' }}
-          >
-            <Button color="secondary">Prisijungti</Button>
-          </Link>
-        )}
-      </MaterialToolbar>
-    </AppBar>
+            <Icon title="Menu" color="white" size={1.5} path={mdiMenu} />
+          </IconButton>
+          <Typography component="h1" variant="h5">
+            {props.title}
+          </Typography>
+        </MaterialToolbar>
+      </AppBar>
+      <DrawerMenu isOpen={isDrawerOpen} onClose={() => setDrawerOpen(false)} />
+    </Fragment>
   );
 };
