@@ -10,6 +10,7 @@ import { SignUp } from './SignUp/SignUp';
 import { AddActivityForm } from './AddActivity/AddActivityForm';
 import { SuccesfulRedirectFromSignUp } from './SignUp/SuccesfulRedirectFromSignUp';
 import { MyActivities } from './User/MyActivities';
+import { MyAccount } from './User/MyAccount';
 import { ROUTES } from '../../constants/routes';
 import { IUserActivityAction } from '../../types/activities';
 import { setUserActivities } from '../../actions/activities';
@@ -41,6 +42,9 @@ export const UserApp: React.FC = () => {
         </Route>
         <Route path={ROUTES.MyActivities}>
           <MyActivities />
+        </Route>
+        <Route path={ROUTES.MyAccount}>
+          <MyAccount />
         </Route>
         <Route path={ROUTES.Main}>
           <Main />
