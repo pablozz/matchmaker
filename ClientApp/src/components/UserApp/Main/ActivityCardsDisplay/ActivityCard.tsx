@@ -27,6 +27,7 @@ import {
   setLoadedOrErrorActivities,
   setUserActivities
 } from '../../../../actions/activities';
+import { getTimeString } from '../../../../scripts/datetime-formats';
 
 const useStyles = makeStyles(theme => ({
   activity: {
@@ -181,18 +182,6 @@ export const ActivityCard: React.FC<ICardProps> = props => {
       />
     </Fragment>
   );
-};
-
-const getTimeString = (secs: number) => {
-  const t = new Date(secs * 1000);
-  let h, m;
-  t.getHours() >= 10
-    ? (h = t.getHours().toString())
-    : (h = '0' + t.getHours().toString());
-  t.getMinutes() >= 10
-    ? (m = t.getMinutes().toString())
-    : (m = '0' + t.getMinutes().toString());
-  return h + ':' + m;
 };
 
 const ICON_SIZE = 1.3;

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Typography, Container } from '@material-ui/core';
+import { Typography, Container, Paper } from '@material-ui/core';
 import { LoginForm } from '../Login/LoginForm';
 import { makeStyles } from '@material-ui/core/styles';
 import { ROUTES } from '../../../constants/routes';
@@ -11,6 +11,10 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 'auto',
     marginRight: 'auto',
     marginTop: theme.spacing(5)
+  },
+  paper: {
+    padding: theme.spacing(2),
+    margin: theme.spacing(3, 0, 0, 0)
   }
 }));
 
@@ -26,7 +30,9 @@ export const SuccesfulRedirectFromSignUp: React.FC = () => {
         </Typography>
         <br />
         <Container maxWidth="xs">
-          <LoginForm />
+          <Paper className={classes.paper}>
+            <LoginForm />
+          </Paper>
         </Container>
       </Container>
     </Fragment>

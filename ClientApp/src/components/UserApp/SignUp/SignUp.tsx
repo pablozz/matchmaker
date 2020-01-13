@@ -11,7 +11,8 @@ import {
   FormLabel,
   RadioGroup,
   FormControlLabel,
-  Radio
+  Radio,
+  Paper
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ROUTES } from '../../../constants/routes';
@@ -19,14 +20,8 @@ import { REGISTER_URL } from '../../../constants/urls';
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    marginTop: theme.spacing(2),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  form: {
-    width: '100%',
-    marginTop: theme.spacing(3)
+    padding: theme.spacing(2),
+    margin: theme.spacing(3, 0, 0, 0)
   },
   formControl: {
     margin: theme.spacing(2, 2, 1, 2),
@@ -91,7 +86,7 @@ export const SignUp = () => {
         error: true,
         helperText: 'Slaptažodį privalo sudaryti ne mažiau nei 8 simboliai'
       });
-      
+
     const registerObj: IRegisterData = {
       Name: fname.value + ' ' + lname.value,
       Email: email.value,
@@ -127,124 +122,120 @@ export const SignUp = () => {
       {redirect && <Redirect to={ROUTES.SuccesfulRedirectFromSignUp} />}
       <Toolbar title="Registracija" />
       <Container maxWidth="xs">
-        <div className={classes.paper}>
-          <div className={classes.form}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  error={fname.error}
-                  name="firstName"
-                  variant="outlined"
-                  fullWidth
-                  id="firstName"
-                  label="Vardas*"
-                  autoComplete="fname"
-                  autoFocus
-                  value={fname.value}
-                  onChange={e =>
-                    setFName({ value: e.target.value, error: false })
-                  }
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  error={lname.error}
-                  variant="outlined"
-                  fullWidth
-                  id="lastName"
-                  label="Pavardė*"
-                  name="lastName"
-                  autoComplete="lname"
-                  value={lname.value}
-                  onChange={e =>
-                    setLName({ value: e.target.value, error: false })
-                  }
-                />
-              </Grid>
-              <FormControl className={classes.formControl}>
-                <FormLabel component="legend">Lytis</FormLabel>
-                <RadioGroup
-                  aria-label="gender"
-                  name="gender"
-                  value={gender}
-                  onChange={e => setGender(e.target.value)}
-                  row
-                  className={classes.radioGroup}
-                >
-                  <Grid container justify="space-around">
-                    <FormControlLabel
-                      value="Vyras"
-                      control={<Radio color="primary" />}
-                      label="Vyras"
-                    />
-                    <FormControlLabel
-                      value="Moteris"
-                      control={<Radio color="primary" />}
-                      label="Moteris"
-                    />
-                    <FormControlLabel
-                      value="Kita"
-                      control={<Radio color="primary" />}
-                      label="Kita"
-                    />
-                  </Grid>
-                </RadioGroup>
-              </FormControl>
+        <Paper className={classes.paper}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                error={fname.error}
+                name="firstName"
+                variant="outlined"
+                fullWidth
+                id="firstName"
+                label="Vardas*"
+                autoComplete="fname"
+                autoFocus
+                value={fname.value}
+                onChange={e =>
+                  setFName({ value: e.target.value, error: false })
+                }
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                error={lname.error}
+                variant="outlined"
+                fullWidth
+                id="lastName"
+                label="Pavardė*"
+                name="lastName"
+                autoComplete="lname"
+                value={lname.value}
+                onChange={e =>
+                  setLName({ value: e.target.value, error: false })
+                }
+              />
+            </Grid>
+            <FormControl className={classes.formControl}>
+              <FormLabel component="legend">Lytis</FormLabel>
+              <RadioGroup
+                aria-label="gender"
+                name="gender"
+                value={gender}
+                onChange={e => setGender(e.target.value)}
+                row
+                className={classes.radioGroup}
+              >
+                <Grid container justify="space-around">
+                  <FormControlLabel
+                    value="Vyras"
+                    control={<Radio color="primary" />}
+                    label="Vyras"
+                  />
+                  <FormControlLabel
+                    value="Moteris"
+                    control={<Radio color="primary" />}
+                    label="Moteris"
+                  />
+                  <FormControlLabel
+                    value="Kita"
+                    control={<Radio color="primary" />}
+                    label="Kita"
+                  />
+                </Grid>
+              </RadioGroup>
+            </FormControl>
 
-              <Grid item xs={12}>
-                <TextField
-                  error={email.error}
-                  helperText={email.helperText}
-                  variant="outlined"
-                  fullWidth
-                  id="email"
-                  label="El. paštas*"
-                  name="email"
-                  autoComplete="email"
-                  value={email.value}
-                  onChange={e =>
-                    setEmail({ value: e.target.value, error: false })
-                  }
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  error={password.error}
-                  helperText={password.helperText}
-                  variant="outlined"
-                  fullWidth
-                  name="password"
-                  label="Slaptažodis*"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  value={password.value}
-                  onChange={e =>
-                    setPassword({ value: e.target.value, error: false })
-                  }
-                />
-              </Grid>
+            <Grid item xs={12}>
+              <TextField
+                error={email.error}
+                helperText={email.helperText}
+                variant="outlined"
+                fullWidth
+                id="email"
+                label="El. paštas*"
+                name="email"
+                autoComplete="email"
+                value={email.value}
+                onChange={e =>
+                  setEmail({ value: e.target.value, error: false })
+                }
+              />
             </Grid>
-            <Button
-              fullWidth
-              variant="contained"
-              color="secondary"
-              className={classes.submit}
-              onClick={() => handleSubmit()}
-            >
-              Registruotis
-            </Button>
-            <Grid container justify="flex-end">
-              <Grid item>
-                <Link className={classes.link} to={ROUTES.Login}>
-                  <Typography variant="body2">
-                    Turi paskyrą? Prisijunk
-                  </Typography>
-                </Link>
-              </Grid>
+            <Grid item xs={12}>
+              <TextField
+                error={password.error}
+                helperText={password.helperText}
+                variant="outlined"
+                fullWidth
+                name="password"
+                label="Slaptažodis*"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={password.value}
+                onChange={e =>
+                  setPassword({ value: e.target.value, error: false })
+                }
+              />
             </Grid>
-          </div>
-        </div>
+          </Grid>
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            className={classes.submit}
+            onClick={() => handleSubmit()}
+          >
+            Registruotis
+          </Button>
+          <Grid container justify="flex-end">
+            <Grid item>
+              <Link className={classes.link} to={ROUTES.Login}>
+                <Typography variant="body2">Turi paskyrą? Prisijunk</Typography>
+              </Link>
+            </Grid>
+          </Grid>
+        </Paper>
       </Container>
     </Fragment>
   );

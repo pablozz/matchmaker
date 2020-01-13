@@ -1,27 +1,27 @@
 ﻿import React, { Fragment, useState } from 'react';
 import { Link, Paper, Typography, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Icon from '@mdi/react';
 import { ROUTES } from '../../../../constants/routes';
-import { mdiPlusCircleOutline } from '@mdi/js';
 import { Redirect } from 'react-router-dom';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   activity: {
     cursor: 'pointer',
     userSelect: 'none'
   },
   addActivityCard: {
-    margin: theme.spacing(2)
+    margin: theme.spacing(2),
+    backgroundColor: theme.palette.secondary.main,
+    color: 'white'
   },
   cardElement: {
     padding: theme.spacing(1)
   },
   cardText: {
-    fontWeight: 'bold',
-    margin: theme.spacing(3)
+    fontWeight: 500,
+    margin: theme.spacing(1)
   }
-})); 
+}));
 
 export const AddActivity: React.FC = () => {
   const classes = useStyles();
@@ -44,24 +44,23 @@ export const AddActivity: React.FC = () => {
           setElevation(1);
         }}
       >
-        <Paper className={classes.addActivityCard}
+        <Paper
+          className={classes.addActivityCard}
           style={{
             filter: brightness
           }}
           elevation={elevation}
           onClick={() => setNewActivity(true)}
         >
-          <Grid container justify="space-between">
+          <Grid container justify="center">
             <Grid item className={classes.cardElement}>
-              <Typography className={classes.cardText} variant="h5">Nauja veikla</Typography>
-            </Grid>
-            <Grid item className={classes.cardElement}>
-              <Icon title="AddIcon" size={3} path={mdiPlusCircleOutline} />
+              <Typography className={classes.cardText} variant="h5">
+                Įkelti veiklą
+              </Typography>
             </Grid>
           </Grid>
         </Paper>
       </Link>
     </Fragment>
   );
-}
-  
+};

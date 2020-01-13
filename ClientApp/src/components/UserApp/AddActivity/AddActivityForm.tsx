@@ -11,7 +11,8 @@ import {
   FormLabel,
   Radio,
   Slider,
-  MenuItem
+  MenuItem,
+  Paper
 } from '@material-ui/core';
 import { Toolbar } from '../Toolbar';
 import { ICategory } from '../../../types/categories';
@@ -27,26 +28,16 @@ import { Redirect } from 'react-router-dom';
 import { DateTimePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 
-
 const useStyles = makeStyles(theme => ({
   paper: {
-    marginTop: theme.spacing(2),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  form: {
-    width: '100%',
-    marginTop: theme.spacing(3)
-  },
-  formControl: {
-    margin: theme.spacing(2, 2, 1, 2),
-    width: '100%'
+    padding: theme.spacing(2),
+    margin: theme.spacing(3, 0, 0, 0)
   },
   radioGroup: {
     margin: theme.spacing(1)
   },
   submit: {
+    backgroundColor: theme.palette.secondary.main,
     margin: theme.spacing(3, 0, 2)
   },
   link: {
@@ -195,8 +186,8 @@ export const AddActivityForm: React.FC = () => {
       {(!cookie.user || created) && <Redirect to={ROUTES.Main} />}
       <Toolbar title="Pridėti naują veiklą" />
       <Container component="main" maxWidth="xs">
-        <div className={classes.paper}>
-          <form className={classes.form} onSubmit={handleSubmit}>
+        <Paper className={classes.paper}>
+          <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -253,8 +244,8 @@ export const AddActivityForm: React.FC = () => {
                   label="Data"
                   name="date"
                   ampm={false}
-                  value={date.value} 
-                  onChange={(date) => setDate({ value: date, error: ''})}
+                  value={date.value}
+                  onChange={date => setDate({ value: date, error: '' })}
                   helperText={date.error}
                 />
               </Grid>
@@ -332,9 +323,8 @@ export const AddActivityForm: React.FC = () => {
                 Sukurti
               </Button>
             </Grid>
-            
           </form>
-        </div>
+        </Paper>
       </Container>
     </Fragment>
   );
