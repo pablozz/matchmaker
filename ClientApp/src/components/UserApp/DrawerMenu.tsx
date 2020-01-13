@@ -17,7 +17,10 @@ import {
   setLoadedOrErrorActivities,
   setUserActivities
 } from '../../actions/activities';
-import { IActivityAction, IUserActivityAction } from '../../types/activities';
+import {
+  IActivitiesAction,
+  IUserActivitiesAction
+} from '../../types/activities';
 import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
@@ -44,8 +47,8 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
   >(false);
   const [redirectToUserAccount, setRedirectToUserAccount] = useState<boolean>(false);
 
-  const userActivityDispatch: Dispatch<IUserActivityAction> = useDispatch();
-  const activityDispatch: Dispatch<IActivityAction> = useDispatch();
+  const userActivityDispatch: Dispatch<IUserActivitiesAction> = useDispatch();
+  const activityDispatch: Dispatch<IActivitiesAction> = useDispatch();
 
   const classes = useStyles();
 

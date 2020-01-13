@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Typography, Container, Paper } from '@material-ui/core';
-import { LoginForm } from '../Login/LoginForm';
+import { Typography, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ROUTES } from '../../../constants/routes';
 import { useCookies } from 'react-cookie';
@@ -25,15 +24,10 @@ export const SuccesfulRedirectFromSignUp: React.FC = () => {
     <Fragment>
       {cookie.user && <Redirect to={ROUTES.Main} />}
       <Container className={classes.container} maxWidth="sm">
-        <Typography component="h1" variant="h3">
-          Registracija sėkminga
-        </Typography>
-        <br />
-        <Container maxWidth="xs">
-          <Paper className={classes.paper}>
-            <LoginForm />
-          </Paper>
-        </Container>
+          <Typography component="h1" variant="h3">
+            Registracijai užbaigti paspauskite
+            ant aktyvacijos nuorodos, kurią mes išsiuntėme jūsų nurodytu el. pašto adresu.
+          </Typography>
       </Container>
     </Fragment>
   );

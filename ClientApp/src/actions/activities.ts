@@ -1,24 +1,32 @@
 import {
   INIT_ACTVIVITIES,
-  LOADING_ACTIVITIES,
+  LOAD_ACTIVITY,
+  LOAD_USER_ACTIVITIES,
   LOADED_ACTIVITIES,
-  LOAD_USER_ACTIVITIES
+  LOADING_ACTIVITIES,
+  LOAD_USER_CREATED_ACTIVITIES
 } from '../constants/action-names';
-import { ACTIVITIES_URL, GET_USER_ACTIVITIES_URL } from '../constants/urls';
 import {
+  ACTIVITIES_URL,
+  GET_USER_ACTIVITIES_URL,
+  GET_USER_CREATED_ACTIVITIES_URL
+} from '../constants/urls';
+import {
+  IActivitiesAction,
   IActivity,
   IActivityAction,
-  IUserActivityAction
+  IUserActivitiesAction,
+  IUserCreatedActivitiesAction
 } from '../types/activities';
 
-export const setInitActivities = (): IActivityAction => {
+export const setInitActivities = (): IActivitiesAction => {
   return {
     type: INIT_ACTVIVITIES,
     payload: { status: 'init', data: [] }
   };
 };
 
-export const setLoadingActivities = (): IActivityAction => {
+export const setLoadingActivities = (): IActivitiesAction => {
   return {
     type: LOADING_ACTIVITIES,
     payload: { status: 'loading', data: [] }
@@ -26,7 +34,7 @@ export const setLoadingActivities = (): IActivityAction => {
 };
 
 export const setLoadedOrErrorActivities = async (): Promise<
-  IActivityAction
+  IActivitiesAction
 > => {
   const fData: IActivity[] | null = await fetch(ACTIVITIES_URL)
     .then(response => response.json())
@@ -51,31 +59,74 @@ export const setLoadedOrErrorActivities = async (): Promise<
 
 export const setUserActivities = async (
   loginToken: string
-): Promise<IUserActivityAction> => {
+): Promise<IUserActivitiesAction> => {
   if (loginToken) {
-    const userActivities: IActivity[] = await fetch(GET_USER_ACTIVITIES_URL, {
-      headers: {
-        Authorization: 'Bearer ' + loginToken
+    const userCreatedActivities: IActivity[] = await fetch(
+      GET_USER_ACTIVITIES_URL,
+      {
+        headers: {
+          Authorization: 'Bearer ' + loginToken
+        }
       }
-    })
+    )
       .then(response => response.text())
       .then(data => {
         return generateActivities(JSON.parse(data));
       });
-    if (userActivities) {
+    if (userCreatedActivities.length) {
       return {
         type: LOAD_USER_ACTIVITIES,
-        payload: userActivities
+        payload: userCreatedActivities
       };
     }
     return {
       type: LOAD_USER_ACTIVITIES,
-      payload: []
+      payload: null
     };
   }
   return {
     type: LOAD_USER_ACTIVITIES,
-    payload: []
+    payload: null
+  };
+};
+
+export const setActivity = (activity: IActivity): IActivityAction => {
+  return {
+    type: LOAD_ACTIVITY,
+    payload: activity
+  };
+};
+
+export const setUserCreatedActivities = async (
+  loginToken: string
+): Promise<IUserCreatedActivitiesAction> => {
+  if (loginToken) {
+    const userActivities: IActivity[] = await fetch(
+      GET_USER_CREATED_ACTIVITIES_URL,
+      {
+        headers: {
+          Authorization: 'Bearer ' + loginToken
+        }
+      }
+    )
+      .then(response => response.text())
+      .then(data => {
+        return generateActivities(JSON.parse(data));
+      });
+    if (userActivities.length) {
+      return {
+        type: LOAD_USER_CREATED_ACTIVITIES,
+        payload: userActivities
+      };
+    }
+    return {
+      type: LOAD_USER_CREATED_ACTIVITIES,
+      payload: null
+    };
+  }
+  return {
+    type: LOAD_USER_CREATED_ACTIVITIES,
+    payload: null
   };
 };
 

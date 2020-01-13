@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppState } from '../../../reducers';
 import {
-  IActivityAction,
-  IActivityActionPayload
+  IActivitiesAction,
+  IActivitiesActionPayload
 } from '../../../types/activities';
 import { setLoadedOrErrorActivities } from '../../../actions/activities';
 import { Container } from '@material-ui/core';
@@ -20,10 +20,10 @@ const useStyles = makeStyles(theme => ({
 export const Main: React.FC = () => {
   const classes = useStyles();
 
-  const activities: IActivityActionPayload = useSelector(
+  const activities: IActivitiesActionPayload = useSelector(
     (state: AppState) => state.activities
   );
-  const dispatch: Dispatch<IActivityAction> = useDispatch();
+  const dispatch: Dispatch<IActivitiesAction> = useDispatch();
 
   useEffect(() => {
     if (activities.status === 'init') {

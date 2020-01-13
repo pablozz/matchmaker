@@ -3,7 +3,7 @@ import { AppState } from '../../../../reducers';
 import Skeleton from '@material-ui/lab/Skeleton';
 import {
   IActivity,
-  IActivityActionPayload
+  IActivitiesActionPayload
 } from '../../../../types/activities';
 import { useSelector } from 'react-redux';
 import { ActivityCard } from './ActivityCard';
@@ -18,11 +18,11 @@ import {
 } from '../../../../scripts/datetime-formats';
 
 interface ICardsDisplayProps {
-  activities: IActivityActionPayload;
+  activities: IActivitiesActionPayload;
 }
 
 export const ActivityCardsDisplay: React.FC<ICardsDisplayProps> = props => {
-  const activities: IActivityActionPayload = props.activities;
+  const activities: IActivitiesActionPayload = props.activities;
 
   const userActivities: IActivity[] = useSelector(
     (state: AppState) => state.userActivities
@@ -48,7 +48,9 @@ export const ActivityCardsDisplay: React.FC<ICardsDisplayProps> = props => {
       });
   }
 
-  const userActivityIds: string[] = userActivities.map(item => item.id);
+  const userActivityIds: string[] = userActivities
+    ? userActivities.map(item => item.id)
+    : [];
 
   if (activities.status === 'loading' || activities.status === 'init')
     return (

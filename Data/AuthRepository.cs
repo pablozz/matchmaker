@@ -62,6 +62,7 @@ namespace Matchmaker.Data
             var token = await _context.ActivationTokens.SingleAsync(a => a.Id == tokenId);
             var user = await _context.Users.FindAsync(token.UserId);
             user.Activated = true;
+            _context.ActivationTokens.Remove(token);
             await _context.SaveChangesAsync();
             return user;
         }
@@ -100,6 +101,30 @@ namespace Matchmaker.Data
             return false;
         }
 
+        public async Task<User> ChangeEmail(string id, string newEmail)
+        {
+            var user = await _context.Users.FindAsync(id);
+            user.Email = newEmail;
+            await _context.SaveChangesAsync();
+            return user;
+        }
+
+        public async Task<User> ChangePassword(string id, string oldPassword, string newPassword)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (VerifyPassword(oldPassword, user.PasswordHash, user.PasswordSalt))
+            {
+                CreatePasswordHash(newPassword, out byte[] passwordHash, out byte[] passwordSalt);
+
+                user.PasswordHash = passwordHash;
+                user.PasswordSalt = passwordSalt;
+
+                await _context.SaveChangesAsync();
+                return user;
+            }
+            return null;
+        }
+
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using var hmac = new System.Security.Cryptography.HMACSHA512();
@@ -120,5 +145,7 @@ namespace Matchmaker.Data
             }
             return true;
         }
+
+        
     }
 }

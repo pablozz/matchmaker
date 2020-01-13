@@ -1,15 +1,13 @@
 import { LOAD_USER_ACTIVITIES } from '../constants/action-names';
 import { AppState } from '.';
-import { IUserActivityAction } from '../types/activities';
+import { IUserActivitiesAction } from '../types/activities';
 
 export const userActivitiesReducer = (
   state: AppState = [],
-  action: IUserActivityAction
+  action: IUserActivitiesAction
 ) => {
-  switch (action.type) {
-    case LOAD_USER_ACTIVITIES:
-      return action.payload;
-    default:
-      return state;
+  if (action.type === LOAD_USER_ACTIVITIES) {
+    return action.payload;
   }
+  return state;
 };
