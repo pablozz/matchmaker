@@ -1,24 +1,26 @@
 import {
   INIT_ACTVIVITIES,
-  LOADING_ACTIVITIES,
+  LOAD_ACTIVITY,
+  LOAD_USER_ACTIVITIES,
   LOADED_ACTIVITIES,
-  LOAD_USER_ACTIVITIES
+  LOADING_ACTIVITIES
 } from '../constants/action-names';
 import { ACTIVITIES_URL, GET_USER_ACTIVITIES_URL } from '../constants/urls';
 import {
+  IActivitiesAction,
   IActivity,
   IActivityAction,
-  IUserActivityAction
+  IUserActivitiesAction
 } from '../types/activities';
 
-export const setInitActivities = (): IActivityAction => {
+export const setInitActivities = (): IActivitiesAction => {
   return {
     type: INIT_ACTVIVITIES,
     payload: { status: 'init', data: [] }
   };
 };
 
-export const setLoadingActivities = (): IActivityAction => {
+export const setLoadingActivities = (): IActivitiesAction => {
   return {
     type: LOADING_ACTIVITIES,
     payload: { status: 'loading', data: [] }
@@ -26,7 +28,7 @@ export const setLoadingActivities = (): IActivityAction => {
 };
 
 export const setLoadedOrErrorActivities = async (): Promise<
-  IActivityAction
+  IActivitiesAction
 > => {
   const fData: IActivity[] | null = await fetch(ACTIVITIES_URL)
     .then(response => response.json())
@@ -51,7 +53,7 @@ export const setLoadedOrErrorActivities = async (): Promise<
 
 export const setUserActivities = async (
   loginToken: string
-): Promise<IUserActivityAction> => {
+): Promise<IUserActivitiesAction> => {
   if (loginToken) {
     const userActivities: IActivity[] = await fetch(GET_USER_ACTIVITIES_URL, {
       headers: {
@@ -62,7 +64,7 @@ export const setUserActivities = async (
       .then(data => {
         return generateActivities(JSON.parse(data));
       });
-    if (userActivities) {
+    if (userActivities.length) {
       return {
         type: LOAD_USER_ACTIVITIES,
         payload: userActivities
@@ -70,12 +72,19 @@ export const setUserActivities = async (
     }
     return {
       type: LOAD_USER_ACTIVITIES,
-      payload: []
+      payload: null
     };
   }
   return {
     type: LOAD_USER_ACTIVITIES,
-    payload: []
+    payload: null
+  };
+};
+
+export const setActivity = (activity: IActivity): IActivityAction => {
+  return {
+    type: LOAD_ACTIVITY,
+    payload: activity
   };
 };
 

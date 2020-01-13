@@ -1,16 +1,20 @@
-import React, { Fragment } from 'react';
-import { useSelector } from 'react-redux';
+import React, { Dispatch, Fragment } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../../../reducers';
-import { IActivity } from '../../../../types/activities';
+import { IActivity, IActivityAction } from '../../../../types/activities';
+import { setActivity } from '../../../../actions/activities';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Paper, List, Divider } from '@material-ui/core';
-import { UserActivityListItem } from './UserActivityListItem';
+import { Container, Paper, List, Divider, Typography } from '@material-ui/core';
+import { MyActivityListItem } from './MyActivityListItem';
 
 import Zoom from '@material-ui/core/Zoom';
 
 const useStyles = makeStyles(theme => ({
   paper: {
     margin: theme.spacing(3, 0, 3, 0)
+  },
+  empty: {
+    marginTop: theme.spacing(3)
   }
 }));
 
@@ -21,25 +25,34 @@ export const RegisteredActivitiesDisplay = () => {
     (state: AppState) => state.userActivities
   );
 
+  const dispatchActivity: Dispatch<IActivityAction> = useDispatch();
   return (
-    <Container maxWidth="xs">
-      <Zoom in={true}>
-        <Paper className={classes.paper}>
-          <List>
-            {userActivities.map((activity, index) => {
-              return (
-                <Fragment>
-                  {index !== 0 && <Divider />}
-                  <UserActivityListItem
-                    datetime={activity.date}
-                    playground={activity.playground}
-                  />
-                </Fragment>
-              );
-            })}
-          </List>
-        </Paper>
-      </Zoom>
-    </Container>
+    <Zoom in={true}>
+      {userActivities ? (
+        <Container maxWidth="xs">
+          <Paper className={classes.paper}>
+            <List>
+              {userActivities.map((activity: IActivity, index: number) => {
+                return (
+                  <Fragment key={index}>
+                    {index !== 0 && <Divider />}
+                    <MyActivityListItem
+                      datetime={activity.date}
+                      playground={activity.playground}
+                      category={activity.category}
+                      onClick={() => dispatchActivity(setActivity(activity))}
+                    />
+                  </Fragment>
+                );
+              })}
+            </List>
+          </Paper>
+        </Container>
+      ) : (
+        <Typography className={classes.empty} component={'h1'} variant={'h4'}>
+          Nesate užsiregistravęs į jokią veiklą
+        </Typography>
+      )}
+    </Zoom>
   );
 };

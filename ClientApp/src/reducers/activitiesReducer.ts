@@ -5,11 +5,11 @@ import {
   ERROR_ACTIVITIES
 } from '../constants/action-names';
 import { AppState } from '.';
-import { IActivityAction } from '../types/activities';
+import { IActivitiesAction } from '../types/activities';
 
 export const activitiesReducer = (
   state: AppState = { payload: [], status: 'init' },
-  action: IActivityAction
+  action: IActivitiesAction
 ) => {
   switch (action.type) {
     case INIT_ACTVIVITIES:

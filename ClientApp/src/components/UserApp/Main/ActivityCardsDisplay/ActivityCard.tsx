@@ -2,17 +2,12 @@ import React, { useState, Fragment, Dispatch } from 'react';
 import { useDispatch } from 'react-redux';
 import { Paper, Typography, Grid, Link, Snackbar } from '@material-ui/core';
 import Icon from '@mdi/react';
+import { IIcon } from '../../../../types/icons';
 import {
-  mdiBasketball,
-  mdiVolleyball,
-  mdiSoccer,
-  mdiGenderMale,
-  mdiGenderFemale,
-  mdiGenderMaleFemale,
-  mdiSignalCellular1,
-  mdiSignalCellular2,
-  mdiSignalCellular3
-} from '@mdi/js';
+  pickCategoryIcon,
+  pickGenderIcon,
+  pickLevelIcon
+} from '../../../../scripts/getIcons';
 import { makeStyles } from '@material-ui/core/styles';
 import { useCookies } from 'react-cookie';
 import {
@@ -20,8 +15,8 @@ import {
   UNREGISTER_ACTIVITY_URL
 } from '../../../../constants/urls';
 import {
-  IUserActivityAction,
-  IActivityAction
+  IUserActivitiesAction,
+  IActivitiesAction
 } from '../../../../types/activities';
 import {
   setLoadedOrErrorActivities,
@@ -60,8 +55,8 @@ interface ICardProps {
 export const ActivityCard: React.FC<ICardProps> = props => {
   const classes = useStyles();
 
-  const userActivityDispatch: Dispatch<IUserActivityAction> = useDispatch();
-  const activityDispatch: Dispatch<IActivityAction> = useDispatch();
+  const userActivityDispatch: Dispatch<IUserActivitiesAction> = useDispatch();
+  const activityDispatch: Dispatch<IActivitiesAction> = useDispatch();
 
   const [brightness, changeBrightness] = useState<string>('brightness(100%)');
   const [elevation, changeElevation] = useState<number>(1);
@@ -117,6 +112,9 @@ export const ActivityCard: React.FC<ICardProps> = props => {
     }
   };
 
+  const categoryIcon: IIcon = pickCategoryIcon(props.category);
+  const genderIcon: IIcon = pickGenderIcon(props.gender);
+  const levelIcon: IIcon = pickLevelIcon(props.playerLevel);
   return (
     <Fragment>
       <Link
@@ -150,9 +148,27 @@ export const ActivityCard: React.FC<ICardProps> = props => {
                 </Grid>
                 <Grid item className={classes.cardElement}>
                   <Grid container spacing={2}>
-                    <Grid item>{pickCategoryIcon(props.category)}</Grid>
-                    <Grid item>{pickGenderIcon(props.gender)}</Grid>
-                    <Grid item>{pickLevelIcon(props.playerLevel)}</Grid>
+                    <Grid item>
+                      <Icon
+                        title={categoryIcon.title}
+                        size={1.3}
+                        path={categoryIcon.path}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Icon
+                        title={genderIcon.title}
+                        size={1.3}
+                        path={genderIcon.path}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Icon
+                        title={levelIcon.title}
+                        size={1.3}
+                        path={levelIcon.path}
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
@@ -182,57 +198,4 @@ export const ActivityCard: React.FC<ICardProps> = props => {
       />
     </Fragment>
   );
-};
-
-const ICON_SIZE = 1.3;
-
-const pickCategoryIcon = (category: string) => {
-  switch (category) {
-    case 'Krepšinis':
-      return <Icon title="Krepšinis" size={ICON_SIZE} path={mdiBasketball} />;
-    case 'Tinklinis':
-      return <Icon title="Tinklinis" size={ICON_SIZE} path={mdiVolleyball} />;
-    case 'Futbolas':
-      return <Icon title="Futbolas" size={ICON_SIZE} path={mdiSoccer} />;
-    default:
-      return;
-  }
-};
-
-const pickGenderIcon = (gender: string) => {
-  switch (gender) {
-    case 'Vyrai':
-      return <Icon title="Vyrai" size={ICON_SIZE} path={mdiGenderMale} />;
-    case 'Moterys':
-      return <Icon title="Moterys" size={ICON_SIZE} path={mdiGenderFemale} />;
-    case 'Mišri grupė':
-      return (
-        <Icon title="Mišri grupė" size={ICON_SIZE} path={mdiGenderMaleFemale} />
-      );
-    default:
-      return;
-  }
-};
-
-const pickLevelIcon = (level: number) => {
-  switch (level) {
-    case 1:
-      return (
-        <Icon
-          title="Pradedantysis"
-          size={ICON_SIZE}
-          path={mdiSignalCellular1}
-        />
-      );
-    case 2:
-      return (
-        <Icon title="Mėgėjas" size={ICON_SIZE} path={mdiSignalCellular2} />
-      );
-    case 3:
-      return (
-        <Icon title="Pažengęs" size={ICON_SIZE} path={mdiSignalCellular3} />
-      );
-    default:
-      return;
-  }
 };

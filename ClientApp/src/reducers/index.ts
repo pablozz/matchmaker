@@ -1,10 +1,12 @@
 import { combineReducers, Reducer } from 'redux';
 import { activitiesReducer } from './activitiesReducer';
 import { userActivitiesReducer } from './userActivitiesReducer';
+import { activityReducer } from './activityReducer';
 
 export const rootReducer: Reducer = combineReducers({
   activities: activitiesReducer,
-  userActivities: userActivitiesReducer
+  userActivities: userActivitiesReducer,
+  activity: activityReducer
 });
 
 export type AppState = ReturnType<typeof rootReducer>;
