@@ -233,16 +233,27 @@ namespace Matchmaker.Controllers
         // PUT: api/Activities/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
+        [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutActivity(string id, Activity activity)
+        public async Task<IActionResult> PutActivity(string id, UpdateActivityDto updatedActivity)
         {
-            if (id != activity.ActivityId)
+            if (id != updatedActivity.ActivityId)
             {
                 return BadRequest();
             }
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var activity = await _context.Activities.FindAsync(id);
 
-            _context.Entry(activity).State = EntityState.Modified;
+            if (activity.RegisteredParticipants > 0 || activity.AdminId != userId)
+            {
+                return StatusCode(403);
+            }
+
+            activity.Date = updatedActivity.Date;
+            activity.Gender = updatedActivity.Gender;
+            activity.Price = updatedActivity.Price;
+            activity.NumberOfParticipants = updatedActivity.NumberOfParticipants;
+            activity.PlayerLevel = updatedActivity.PlayerLevel;
 
             try
             {
@@ -331,14 +342,18 @@ namespace Matchmaker.Controllers
         }
 
         // DELETE: api/Activities/5
-        [Authorize(Roles = Role.Admin + "," + Role.SuperAdmin)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Activity>> DeleteActivity(string id)
         {
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var activity = await _context.Activities.FindAsync(id);
             if (activity == null)
             {
                 return NotFound();
+            }
+            if (activity.RegisteredParticipants > 0 || userId != activity.AdminId)
+            {
+                return StatusCode(403);
             }
 
             _context.Activities.Remove(activity);
