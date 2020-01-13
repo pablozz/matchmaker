@@ -11,13 +11,13 @@ import { AddActivityForm } from './AddActivity/AddActivityForm';
 import { SuccesfulRedirectFromSignUp } from './SignUp/SuccesfulRedirectFromSignUp';
 import { MyActivities } from './User/MyActivities/MyActivities';
 import { ROUTES } from '../../constants/routes';
-import { IUserActivityAction } from '../../types/activities';
+import { IUserActivitiesAction } from '../../types/activities';
 import { setUserActivities } from '../../actions/activities';
 
 export const UserApp: React.FC = () => {
   const [cookie] = useCookies(['user']);
 
-  const dispatch: Dispatch<IUserActivityAction> = useDispatch();
+  const dispatch: Dispatch<IUserActivitiesAction> = useDispatch();
   useEffect(() => {
     if (cookie.user) {
       (async () => dispatch(await setUserActivities(cookie.user.token)))();

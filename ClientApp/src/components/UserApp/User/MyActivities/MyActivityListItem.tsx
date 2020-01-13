@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, Fragment } from 'react';
 import { Grid, ListItem, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   getFullDate,
   getTimeString
 } from '../../../../scripts/datetime-formats';
+import { MyActivityDialog } from './MyActivityDialog';
 
 const useStyles = makeStyles(theme => ({
   item: {
@@ -12,18 +13,26 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-interface IUerActivityListItemProps {
+interface IMyActivityListItemProps {
   datetime: number;
   playground: string;
+  category: string;
+  onClick: () => void;
 }
 
-export const UserActivityListItem: React.FC<
-  IUerActivityListItemProps
-> = props => {
+export const MyActivityListItem: React.FC<IMyActivityListItemProps> = props => {
   const classes = useStyles();
+
+  const [isDialog, setDialog] = useState<boolean>(false);
+
+  const handleClick = () => {
+    props.onClick();
+    setDialog(true);
+  };
+
   return (
-    <div>
-      <ListItem button className={classes.item}>
+    <Fragment>
+      <ListItem button onClick={() => handleClick()} className={classes.item}>
         <Grid container justify="space-between" alignItems="center">
           <Grid item>
             <Typography>{getFullDate(props.datetime)}</Typography>
@@ -33,11 +42,12 @@ export const UserActivityListItem: React.FC<
           </Grid>
           <Grid item>
             <Typography component="span" variant="body2">
-              {props.playground}
+              {props.playground}, {props.category}
             </Typography>
           </Grid>
         </Grid>
       </ListItem>
-    </div>
+      <MyActivityDialog open={isDialog} onClose={() => setDialog(false)} />
+    </Fragment>
   );
 };

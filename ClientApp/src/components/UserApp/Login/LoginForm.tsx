@@ -4,8 +4,8 @@ import { Button, Grid, TextField, Snackbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { LOGIN_URL, GET_CURRENT_USER } from '../../../constants/urls';
 import {
-  IUserActivityAction,
-  IActivityAction
+  IUserActivitiesAction,
+  IActivitiesAction
 } from '../../../types/activities';
 import { useCookies } from 'react-cookie';
 import {
@@ -35,8 +35,8 @@ interface ILoginData {
 export const LoginForm: React.FC = () => {
   const classes = useStyles();
 
-  const userActivityDispatch: Dispatch<IUserActivityAction> = useDispatch();
-  const activityDispatch: Dispatch<IActivityAction> = useDispatch();
+  const userActivityDispatch: Dispatch<IUserActivitiesAction> = useDispatch();
+  const activityDispatch: Dispatch<IActivitiesAction> = useDispatch();
 
   const [email, setEmail] = useState<ITextField>({ value: '', error: false });
   const [password, setPassword] = useState<ITextField>({
