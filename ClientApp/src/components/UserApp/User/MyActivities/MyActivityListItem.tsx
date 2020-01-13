@@ -6,6 +6,8 @@ import {
   getTimeString
 } from '../../../../scripts/datetime-formats';
 import { MyActivityDialog } from './MyActivityDialog';
+import { useSelector } from 'react-redux';
+import { AppState } from '../../../../reducers';
 
 const useStyles = makeStyles(theme => ({
   item: {
@@ -23,11 +25,15 @@ interface IMyActivityListItemProps {
 export const MyActivityListItem: React.FC<IMyActivityListItemProps> = props => {
   const classes = useStyles();
 
-  const [isDialog, setDialog] = useState<boolean>(false);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
+  const tabState: number = useSelector(
+    (state: AppState) => state.myActivitiesTabState
+  );
 
   const handleClick = () => {
     props.onClick();
-    setDialog(true);
+    setDialogOpen(true);
   };
 
   return (
@@ -47,7 +53,11 @@ export const MyActivityListItem: React.FC<IMyActivityListItemProps> = props => {
           </Grid>
         </Grid>
       </ListItem>
-      <MyActivityDialog open={isDialog} onClose={() => setDialog(false)} />
+      <MyActivityDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        unregisterButton={tabState === 0}
+      />
     </Fragment>
   );
 };
