@@ -22,6 +22,7 @@ import { useCookies } from 'react-cookie';
 interface IMyActivityDialogProps {
   open: boolean;
   onClose: () => void;
+  unregisterButton?: boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -134,9 +135,15 @@ export const MyActivityDialog: React.FC<IMyActivityDialogProps> = props => {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={() => handleUnregister()} color="primary">
-            Išsiregistruoti
-          </Button>
+          {props.unregisterButton && (
+            <Button
+              autoFocus
+              onClick={() => handleUnregister()}
+              color="primary"
+            >
+              Išsiregistruoti
+            </Button>
+          )}
           <Button onClick={props.onClose} color="primary" autoFocus>
             Gerai
           </Button>

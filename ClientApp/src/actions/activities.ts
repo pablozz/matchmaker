@@ -3,14 +3,20 @@ import {
   LOAD_ACTIVITY,
   LOAD_USER_ACTIVITIES,
   LOADED_ACTIVITIES,
-  LOADING_ACTIVITIES
+  LOADING_ACTIVITIES,
+  LOAD_USER_CREATED_ACTIVITIES
 } from '../constants/action-names';
-import { ACTIVITIES_URL, GET_USER_ACTIVITIES_URL } from '../constants/urls';
+import {
+  ACTIVITIES_URL,
+  GET_USER_ACTIVITIES_URL,
+  GET_USER_CREATED_ACTIVITIES_URL
+} from '../constants/urls';
 import {
   IActivitiesAction,
   IActivity,
   IActivityAction,
-  IUserActivitiesAction
+  IUserActivitiesAction,
+  IUserCreatedActivitiesAction
 } from '../types/activities';
 
 export const setInitActivities = (): IActivitiesAction => {
@@ -55,19 +61,22 @@ export const setUserActivities = async (
   loginToken: string
 ): Promise<IUserActivitiesAction> => {
   if (loginToken) {
-    const userActivities: IActivity[] = await fetch(GET_USER_ACTIVITIES_URL, {
-      headers: {
-        Authorization: 'Bearer ' + loginToken
+    const userCreatedActivities: IActivity[] = await fetch(
+      GET_USER_ACTIVITIES_URL,
+      {
+        headers: {
+          Authorization: 'Bearer ' + loginToken
+        }
       }
-    })
+    )
       .then(response => response.text())
       .then(data => {
         return generateActivities(JSON.parse(data));
       });
-    if (userActivities.length) {
+    if (userCreatedActivities.length) {
       return {
         type: LOAD_USER_ACTIVITIES,
-        payload: userActivities
+        payload: userCreatedActivities
       };
     }
     return {
@@ -85,6 +94,39 @@ export const setActivity = (activity: IActivity): IActivityAction => {
   return {
     type: LOAD_ACTIVITY,
     payload: activity
+  };
+};
+
+export const setUserCreatedActivities = async (
+  loginToken: string
+): Promise<IUserCreatedActivitiesAction> => {
+  if (loginToken) {
+    const userActivities: IActivity[] = await fetch(
+      GET_USER_CREATED_ACTIVITIES_URL,
+      {
+        headers: {
+          Authorization: 'Bearer ' + loginToken
+        }
+      }
+    )
+      .then(response => response.text())
+      .then(data => {
+        return generateActivities(JSON.parse(data));
+      });
+    if (userActivities.length) {
+      return {
+        type: LOAD_USER_CREATED_ACTIVITIES,
+        payload: userActivities
+      };
+    }
+    return {
+      type: LOAD_USER_CREATED_ACTIVITIES,
+      payload: null
+    };
+  }
+  return {
+    type: LOAD_USER_CREATED_ACTIVITIES,
+    payload: null
   };
 };
 
