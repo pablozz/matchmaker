@@ -15,5 +15,7 @@ namespace Matchmaker.Data
         Task<User> GetCurrentUser(string email);
         Task<User> UpdateUser(string id, UserProfileDto userProfile);
         Task<bool> UserExists(string email);
+        Task<User> ChangeEmail(string id, string newEmail);
+        Task<User> ChangePassword(string id, string oldPassword, string newPassword);
     }
 }

@@ -123,7 +123,8 @@ namespace Matchmaker.Controllers
                 Email = user.Email,
                 Name = user.Name,
                 Gender = user.Gender,
-                Role = user.Role
+                Role = user.Role,
+                Activated = user.Activated
             }).ToList();
         }
 
@@ -157,6 +158,26 @@ namespace Matchmaker.Controllers
             if (updatedUser == null)
             {
                 return BadRequest();
+            }
+            return NoContent();
+        }
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ChangeEmail(ChangeEmailDto changeEmailDto)
+        {
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await _repo.ChangeEmail(userId, changeEmailDto.newEmail);
+            return NoContent();
+        }
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto changePasswordDto)
+        {
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await _repo.ChangePassword(userId, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
+            if (user is null)
+            {
+                return BadRequest("Old password does not match current password");
             }
             return NoContent();
         }
