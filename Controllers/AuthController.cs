@@ -100,7 +100,7 @@ namespace Matchmaker.Controllers
 
             return Ok(new { tokenString });
         }
-
+        [AllowAnonymous]
         [HttpGet("{tokenId}")]
         public async Task<IActionResult> Activate(string tokenId)
         {
