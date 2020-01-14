@@ -8,6 +8,7 @@ import { Main } from './Main/Main';
 import { Login } from './Login/Login';
 import { SignUp } from './SignUp/SignUp';
 import { AddActivityForm } from './AddActivity/AddActivityForm';
+import { EditActivityForm } from './AddActivity/EditActivityForm';
 import { SuccessfulRedirectFromSignUp } from './SignUp/SuccesfulRedirectFromSignUp';
 import { UserActivities } from './User/UserActivities/UserActivities';
 import { UserAccount } from './User/UserAccount/UserAccount';
@@ -39,6 +40,9 @@ export const UserApp: React.FC = () => {
         </Route>
         <Route path={ROUTES.AddActivity}>
           <AddActivityForm />
+        </Route>
+        <Route path={ROUTES.EditActivity}>
+          <EditActivityForm />
         </Route>
         <Route path={ROUTES.UserActivities}>
           <UserActivities />
