@@ -1,4 +1,5 @@
 import React, { Dispatch, Fragment } from 'react';
+import { Redirect } from 'react-router';
 import { Toolbar } from '../../Toolbar';
 import { TabNavigation } from './TabNavigation';
 import { RegisteredActivitiesDisplay } from './RegisteredActivitiesDisplay';
@@ -7,8 +8,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../../../reducers';
 import { setMyActivitiesTabStateAction } from '../../../../types/controllers';
 import { setMyActivitiesTabState } from '../../../../actions/controllers';
+import { ROUTES } from '../../../../constants/routes';
+import { useCookies } from 'react-cookie';
 
 export const MyActivities: React.FC = () => {
+  const [cookie] = useCookies(['user']);
+
   // 0 - user's registered activities
   // 1 - user's created activities
   const state: number = useSelector(
@@ -25,6 +30,7 @@ export const MyActivities: React.FC = () => {
 
   return (
     <Fragment>
+      {!cookie.user && <Redirect to={ROUTES.Main} />}
       <Toolbar title="Mano veiklos" />
       <TabNavigation index={state} onChange={handleChange} />
       {state === 0 && <RegisteredActivitiesDisplay />}
