@@ -5,5 +5,6 @@ export const ROUTES = {
   SuccesfulRedirectFromSignUp: '/registered',
   Admin: '/admin',
   AddActivity: '/activities/add',
-  MyActivities: '/my-activities'
+  MyActivities: '/my-activities',
+  MyAccount: '/my-account'
 };

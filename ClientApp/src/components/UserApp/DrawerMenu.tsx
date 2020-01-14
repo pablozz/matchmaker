@@ -12,7 +12,7 @@ import {
 import { Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Icon from '@mdi/react';
-import { mdiHome, mdiLogout, mdiLogin, mdiBasketball } from '@mdi/js';
+import { mdiHome, mdiLogout, mdiLogin, mdiBasketball, mdiAccount } from '@mdi/js';
 import {
   setLoadedOrErrorActivities,
   setUserActivities
@@ -45,6 +45,7 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
   const [redirectToUserActivities, setRedirectToUserActivities] = useState<
     boolean
   >(false);
+  const [redirectToUserAccount, setRedirectToUserAccount] = useState<boolean>(false);
 
   const userActivityDispatch: Dispatch<IUserActivitiesAction> = useDispatch();
   const activityDispatch: Dispatch<IActivitiesAction> = useDispatch();
@@ -62,6 +63,7 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
       {redirectToMain && <Redirect to="/" />}
       {redirectToLogin && <Redirect to="/login" />}
       {redirectToUserActivities && <Redirect to="/my-activities" />}
+      {redirectToUserAccount && <Redirect to="/my-account" />}
 
       <Drawer open={props.isOpen} onClose={props.onClose}>
         {cookie.user && (
@@ -90,6 +92,15 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
                 <ListItemText primary="Mano veiklos" />
               </ListItem>
             )}
+            {cookie.user && (
+              <ListItem button onClick={() => setRedirectToUserAccount(true)}>
+                <ListItemIcon>
+                  <Icon title="Account" size={1} path={mdiAccount} />
+                </ListItemIcon>
+                <ListItemText primary="Mano paskyra" />
+              </ListItem>
+            )}
+            <Divider />
             {cookie.user ? (
               <ListItem button onClick={() => handleLogOut()}>
                 <ListItemIcon>

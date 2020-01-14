@@ -10,3 +10,5 @@ export const UNREGISTER_ACTIVITY_URL = BASE_URL + '/api/activities/unregister/';
 export const GET_USER_ACTIVITIES_URL = BASE_URL + '/api/activities/user';
 export const GET_USER_CREATED_ACTIVITIES_URL =
   BASE_URL + '/api/activities/created';
+export const CHANGE_EMAIL_URL = BASE_URL + '/api/auth/changeemail';
+export const CHANGE_PASSWORD_URL = BASE_URL + '/api/auth/changepassword';
