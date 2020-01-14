@@ -5,7 +5,7 @@ import {
   getFullDate,
   getTimeString
 } from '../../../../scripts/datetime-formats';
-import { MyActivityDialog } from './MyActivityDialog';
+import { UserActivityDialog } from './UserActivityDialog';
 import { useSelector } from 'react-redux';
 import { AppState } from '../../../../reducers';
 
@@ -22,7 +22,7 @@ interface IMyActivityListItemProps {
   onClick: () => void;
 }
 
-export const MyActivityListItem: React.FC<IMyActivityListItemProps> = props => {
+export const UserActivityListItem: React.FC<IMyActivityListItemProps> = props => {
   const classes = useStyles();
 
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -53,7 +53,7 @@ export const MyActivityListItem: React.FC<IMyActivityListItemProps> = props => {
           </Grid>
         </Grid>
       </ListItem>
-      <MyActivityDialog
+      <UserActivityDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         unregisterButton={tabState === 0}

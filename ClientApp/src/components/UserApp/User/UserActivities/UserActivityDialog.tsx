@@ -6,7 +6,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { IActivity, IUserActivitiesAction } from '../../../../types/activities';
+import { IActivity, IUserRegisteredActivitiesAction } from '../../../../types/activities';
 import {
   getFullDate,
   getTimeString
@@ -16,7 +16,7 @@ import { pickLevelIcon } from '../../../../scripts/getIcons';
 import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import { UNREGISTER_ACTIVITY_URL } from '../../../../constants/urls';
-import { setUserActivities } from '../../../../actions/activities';
+import { setUserRegisteredActivities } from '../../../../actions/activities';
 import { useCookies } from 'react-cookie';
 
 interface IMyActivityDialogProps {
@@ -31,11 +31,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const MyActivityDialog: React.FC<IMyActivityDialogProps> = props => {
+export const UserActivityDialog: React.FC<IMyActivityDialogProps> = props => {
   const [cookie] = useCookies(['user']);
   const activity: IActivity = useSelector((state: AppState) => state.activity);
 
-  const userActivityDispatch: Dispatch<IUserActivitiesAction> = useDispatch();
+  const userActivityDispatch: Dispatch<IUserRegisteredActivitiesAction> = useDispatch();
 
   const classes = useStyles();
 
@@ -51,7 +51,7 @@ export const MyActivityDialog: React.FC<IMyActivityDialogProps> = props => {
         props.onClose();
       })
       .then(async () => {
-        userActivityDispatch(await setUserActivities(cookie.user.token));
+        userActivityDispatch(await setUserRegisteredActivities(cookie.user.token));
       })
       .catch(() => {
         alert('Įvyko klaida');

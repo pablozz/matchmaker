@@ -4,13 +4,13 @@ import { Button, Grid, TextField, Snackbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { LOGIN_URL, GET_CURRENT_USER } from '../../../constants/urls';
 import {
-  IUserActivitiesAction,
+  IUserRegisteredActivitiesAction,
   IActivitiesAction
 } from '../../../types/activities';
 import { useCookies } from 'react-cookie';
 import {
   setLoadedOrErrorActivities,
-  setUserActivities
+  setUserRegisteredActivities
 } from '../../../actions/activities';
 
 const useStyles = makeStyles(theme => ({
@@ -35,7 +35,7 @@ interface ILoginData {
 export const LoginForm: React.FC = () => {
   const classes = useStyles();
 
-  const userActivityDispatch: Dispatch<IUserActivitiesAction> = useDispatch();
+  const userActivityDispatch: Dispatch<IUserRegisteredActivitiesAction> = useDispatch();
   const activityDispatch: Dispatch<IActivitiesAction> = useDispatch();
 
   const [email, setEmail] = useState<ITextField>({ value: '', error: false });
@@ -81,7 +81,7 @@ export const LoginForm: React.FC = () => {
               },
               { path: '/', maxAge: 31536000 }
             );
-            userActivityDispatch(await setUserActivities(token));
+            userActivityDispatch(await setUserRegisteredActivities(token));
             activityDispatch(await setLoadedOrErrorActivities());
           });
       } else if (response.statusText === 'Unauthorized') {

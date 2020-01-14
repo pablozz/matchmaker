@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const SuccesfulRedirectFromSignUp: React.FC = () => {
+export const SuccessfulRedirectFromSignUp: React.FC = () => {
   const classes = useStyles();
   const [cookie] = useCookies(['user']);
   return (

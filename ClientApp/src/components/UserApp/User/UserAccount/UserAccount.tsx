@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const MyAccount: React.FC = () => {
+export const UserAccount: React.FC = () => {
   const [cookie] = useCookies(['user']);
   const classes = useStyles();
 

@@ -8,20 +8,20 @@ import { Main } from './Main/Main';
 import { Login } from './Login/Login';
 import { SignUp } from './SignUp/SignUp';
 import { AddActivityForm } from './AddActivity/AddActivityForm';
-import { SuccesfulRedirectFromSignUp } from './SignUp/SuccesfulRedirectFromSignUp';
-import { MyActivities } from './User/MyActivities/MyActivities';
-import { MyAccount } from './User/MyAccount/MyAccount';
+import { SuccessfulRedirectFromSignUp } from './SignUp/SuccesfulRedirectFromSignUp';
+import { UserActivities } from './User/UserActivities/UserActivities';
+import { UserAccount } from './User/UserAccount/UserAccount';
 import { ROUTES } from '../../constants/routes';
-import { IUserActivitiesAction } from '../../types/activities';
-import { setUserActivities } from '../../actions/activities';
+import { IUserRegisteredActivitiesAction } from '../../types/activities';
+import { setUserRegisteredActivities } from '../../actions/activities';
 
 export const UserApp: React.FC = () => {
   const [cookie] = useCookies(['user']);
 
-  const dispatch: Dispatch<IUserActivitiesAction> = useDispatch();
+  const dispatch: Dispatch<IUserRegisteredActivitiesAction> = useDispatch();
   useEffect(() => {
     if (cookie.user) {
-      (async () => dispatch(await setUserActivities(cookie.user.token)))();
+      (async () => dispatch(await setUserRegisteredActivities(cookie.user.token)))();
     }
   }, [cookie.user, dispatch]);
 
@@ -34,17 +34,17 @@ export const UserApp: React.FC = () => {
         <Route path={ROUTES.SignUp}>
           <SignUp />
         </Route>
-        <Route path={ROUTES.SuccesfulRedirectFromSignUp}>
-          <SuccesfulRedirectFromSignUp />
+        <Route path={ROUTES.SuccessfulRedirectFromSignUp}>
+          <SuccessfulRedirectFromSignUp />
         </Route>
         <Route path={ROUTES.AddActivity}>
           <AddActivityForm />
         </Route>
-        <Route path={ROUTES.MyActivities}>
-          <MyActivities />
+        <Route path={ROUTES.UserActivities}>
+          <UserActivities />
         </Route>
-        <Route path={ROUTES.MyAccount}>
-          <MyAccount />
+        <Route path={ROUTES.UserAccount}>
+          <UserAccount />
         </Route>
         <Route path={ROUTES.Main}>
           <Main />

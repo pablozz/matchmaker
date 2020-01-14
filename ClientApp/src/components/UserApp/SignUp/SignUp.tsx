@@ -120,7 +120,7 @@ export const SignUp = () => {
 
   return (
     <Fragment>
-      {redirect && <Redirect to={ROUTES.SuccesfulRedirectFromSignUp} />}
+      {redirect && <Redirect to={ROUTES.SuccessfulRedirectFromSignUp} />}
       <Toolbar title="Registracija" />
       <Container maxWidth="xs">
         <Paper className={classes.paper}>

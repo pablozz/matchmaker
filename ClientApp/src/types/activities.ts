@@ -1,9 +1,9 @@
 import {
   LOADED_ACTIVITIES,
   LOADING_ACTIVITIES,
-  INIT_ACTVIVITIES,
+  INIT_ACTIVITIES,
   ERROR_ACTIVITIES,
-  LOAD_USER_ACTIVITIES,
+  LOAD_USER_REGISTERED_ACTIVITIES,
   LOAD_ACTIVITY,
   LOAD_USER_CREATED_ACTIVITIES
 } from '../constants/action-names';
@@ -24,7 +24,7 @@ export interface IActivity {
 export type ActivitiesActionStatus = 'loading' | 'loaded' | 'error' | 'init';
 
 type ActivitiesActionTypes =
-  | typeof INIT_ACTVIVITIES
+  | typeof INIT_ACTIVITIES
   | typeof LOADING_ACTIVITIES
   | typeof LOADED_ACTIVITIES
   | typeof ERROR_ACTIVITIES;
@@ -39,8 +39,8 @@ export interface IActivitiesAction {
   payload: IActivitiesActionPayload;
 }
 
-export interface IUserActivitiesAction {
-  type: typeof LOAD_USER_ACTIVITIES;
+export interface IUserRegisteredActivitiesAction {
+  type: typeof LOAD_USER_REGISTERED_ACTIVITIES;
   payload: IActivity[] | null;
 }
 

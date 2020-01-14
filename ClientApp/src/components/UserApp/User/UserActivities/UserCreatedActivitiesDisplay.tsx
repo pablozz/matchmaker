@@ -7,9 +7,9 @@ import { setUserCreatedActivities } from '../../../../actions/activities';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import { AppState } from '../../../../reducers';
-import { MyActivitiesDisplay } from './MyActivitiesDisplay';
+import { UserActivityList } from './UserActivityList';
 
-export const CreatedActivitiesDisplay = () => {
+export const UserCreatedActivitiesDisplay = () => {
   const [cookie] = useCookies(['user']);
 
   const userCreatedActivities: IActivity[] = useSelector(
@@ -28,7 +28,7 @@ export const CreatedActivitiesDisplay = () => {
   });
 
   return (
-    <MyActivitiesDisplay
+    <UserActivityList
       activities={userCreatedActivities}
       emptyText={'Nesate sukūręs veiklų'}
     />

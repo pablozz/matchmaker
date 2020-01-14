@@ -21,11 +21,11 @@ import {
 } from '@mdi/js';
 import {
   setLoadedOrErrorActivities,
-  setUserActivities
+  setUserRegisteredActivities
 } from '../../actions/activities';
 import {
   IActivitiesAction,
-  IUserActivitiesAction
+  IUserRegisteredActivitiesAction
 } from '../../types/activities';
 import { useDispatch } from 'react-redux';
 import { ROUTES } from '../../constants/routes';
@@ -56,14 +56,14 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
     false
   );
 
-  const userActivityDispatch: Dispatch<IUserActivitiesAction> = useDispatch();
+  const userActivityDispatch: Dispatch<IUserRegisteredActivitiesAction> = useDispatch();
   const activityDispatch: Dispatch<IActivitiesAction> = useDispatch();
 
   const classes = useStyles();
 
   const handleLogOut = async () => {
     removeCookie('user');
-    userActivityDispatch(await setUserActivities(''));
+    userActivityDispatch(await setUserRegisteredActivities(''));
     activityDispatch(await setLoadedOrErrorActivities());
   };
 
@@ -71,8 +71,8 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
     <Fragment>
       {redirectToMain && <Redirect to={ROUTES.Main} />}
       {redirectToLogin && <Redirect to={ROUTES.Login} />}
-      {redirectToUserActivities && <Redirect to={ROUTES.MyActivities} />}
-      {redirectToUserAccount && <Redirect to={ROUTES.MyAccount} />}
+      {redirectToUserActivities && <Redirect to={ROUTES.UserActivities} />}
+      {redirectToUserAccount && <Redirect to={ROUTES.UserAccount} />}
       <Drawer open={props.isOpen} onClose={props.onClose}>
         {cookie.user && (
           <div className={classes.userData}>

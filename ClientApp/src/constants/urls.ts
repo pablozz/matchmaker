@@ -7,7 +7,7 @@ export const LOGIN_URL = BASE_URL + '/api/auth/login';
 export const GET_CURRENT_USER = BASE_URL + '/api/auth/currentuser';
 export const REGISTER_ACTIVITY_URL = BASE_URL + '/api/activities/register/';
 export const UNREGISTER_ACTIVITY_URL = BASE_URL + '/api/activities/unregister/';
-export const GET_USER_ACTIVITIES_URL = BASE_URL + '/api/activities/user';
+export const GET_USER_REGISTERED_ACTIVITIES_URL = BASE_URL + '/api/activities/user';
 export const GET_USER_CREATED_ACTIVITIES_URL =
   BASE_URL + '/api/activities/created';
 export const CHANGE_EMAIL_URL = BASE_URL + '/api/auth/changeemail';
