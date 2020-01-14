@@ -23,13 +23,11 @@ namespace Matchmaker.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthRepository _repo;
-        private readonly AppSettings _appSettings;
         private readonly IEmailSender _sender;
 
-        public AuthController(IAuthRepository repo, IOptions<AppSettings> appSettings, IEmailSender sender)
+        public AuthController(IAuthRepository repo,  IEmailSender sender)
         {
             _repo = repo;
-            _appSettings = appSettings.Value;
             _sender = sender;
         }
 
@@ -83,7 +81,7 @@ namespace Matchmaker.Controllers
 
             // generate JWT
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("SECRET"));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]{

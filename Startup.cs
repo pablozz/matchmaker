@@ -38,18 +38,13 @@ namespace Matchmaker
             });
 
             services.AddDbContext<MatchmakerContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("MatchmakerContext"), o => o.SetPostgresVersion(new Version(9, 6))));
+                options.UseNpgsql(Environment.GetEnvironmentVariable("POSTGRESQL_CONNECTION_STRING"), o => o.SetPostgresVersion(new Version(9, 6))));
 
             services.AddScoped<IAuthRepository, AuthRepository>();
 
             services.AddTransient<IEmailSender, EmailSender>();
 
-            var appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
-
-            var appSettings = appSettingsSection.Get<AppSettings>();
-
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("SECRET"));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -88,8 +83,6 @@ namespace Matchmaker
             app.UseAuthentication();
 
             app.UseAuthorization();
-
-            
 
             app.UseEndpoints(endpoints =>
             {

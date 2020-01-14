@@ -13,6 +13,8 @@
       "launchBrowser": true,
       "environmentVariables": {
         "SENDGRID_API_KEY": "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",
+        "POSTGRESQL_CONNECTION_STRING": "Host=dumbo.db.elephantsql.com;Port=5432;Database=ilmsugfg;Username=ilmsugfg;Password=TXIerbnPGb9dE6GX7cE6yg5JRQfSin4N",
+        "SECRET": "6rNqEivCgtIOPfoG5ZAi5Pe31pI0liFowkZkh2JXhwyeTihK1nQg7OIRSnNmBxLkVj5di5pRkTvRtzkD",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
