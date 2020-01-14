@@ -37,7 +37,7 @@ namespace Matchmaker
             });
 
             services.AddDbContext<MatchmakerContext>(options =>
-                options.UseNpgsql(Environment.GetEnvironmentVariable("POSTGRESQL_CONNECTION_STRING"), o => o.SetPostgresVersion(new Version(9, 6))));
+                options.UseNpgsql(Environment.GetEnvironmentVariable("CUSTOMCONNSTR_POSTGRESQL_CONNECTION_STRING"), o => o.SetPostgresVersion(new Version(9, 6))));
 
             services.AddScoped<IAuthRepository, AuthRepository>();
 

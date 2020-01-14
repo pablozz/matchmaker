@@ -169,7 +169,7 @@ namespace Matchmaker.Controllers
             {
                 return BadRequest("Email is already taken!");
             }
-            await _sender.SendActivationEmail(user, token);
+            await _sender.SendActivationEmail(user, token, changeEmailDto.NewEmail);
 
             return NoContent();
         }

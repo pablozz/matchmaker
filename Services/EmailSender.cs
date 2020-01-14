@@ -26,12 +26,12 @@ namespace Matchmaker.Services
             var response = await client.SendEmailAsync(msg);
             return response;
         }
-        public async Task<Response> SendActivationEmail(User recipient, EmailChangeToken token) {
+        public async Task<Response> SendActivationEmail(User recipient, EmailChangeToken token, string newEmail) {
             var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("noreply@sportmatchmaker.azurewebsites.net", "Sport Matchmaker");
             var subject = "Patvirtinkite savo elektroninio pašto keitimą!";
-            var to = new EmailAddress(recipient.Email);
+            var to = new EmailAddress(newEmail);
             var plainTextContent = $"Sveiki {recipient.Name}," +
                 " Norėdami patvirtinti savo elektroninio pašto keitimą paspauskite nuorodą." +
                 " Jeigu tai ne jūs arba nekeitėte savo elektroninio pašto ignoruokite šį laišką.";
