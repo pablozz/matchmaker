@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useCookies } from 'react-cookie';
+import { CHANGE_PASSWORD_URL } from '../../../../constants/urls';
 import { makeStyles } from '@material-ui/core/styles';
 import {
     Button,
     TextField,
-    Grid
+    Grid,
+    Snackbar
 } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -20,8 +22,14 @@ interface ITextField {
     helperText?: string | undefined;
 }
 
+interface IPasswordData {
+    oldPassword: string;
+    newPassword: string;
+}
+
 export const UpdatePassword: React.FC = () => {
     const [cookie] = useCookies(['user']);
+    const [snackbarText, setSnackbarText] = useState<string>('');
     
     const [oldPassword, setOldPassword] = useState<ITextField>({
         value: '',
@@ -49,12 +57,6 @@ export const UpdatePassword: React.FC = () => {
                 error: true,
                 helperText: 'Slaptažodį privalo sudaryti ne mažiau nei 8 simboliai'
         });
-        if (newPassword1.value === cookie.user.password)
-            setNewPassword1({
-                value: newPassword1.value,
-                error: true,
-                helperText: 'Slaptažodis užimtas'
-        });
         if (newPassword1.value !== newPassword2.value)
             setNewPassword2({
                 value: oldPassword.value,
@@ -62,8 +64,24 @@ export const UpdatePassword: React.FC = () => {
                 helperText: 'Slaptažodžiai nesutampa'
         });
         
-        if (!oldPassword.error && !newPassword1.error && !newPassword2.error) {
-                // POST new password
+        if (!oldPassword.error && 
+            !newPassword1.error && 
+            !newPassword2.error &&
+            newPassword1.value.length > 7 &&
+            newPassword1.value === newPassword2.value) {
+            
+            const passwordObj: IPasswordData = {
+                oldPassword: oldPassword.value,
+                newPassword: newPassword1.value
+            };
+            const response: Response = await sendForm(CHANGE_PASSWORD_URL, passwordObj, cookie.user.token);
+            const text = await response.text();
+            
+            if (response.statusText === 'No Content') {
+                setSnackbarText('Slaptažodis sėkmingai pakeistas');
+            } else if ( response.statusText === 'Bad Request' && text === 'Old password does not match current password') {
+                setSnackbarText('Neteisingas senas slaptažodis');
+            }
         }
       };
 
@@ -87,7 +105,6 @@ export const UpdatePassword: React.FC = () => {
                     }
                 />
             </Grid>
-
             <Grid item xs={12}>
                 <TextField
                     error={newPassword1.error}
@@ -104,7 +121,6 @@ export const UpdatePassword: React.FC = () => {
                     }
                 />
             </Grid>
-
             <Grid item xs={12}>
                 <TextField
                     error={newPassword2.error}
@@ -121,7 +137,6 @@ export const UpdatePassword: React.FC = () => {
                     }
                 />
             </Grid>
-
             <Grid item xs={12}>
                 <Button
                     fullWidth
@@ -134,6 +149,28 @@ export const UpdatePassword: React.FC = () => {
                     Patvirtinti
                 </Button>
             </Grid>
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center'
+                }}
+                open={snackbarText !== ''}
+                autoHideDuration={6000}
+                onClose={() => setSnackbarText('')}
+                message={<span>{snackbarText}</span>}
+            />
         </Grid>
     );
+};
+
+const sendForm = async (url: string, obj: IPasswordData, token: string): Promise<Response> => {
+    const response: Response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+         Authorization: 'Bearer ' + token
+      },
+      body: JSON.stringify(obj)
+    });
+    return response;
 };

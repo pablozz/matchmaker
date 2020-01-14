@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useCookies } from 'react-cookie';
+import { CHANGE_EMAIL_URL } from '../../../../constants/urls';
 import { makeStyles } from '@material-ui/core/styles';
 import {
     Button,
     TextField,
-    Grid
+    Grid,
+    Snackbar
   } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -20,8 +22,13 @@ interface ITextField {
     helperText?: string | undefined;
 }
 
+interface IEmailData {
+    newEmail: string;
+}
+
 export const UpdateEmail: React.FC = () => {
-    const [cookie] = useCookies(['user']);
+    const [cookie, setCookie] = useCookies(['user']);
+    const [snackbarText, setSnackbarText] = useState<string>('');
 
     const [newEmail1, setNewEmail1] = useState<ITextField>({
         value: '',
@@ -55,9 +62,34 @@ export const UpdateEmail: React.FC = () => {
                 error: true,
                 helperText: 'Toks el. pašto adresas jau naudojamas'
         });
+        
+        if (
+            !newEmail1.error &&
+            !newEmail2.error &&
+            isEmail(newEmail1.value) &&
+            (newEmail1.value === newEmail2.value) &&
+            (newEmail1.value !== cookie.user.email)
+        ){
+            const emailObj: IEmailData = {
+                newEmail: newEmail1.value
+            };
+            const response: Response = await sendForm(CHANGE_EMAIL_URL, emailObj, cookie.user.token);
 
-        if (!newEmail1.error && !newEmail2.error) {
-                // POST new email
+            if (response.statusText === 'No Content') {
+                setSnackbarText('El. pašto adresas sėkmingai pakeistas');
+                setCookie(
+                    'user',
+                    {
+                      token: cookie.user.token,
+                      id: cookie.user.id,
+                      email: newEmail1.value,
+                      name: cookie.user.name,
+                      gender: cookie.user.gender,
+                      role: cookie.user.role
+                    },
+                    { path: '/', maxAge: 31536000 }
+                  );
+            }
         }
       };
 
@@ -80,7 +112,6 @@ export const UpdateEmail: React.FC = () => {
                     }
                 />
             </Grid>
-
             <Grid item xs={12}>
                 <TextField
                     error={newEmail2.error}
@@ -96,7 +127,6 @@ export const UpdateEmail: React.FC = () => {
                     }
                 />
             </Grid>
-
             <Grid item xs={12}>
                 <Button
                     fullWidth
@@ -108,13 +138,35 @@ export const UpdateEmail: React.FC = () => {
                 >
                     Patvirtinti
                 </Button>
-                </Grid>
+            </Grid>
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center'
+                }}
+                open={snackbarText !== ''}
+                autoHideDuration={6000}
+                onClose={() => setSnackbarText('')}
+                message={<span>{snackbarText}</span>}
+            />
          </Grid>
+        
     );
+};
+
+const sendForm = async (url: string, obj: IEmailData, token: string): Promise<Response> => {
+    const response: Response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+         Authorization: 'Bearer ' + token
+      },
+      body: JSON.stringify(obj)
+    });
+    return response;
 };
 
 const isEmail = (email: string) => {
     const re = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email.toLowerCase());
-  };
-  
+};
