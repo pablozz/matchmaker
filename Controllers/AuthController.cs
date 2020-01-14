@@ -183,7 +183,7 @@ namespace Matchmaker.Controllers
                 return BadRequest("Wrong activation token");
             }
             
-            return Redirect("https://sportmatchmaker.azurewebsites.net/");
+            return Redirect("https://sportmatchmaker.azurewebsites.net/user/account");
         }
         [Authorize]
         [HttpPost]
