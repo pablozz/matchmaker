@@ -1,4 +1,4 @@
-﻿import React, { Fragment } from 'react';
+﻿import React, { Dispatch, Fragment } from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -27,6 +27,9 @@ import {
 import { Redirect } from 'react-router-dom';
 import { DateTimePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import { setLoadedOrErrorActivities } from '../../../actions/activities';
+import { IActivitiesAction } from '../../../types/activities';
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -87,6 +90,8 @@ export const AddActivityForm: React.FC = () => {
   });
   const [created, setCreated] = useState(false);
   const [cookie] = useCookies(['user']);
+
+  const activityDispatch: Dispatch<IActivitiesAction> = useDispatch();
 
   const adjustSpellingOfPlace = (size: number): string => {
     if (size === 1) {
@@ -179,6 +184,7 @@ export const AddActivityForm: React.FC = () => {
     } catch (error) {
       console.error(error);
     }
+    activityDispatch(await setLoadedOrErrorActivities());
   };
 
   return (
