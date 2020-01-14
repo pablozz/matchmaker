@@ -15,12 +15,12 @@ import {
   UNREGISTER_ACTIVITY_URL
 } from '../../../../constants/urls';
 import {
-  IUserActivitiesAction,
+  IUserRegisteredActivitiesAction,
   IActivitiesAction
 } from '../../../../types/activities';
 import {
   setLoadedOrErrorActivities,
-  setUserActivities
+  setUserRegisteredActivities
 } from '../../../../actions/activities';
 import { getTimeString } from '../../../../scripts/datetime-formats';
 
@@ -55,7 +55,7 @@ interface ICardProps {
 export const ActivityCard: React.FC<ICardProps> = props => {
   const classes = useStyles();
 
-  const userActivityDispatch: Dispatch<IUserActivitiesAction> = useDispatch();
+  const userActivityDispatch: Dispatch<IUserRegisteredActivitiesAction> = useDispatch();
   const activityDispatch: Dispatch<IActivitiesAction> = useDispatch();
 
   const [brightness, changeBrightness] = useState<string>('brightness(100%)');
@@ -75,7 +75,7 @@ export const ActivityCard: React.FC<ICardProps> = props => {
           }
         })
           .then(async () => {
-            userActivityDispatch(await setUserActivities(cookie.user.token));
+            userActivityDispatch(await setUserRegisteredActivities(cookie.user.token));
             activityDispatch(await setLoadedOrErrorActivities());
           })
           .then(() => {
@@ -95,7 +95,7 @@ export const ActivityCard: React.FC<ICardProps> = props => {
           }
         })
           .then(async () => {
-            userActivityDispatch(await setUserActivities(cookie.user.token));
+            userActivityDispatch(await setUserRegisteredActivities(cookie.user.token));
             activityDispatch(await setLoadedOrErrorActivities());
           })
           .then(() => {

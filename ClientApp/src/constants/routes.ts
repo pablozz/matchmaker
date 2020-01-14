@@ -2,9 +2,9 @@ export const ROUTES = {
   Main: '/',
   Login: '/login',
   SignUp: '/signup',
-  SuccesfulRedirectFromSignUp: '/registered',
+  SuccessfulRedirectFromSignUp: '/registered',
   Admin: '/admin',
   AddActivity: '/activities/add',
-  EditActivity: '/activities/edit',
-  MyActivities: '/my-activities'
+  UserActivities: '/user/activities',
+  UserAccount: '/user/account'
 };

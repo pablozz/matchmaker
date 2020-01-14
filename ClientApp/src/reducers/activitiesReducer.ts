@@ -1,5 +1,5 @@
 import {
-  INIT_ACTVIVITIES,
+  INIT_ACTIVITIES,
   LOADING_ACTIVITIES,
   LOADED_ACTIVITIES,
   ERROR_ACTIVITIES
@@ -12,7 +12,7 @@ export const activitiesReducer = (
   action: IActivitiesAction
 ) => {
   switch (action.type) {
-    case INIT_ACTVIVITIES:
+    case INIT_ACTIVITIES:
       return action.payload;
     case LOADING_ACTIVITIES:
       return action.payload;

@@ -3,15 +3,15 @@ import { useSelector } from 'react-redux';
 import { AppState } from '../../../../reducers';
 import { IActivity } from '../../../../types/activities';
 
-import { MyActivitiesDisplay } from './MyActivitiesDisplay';
+import { UserActivityList } from './UserActivityList';
 
-export const RegisteredActivitiesDisplay = () => {
+export const UserRegisteredActivitiesDisplay = () => {
   const userActivities: IActivity[] = useSelector(
     (state: AppState) => state.userActivities
   );
 
   return (
-    <MyActivitiesDisplay
+    <UserActivityList
       activities={userActivities}
       emptyText={'Nesate prisiregistravęs prie veiklų'}
     />

@@ -12,16 +12,23 @@ import {
 import { Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Icon from '@mdi/react';
-import { mdiHome, mdiLogout, mdiLogin, mdiBasketball } from '@mdi/js';
+import {
+  mdiHome,
+  mdiLogout,
+  mdiLogin,
+  mdiBasketball,
+  mdiAccount
+} from '@mdi/js';
 import {
   setLoadedOrErrorActivities,
-  setUserActivities
+  setUserRegisteredActivities
 } from '../../actions/activities';
 import {
   IActivitiesAction,
-  IUserActivitiesAction
+  IUserRegisteredActivitiesAction
 } from '../../types/activities';
 import { useDispatch } from 'react-redux';
+import { ROUTES } from '../../constants/routes';
 
 const useStyles = makeStyles(theme => ({
   userData: {
@@ -45,24 +52,27 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
   const [redirectToUserActivities, setRedirectToUserActivities] = useState<
     boolean
   >(false);
+  const [redirectToUserAccount, setRedirectToUserAccount] = useState<boolean>(
+    false
+  );
 
-  const userActivityDispatch: Dispatch<IUserActivitiesAction> = useDispatch();
+  const userActivityDispatch: Dispatch<IUserRegisteredActivitiesAction> = useDispatch();
   const activityDispatch: Dispatch<IActivitiesAction> = useDispatch();
 
   const classes = useStyles();
 
   const handleLogOut = async () => {
     removeCookie('user');
-    userActivityDispatch(await setUserActivities(''));
+    userActivityDispatch(await setUserRegisteredActivities(''));
     activityDispatch(await setLoadedOrErrorActivities());
   };
 
   return (
     <Fragment>
-      {redirectToMain && <Redirect to="/" />}
-      {redirectToLogin && <Redirect to="/login" />}
-      {redirectToUserActivities && <Redirect to="/my-activities" />}
-
+      {redirectToMain && <Redirect to={ROUTES.Main} />}
+      {redirectToLogin && <Redirect to={ROUTES.Login} />}
+      {redirectToUserActivities && <Redirect to={ROUTES.UserActivities} />}
+      {redirectToUserAccount && <Redirect to={ROUTES.UserAccount} />}
       <Drawer open={props.isOpen} onClose={props.onClose}>
         {cookie.user && (
           <div className={classes.userData}>
@@ -90,6 +100,15 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
                 <ListItemText primary="Mano veiklos" />
               </ListItem>
             )}
+            {cookie.user && (
+              <ListItem button onClick={() => setRedirectToUserAccount(true)}>
+                <ListItemIcon>
+                  <Icon title="Account" size={1} path={mdiAccount} />
+                </ListItemIcon>
+                <ListItemText primary="Mano paskyra" />
+              </ListItem>
+            )}
+            <Divider />
             {cookie.user ? (
               <ListItem button onClick={() => handleLogOut()}>
                 <ListItemIcon>

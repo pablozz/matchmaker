@@ -22,19 +22,19 @@ export const getWeekday = (secs: number) => {
   const weekday = date.getDay();
   switch (weekday) {
     case 0:
-      return 'pirmadienis';
-    case 1:
-      return 'antradienis';
-    case 2:
-      return 'trečiadienis';
-    case 3:
-      return 'ketvirtadienis';
-    case 4:
-      return 'penktadienis';
-    case 5:
-      return 'šeštadienis';
-    case 6:
       return 'sekmadienis';
+    case 1:
+      return 'pirmadienis';
+    case 2:
+      return 'antradienis';
+    case 3:
+      return 'trečiadienis';
+    case 4:
+      return 'ketvirtadienis';
+    case 5:
+      return 'penktadienis';
+    case 6:
+      return 'šeštadienis';
     default:
       return '';
   }
