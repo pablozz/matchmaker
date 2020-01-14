@@ -1,4 +1,4 @@
-import React, { Dispatch } from 'react';
+import React, { Dispatch, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../../../reducers';
 import Button from '@material-ui/core/Button';
@@ -6,7 +6,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { IActivity, IUserActivitiesAction } from '../../../../types/activities';
+import { IActivity, IUserActivitiesAction, IUserCreatedActivitiesAction } from '../../../../types/activities';
 import {
   getFullDate,
   getTimeString
@@ -15,14 +15,14 @@ import Icon from '@mdi/react';
 import { pickLevelIcon } from '../../../../scripts/getIcons';
 import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
-import { UNREGISTER_ACTIVITY_URL } from '../../../../constants/urls';
-import { setUserActivities } from '../../../../actions/activities';
+import { ACTIVITIES_URL, UNREGISTER_ACTIVITY_URL } from '../../../../constants/urls';
+import { setUserActivities, setUserCreatedActivities } from '../../../../actions/activities';
 import { useCookies } from 'react-cookie';
-
+import { useHistory } from 'react-router-dom';
 interface IMyActivityDialogProps {
   open: boolean;
   onClose: () => void;
-  unregisterButton?: boolean;
+  registeredActivity?: boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -36,8 +36,9 @@ export const MyActivityDialog: React.FC<IMyActivityDialogProps> = props => {
   const activity: IActivity = useSelector((state: AppState) => state.activity);
 
   const userActivityDispatch: Dispatch<IUserActivitiesAction> = useDispatch();
-
+  const userCreatedActivitiesDispatch: Dispatch<IUserCreatedActivitiesAction> = useDispatch();
   const classes = useStyles();
+  const history = useHistory();
 
   const handleUnregister = async () => {
     await fetch(UNREGISTER_ACTIVITY_URL + activity.id, {
@@ -57,6 +58,21 @@ export const MyActivityDialog: React.FC<IMyActivityDialogProps> = props => {
         alert('Įvyko klaida');
       });
   };
+
+  const showEditForm = () => {
+    history.push("/activities/edit");
+  }
+
+  const handleRemove = async () => {
+    await fetch(ACTIVITIES_URL + '/' + activity.id, {
+      method: 'DELETE',
+      headers: {
+        Authorization: 'Bearer ' + cookie.user.token
+      }
+    });
+    userCreatedActivitiesDispatch(await setUserCreatedActivities(cookie.user.token));
+    props.onClose();
+  }
 
   return (
     <div>
@@ -135,7 +151,7 @@ export const MyActivityDialog: React.FC<IMyActivityDialogProps> = props => {
           </Grid>
         </DialogContent>
         <DialogActions>
-          {props.unregisterButton && (
+          {props.registeredActivity ? (
             <Button
               autoFocus
               onClick={() => handleUnregister()}
@@ -143,6 +159,26 @@ export const MyActivityDialog: React.FC<IMyActivityDialogProps> = props => {
             >
               Išsiregistruoti
             </Button>
+          ) : (
+            <Fragment>
+              <Button
+                disabled={activity.users !== 0}
+                autoFocus
+                onClick={() => showEditForm()}
+                color="primary"
+              >
+                Redaguoti
+              </Button>
+              <Button
+                disabled={activity.users !== 0}
+                autoFocus
+                onClick={() => handleRemove()}
+                color="primary"
+              >
+                Ištrinti
+              </Button>
+            </Fragment>
+            
           )}
           <Button onClick={props.onClose} color="primary" autoFocus>
             Gerai

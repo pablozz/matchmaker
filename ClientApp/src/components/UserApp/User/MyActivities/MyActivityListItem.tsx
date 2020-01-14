@@ -56,7 +56,7 @@ export const MyActivityListItem: React.FC<IMyActivityListItemProps> = props => {
       <MyActivityDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        unregisterButton={tabState === 0}
+        registeredActivity={tabState === 0}
       />
     </Fragment>
   );

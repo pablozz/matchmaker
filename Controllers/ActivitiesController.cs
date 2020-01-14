@@ -342,6 +342,7 @@ namespace Matchmaker.Controllers
         }
 
         // DELETE: api/Activities/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Activity>> DeleteActivity(string id)
         {
