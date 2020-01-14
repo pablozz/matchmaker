@@ -33,9 +33,9 @@ namespace Matchmaker.Services
             var subject = "Patvirtinkite savo elektroninio pašto keitimą!";
             var to = new EmailAddress(recipient.Email);
             var plainTextContent = $"Sveiki {recipient.Name}," +
-                " norėdami patvirtinti savo elektroninio pašto keitimą paspauskite nuorodą." +
+                " Norėdami patvirtinti savo elektroninio pašto keitimą paspauskite nuorodą." +
                 " Jeigu tai ne jūs arba nekeitėte savo elektroninio pašto ignoruokite šį laišką.";
-            var htmlContent = $"<html><body><h2 style=\"font-size: 36\">Sveiki {recipient.Name},</h2><br>" +
+            var htmlContent = $"<html><body><h2 style=\"font-size: 36\">Sveiki, {recipient.Name},</h2><br>" +
                 "<div style=\"font-size: 20;\"> norėdami patvirtinti savo elektroninio pašto keitimą " +
                 $"<a style=\"color: blue\" href=\"https://sportmatchmaker.azurewebsites.net/api/auth/activateNewEmail/{token.Id}\">paspauskite čia</a> <br>" +
                 "Jeigu tai ne jūs arba nekeitėte savo elektroninio pašto ignoruokite šį laišką.</div></body></html>";
