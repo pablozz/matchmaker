@@ -76,7 +76,7 @@ export const UpdateEmail: React.FC = () => {
       );
 
       if (response.statusText === 'No Content') {
-        setSnackbarText('El. pašto adresas sėkmingai pakeistas');
+        setSnackbarText('Norėdami užbaigti el. pašto adreso keitimą, paspauskite ant nuorodos, kurią mes išsiuntėme į naują el. paštą');
         setCookie(
           'user',
           {

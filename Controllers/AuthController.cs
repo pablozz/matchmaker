@@ -6,11 +6,9 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Matchmaker.Data;
 using Matchmaker.Dtos;
-using Matchmaker.Helpers;
 using Matchmaker.Models;
 using Microsoft.AspNetCore.Authorization;
 using Matchmaker.Services;
@@ -59,7 +57,7 @@ namespace Matchmaker.Controllers
 
             var token = await _repo.GenerateActivationToken(user.UserId);
 
-            await _sender.SendEmail(createdUser, token);
+            await _sender.SendActivationEmail(createdUser, token);
 
             return StatusCode(201);
         }
@@ -164,8 +162,25 @@ namespace Matchmaker.Controllers
         public async Task<IActionResult> ChangeEmail(ChangeEmailDto changeEmailDto)
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            await _repo.ChangeEmail(userId, changeEmailDto.newEmail);
+            var email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            var user = await _repo.GetCurrentUser(email);
+            var token = await _repo.GenerateEmailChangeToken(userId, changeEmailDto.NewEmail);
+
+            await _sender.SendActivationEmail(user, token);
+
             return NoContent();
+        }
+        [AllowAnonymous]
+        [HttpGet("{tokenId}")]
+        public async Task<IActionResult> ActivateNewEmail(string tokenId)
+        {
+            var user = await _repo.ChangeEmail(tokenId);
+            if (user is null)
+            {
+                return BadRequest("Wrong activation token");
+            }
+            
+            return Redirect("https://sportmatchmaker.azurewebsites.net/");
         }
         [Authorize]
         [HttpPost]

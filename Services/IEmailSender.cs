@@ -9,6 +9,7 @@ namespace Matchmaker.Services
 {
     public interface IEmailSender
     {
-        Task<Response> SendEmail(User recipient, ActivationToken token);
+        Task<Response> SendActivationEmail(User recipient, ActivationToken token);
+        Task<Response> SendActivationEmail(User recipient, EmailChangeToken token);
     }
 }

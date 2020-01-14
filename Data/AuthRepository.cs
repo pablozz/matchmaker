@@ -57,6 +57,19 @@ namespace Matchmaker.Data
             return token;
         }
 
+        public async Task<EmailChangeToken> GenerateEmailChangeToken(string UserId, string newEmail)
+        {
+            var token = new EmailChangeToken()
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserId = UserId,
+                NewEmail = newEmail
+            };
+            await _context.EmailChangeTokens.AddAsync(token);
+            await _context.SaveChangesAsync();
+            return token;
+        }
+
         public async Task<User> ActivateUser(string tokenId)
         {
             var token = await _context.ActivationTokens.SingleAsync(a => a.Id == tokenId);
@@ -66,6 +79,7 @@ namespace Matchmaker.Data
             await _context.SaveChangesAsync();
             return user;
         }
+
 
         public async Task<List<User>> GetUsers()
         {
@@ -101,10 +115,20 @@ namespace Matchmaker.Data
             return false;
         }
 
-        public async Task<User> ChangeEmail(string id, string newEmail)
+        public async Task<User> ChangeEmail(string tokenId)
         {
-            var user = await _context.Users.FindAsync(id);
-            user.Email = newEmail;
+            var token = await _context.EmailChangeTokens.FindAsync(tokenId);
+            if (token is null)
+            {
+                return null;
+            }
+            var user = await _context.Users.FindAsync(token.UserId);
+            if (user is null)
+            {
+                return null;
+            }
+            user.Email = token.NewEmail;
+            _context.EmailChangeTokens.Remove(token);
             await _context.SaveChangesAsync();
             return user;
         }
