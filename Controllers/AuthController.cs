@@ -165,7 +165,10 @@ namespace Matchmaker.Controllers
             var email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
             var user = await _repo.GetCurrentUser(email);
             var token = await _repo.GenerateEmailChangeToken(userId, changeEmailDto.NewEmail);
-
+            if (token is null)
+            {
+                return BadRequest("Email is already taken!");
+            }
             await _sender.SendActivationEmail(user, token);
 
             return NoContent();

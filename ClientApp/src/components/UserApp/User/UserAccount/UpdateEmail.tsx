@@ -74,7 +74,18 @@ export const UpdateEmail: React.FC = () => {
         emailObj,
         cookie.user.token
       );
-
+      if (response.statusText === 'Bad Request') {
+        setNewEmail1({
+          value: newEmail1.value,
+          error: true,
+          helperText: 'Šis elektroninis paštas jau naudojamas kito vartotojo.'
+        });
+        setNewEmail2({
+          value: newEmail2.value,
+          error: true,
+          helperText: 'Šis elektroninis paštas jau naudojamas kito vartotojo.'
+        });
+      }
       if (response.statusText === 'No Content') {
         setSnackbarText('Norėdami užbaigti el. pašto adreso keitimą, paspauskite ant nuorodos, kurią mes išsiuntėme į naują el. paštą');
         setCookie(

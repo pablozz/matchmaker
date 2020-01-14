@@ -59,6 +59,10 @@ namespace Matchmaker.Data
 
         public async Task<EmailChangeToken> GenerateEmailChangeToken(string UserId, string newEmail)
         {
+            if (await _context.Users.AnyAsync(u => u.Email == newEmail))
+            {
+                return null;
+            }
             var token = new EmailChangeToken()
             {
                 Id = Guid.NewGuid().ToString(),
