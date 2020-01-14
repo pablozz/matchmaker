@@ -1,5 +1,4 @@
-﻿using System;
-namespace Matchmaker.Models
+﻿namespace Matchmaker.Models
 {
     public class ActivationToken
     {

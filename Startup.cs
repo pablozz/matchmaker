@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Matchmaker.Data;
-using Matchmaker.Helpers;
 using Matchmaker.Models;
 using Matchmaker.Services;
 
