@@ -12,7 +12,13 @@ import {
 import { Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Icon from '@mdi/react';
-import { mdiHome, mdiLogout, mdiLogin, mdiBasketball, mdiAccount } from '@mdi/js';
+import {
+  mdiHome,
+  mdiLogout,
+  mdiLogin,
+  mdiBasketball,
+  mdiAccount
+} from '@mdi/js';
 import {
   setLoadedOrErrorActivities,
   setUserActivities
@@ -22,6 +28,7 @@ import {
   IUserActivitiesAction
 } from '../../types/activities';
 import { useDispatch } from 'react-redux';
+import { ROUTES } from '../../constants/routes';
 
 const useStyles = makeStyles(theme => ({
   userData: {
@@ -45,7 +52,9 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
   const [redirectToUserActivities, setRedirectToUserActivities] = useState<
     boolean
   >(false);
-  const [redirectToUserAccount, setRedirectToUserAccount] = useState<boolean>(false);
+  const [redirectToUserAccount, setRedirectToUserAccount] = useState<boolean>(
+    false
+  );
 
   const userActivityDispatch: Dispatch<IUserActivitiesAction> = useDispatch();
   const activityDispatch: Dispatch<IActivitiesAction> = useDispatch();
@@ -60,11 +69,10 @@ export const DrawerMenu: React.FC<IDrawerMenuProps> = props => {
 
   return (
     <Fragment>
-      {redirectToMain && <Redirect to="/" />}
-      {redirectToLogin && <Redirect to="/login" />}
-      {redirectToUserActivities && <Redirect to="/my-activities" />}
-      {redirectToUserAccount && <Redirect to="/my-account" />}
-
+      {redirectToMain && <Redirect to={ROUTES.Main} />}
+      {redirectToLogin && <Redirect to={ROUTES.Login} />}
+      {redirectToUserActivities && <Redirect to={ROUTES.MyActivities} />}
+      {redirectToUserAccount && <Redirect to={ROUTES.MyAccount} />}
       <Drawer open={props.isOpen} onClose={props.onClose}>
         {cookie.user && (
           <div className={classes.userData}>
