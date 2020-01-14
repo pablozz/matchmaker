@@ -17,6 +17,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { ROUTES } from '../../../constants/routes';
 import { REGISTER_URL } from '../../../constants/urls';
+import { isEmail } from '../../../scripts/isEmail';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -250,9 +251,4 @@ const sendForm = async (url: string, obj: IRegisterData): Promise<Response> => {
     body: JSON.stringify(obj)
   });
   return response;
-};
-
-const isEmail = (email: string) => {
-  const re = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(email.toLowerCase());
 };
