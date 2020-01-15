@@ -6,7 +6,12 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { IActivity, IUserRegisteredActivitiesAction, IUserCreatedActivitiesAction } from '../../../../types/activities';
+import {
+  IActivity,
+  IUserRegisteredActivitiesAction,
+  IUserCreatedActivitiesAction,
+  IActivitiesAction
+} from '../../../../types/activities';
 import {
   getFullDate,
   getTimeString
@@ -15,8 +20,15 @@ import Icon from '@mdi/react';
 import { pickLevelIcon } from '../../../../scripts/getIcons';
 import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
-import { ACTIVITIES_URL, UNREGISTER_ACTIVITY_URL } from '../../../../constants/urls';
-import { setUserRegisteredActivities, setUserCreatedActivities } from '../../../../actions/activities';
+import {
+  ACTIVITIES_URL,
+  UNREGISTER_ACTIVITY_URL
+} from '../../../../constants/urls';
+import {
+  setUserRegisteredActivities,
+  setUserCreatedActivities,
+  setLoadedOrErrorActivities
+} from '../../../../actions/activities';
 import { useCookies } from 'react-cookie';
 interface IMyActivityDialogProps {
   open: boolean;
@@ -34,8 +46,13 @@ export const UserActivityDialog: React.FC<IMyActivityDialogProps> = props => {
   const [cookie] = useCookies(['user']);
   const activity: IActivity = useSelector((state: AppState) => state.activity);
 
-  const userActivityDispatch: Dispatch<IUserRegisteredActivitiesAction> = useDispatch();
-  const userCreatedActivitiesDispatch: Dispatch<IUserCreatedActivitiesAction> = useDispatch();
+  const activityDispatch: Dispatch<IActivitiesAction> = useDispatch();
+  const userActivityDispatch: Dispatch<
+    IUserRegisteredActivitiesAction
+  > = useDispatch();
+  const userCreatedActivitiesDispatch: Dispatch<
+    IUserCreatedActivitiesAction
+  > = useDispatch();
   const classes = useStyles();
 
   const handleUnregister = async () => {
@@ -50,7 +67,10 @@ export const UserActivityDialog: React.FC<IMyActivityDialogProps> = props => {
         props.onClose();
       })
       .then(async () => {
-        userActivityDispatch(await setUserRegisteredActivities(cookie.user.token));
+        activityDispatch(await setLoadedOrErrorActivities());
+        userActivityDispatch(
+          await setUserRegisteredActivities(cookie.user.token)
+        );
       })
       .catch(() => {
         alert('Įvyko klaida');
@@ -64,9 +84,11 @@ export const UserActivityDialog: React.FC<IMyActivityDialogProps> = props => {
         Authorization: 'Bearer ' + cookie.user.token
       }
     });
-    userCreatedActivitiesDispatch(await setUserCreatedActivities(cookie.user.token));
+    userCreatedActivitiesDispatch(
+      await setUserCreatedActivities(cookie.user.token)
+    );
     props.onClose();
-  }
+  };
 
   return (
     <div>
