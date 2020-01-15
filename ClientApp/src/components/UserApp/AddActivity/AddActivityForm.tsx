@@ -13,8 +13,6 @@ export const AddActivityForm: React.FC = () => {
         playground='' 
         playerLevel={2} 
         numberOfParticipants={0}
-        existingActivity={false}
-        activityId={null}
       />
     </Fragment>
   );

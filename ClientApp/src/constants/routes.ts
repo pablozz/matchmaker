@@ -6,6 +6,5 @@ export const ROUTES = {
   Admin: '/admin',
   AddActivity: '/activities/add',
   UserActivities: '/user/activities',
-  UserAccount: '/user/account',
-  //EditActivity: '/activities/edit'
+  UserAccount: '/user/account'
 };

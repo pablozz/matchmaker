@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, /*useCallback*/} from 'react';
+import React, { Fragment, useState, useEffect, Dispatch, } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Container,
@@ -25,6 +25,9 @@ import {
 import { useCookies } from 'react-cookie';
 import { ROUTES } from '../../../constants/routes';
 import { Redirect } from 'react-router-dom';
+import { IActivitiesAction } from '../../../types/activities';
+import { useDispatch } from 'react-redux';
+import { setLoadedOrErrorActivities } from '../../../actions/activities';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -61,8 +64,6 @@ interface IActivityFormProps {
   playground: string;
   playerLevel: number;
   numberOfParticipants: number;
-  existingActivity: boolean;
-  activityId: string | null;
 }
 
 export const ActivityForm: React.FC<IActivityFormProps> = (props) => {
@@ -96,25 +97,7 @@ export const ActivityForm: React.FC<IActivityFormProps> = (props) => {
   });
   const [submitted, setSubmitted] = useState(false);
   const [cookie] = useCookies(['user']);
-
-  /*const loadExistingValues = useCallback((cancelled: boolean) => {
-    if (props.existingActivity && !cancelled) {
-      const playground = playgrounds.find(p => p.name === props.playground);
-      if (playground) {
-        setPlayground({
-          value: playground.id,
-          error: ''
-        });
-      }
-      const category = categories.find(c => c.name === props.category);
-      if (category) {
-        setCategory({
-          value: category.id,
-          error: ''
-        });
-      }
-    }
-  }, [props.existingActivity, playgrounds, categories, props.category, props.playground]);*/
+  const dispatchActivities: Dispatch<IActivitiesAction> = useDispatch();
 
   async function fetchData() {
     try {
@@ -201,47 +184,13 @@ export const ActivityForm: React.FC<IActivityFormProps> = (props) => {
       });
       if (response.ok) {
         setSubmitted(true);
+        dispatchActivities(await setLoadedOrErrorActivities());
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  /*const updateActivity = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (!validateInputs()) {
-      return;
-    }
-
-    const activity = {
-      activityId: props.activityId,
-      categoryId: category.value,
-      date: date.value,
-      gender: gender.value,
-      playgroundId: playground.value,
-      playerLevel: playerLevel.value,
-      numberOfParticipants: numberOfParticipants,
-      registeredParticipants: 0,
-      price: 0
-    };
-    try {
-      const response = await fetch(ACTIVITIES_URL + '/' + props.activityId, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + cookie.user.token
-        },
-        body: JSON.stringify(activity)
-      });
-      if (response.ok) {
-        setSubmitted(true);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  */
   return (
     <Fragment>
       {(!cookie.user || submitted) && <Redirect to={ROUTES.Main} />}

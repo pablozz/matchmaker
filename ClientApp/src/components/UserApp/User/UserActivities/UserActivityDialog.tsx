@@ -1,4 +1,4 @@
-import React, { Dispatch, Fragment } from 'react';
+import React, { Dispatch } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../../../reducers';
 import Button from '@material-ui/core/Button';
@@ -18,7 +18,6 @@ import { makeStyles } from '@material-ui/core';
 import { ACTIVITIES_URL, UNREGISTER_ACTIVITY_URL } from '../../../../constants/urls';
 import { setUserRegisteredActivities, setUserCreatedActivities } from '../../../../actions/activities';
 import { useCookies } from 'react-cookie';
-//import { useHistory } from 'react-router-dom';
 interface IMyActivityDialogProps {
   open: boolean;
   onClose: () => void;
@@ -38,7 +37,6 @@ export const UserActivityDialog: React.FC<IMyActivityDialogProps> = props => {
   const userActivityDispatch: Dispatch<IUserRegisteredActivitiesAction> = useDispatch();
   const userCreatedActivitiesDispatch: Dispatch<IUserCreatedActivitiesAction> = useDispatch();
   const classes = useStyles();
-  //const history = useHistory();
 
   const handleUnregister = async () => {
     await fetch(UNREGISTER_ACTIVITY_URL + activity.id, {
@@ -58,10 +56,6 @@ export const UserActivityDialog: React.FC<IMyActivityDialogProps> = props => {
         alert('Įvyko klaida');
       });
   };
-
-  /*const showEditForm = () => {
-    history.push("/activities/edit");
-  }*/
 
   const handleRemove = async () => {
     await fetch(ACTIVITIES_URL + '/' + activity.id, {
@@ -160,25 +154,14 @@ export const UserActivityDialog: React.FC<IMyActivityDialogProps> = props => {
               Išsiregistruoti
             </Button>
           ) : (
-            <Fragment>
-              {/*<Button
-                disabled={activity.users !== 0}
-                autoFocus
-                onClick={() => showEditForm()}
-                color="primary"
-              >
-                Redaguoti
-              </Button>*/}
-              <Button
-                disabled={activity.users !== 0}
-                autoFocus
-                onClick={() => handleRemove()}
-                color="primary"
-              >
-                Ištrinti
-              </Button>
-            </Fragment>
-            
+            <Button
+              disabled={activity.users !== 0}
+              autoFocus
+              onClick={() => handleRemove()}
+              color="primary"
+            >
+              Ištrinti
+            </Button>
           )}
           <Button onClick={props.onClose} color="primary" autoFocus>
             Gerai
