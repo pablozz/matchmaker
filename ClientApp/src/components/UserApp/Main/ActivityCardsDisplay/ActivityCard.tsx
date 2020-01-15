@@ -87,6 +87,7 @@ export const ActivityCard: React.FC<ICardProps> = props => {
       }
       // register to activity
       else {
+        let success: boolean;
         await fetch(REGISTER_ACTIVITY_URL + props.id, {
           method: 'POST',
           headers: {
@@ -94,12 +95,20 @@ export const ActivityCard: React.FC<ICardProps> = props => {
             Authorization: 'Bearer ' + cookie.user.token
           }
         })
-          .then(async () => {
-            userActivityDispatch(await setUserRegisteredActivities(cookie.user.token));
-            activityDispatch(await setLoadedOrErrorActivities());
+          .then(async (response) => {
+            success = response.ok;
+            if (success) {
+              userActivityDispatch(await setUserRegisteredActivities(cookie.user.token));
+              activityDispatch(await setLoadedOrErrorActivities());
+            }
           })
           .then(() => {
-            setSnackbarText('Registracija įvyko');
+            if (success) {
+              setSnackbarText('Registracija įvyko');
+            }
+            else {
+              setSnackbarText('Veikla jau užpildyta');
+            }
           })
           .catch(() => {
             alert('Įvyko klaida');

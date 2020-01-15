@@ -189,11 +189,16 @@ namespace Matchmaker.Controllers
             {
                 return BadRequest();
             }
+            if (activity.RegisteredParticipants >= activity.NumberOfParticipants)
+            {
+                return Forbid();
+            }
 
             if (activity.UserActivities is null)
             {
                 activity.UserActivities = new List<UserActivity>();
             }
+
 
             bool alreadyRegistered = activity.UserActivities.Any(ua => ua.UserId == user.UserId && ua.ActivityId == id);
             if (!alreadyRegistered)
