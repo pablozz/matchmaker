@@ -236,3 +236,5 @@ _Pvt_Extensions
 
 # Jetbrains stuff
 /.idea
+
+/Properties/launchSettings.json

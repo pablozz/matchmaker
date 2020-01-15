@@ -187,7 +187,7 @@ export const ActivityForm: React.FC<IActivityFormProps> = (props) => {
       gender: gender.value,
       playgroundId: playground.value,
       playerLevel: playerLevel.value,
-      numberOfParticipants: numberOfParticipants,
+      numberOfParticipants: numberOfParticipants.value,
       price: 0
     };
     try {
