@@ -39,7 +39,7 @@ FRONT-END:
 ![Entity diagram](./Images/entity_diagram.jpg)
 
 ## Activity Diagram
-![Activity diagram](./Images/activity_diagram.jpeg)
+![Activity diagram](./Images/activity_diagram.png)
 
 ## Data Flow Scheme
 ![Data flow scheme](./Images/data_flow_scheme.jpeg)
