@@ -32,6 +32,8 @@ FRONT-END:
 ![Screenshot 1](./Images/ss1.jpg)
 ![Screenshot 2](./Images/ss2.jpg)
 ![Screenshot 3](./Images/ss3.jpg)
+![Screenshot 4](./Images/ss4.jpg)
+![Screenshot 5](./Images/ss5.jpg)
 
 ## Entity Diagram
 ![Entity diagram](./Images/entity_diagram.jpg)
