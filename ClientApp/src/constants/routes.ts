@@ -7,5 +7,5 @@ export const ROUTES = {
   AddActivity: '/activities/add',
   UserActivities: '/user/activities',
   UserAccount: '/user/account',
-  EditActivity: '/activities/edit'
+  //EditActivity: '/activities/edit'
 };

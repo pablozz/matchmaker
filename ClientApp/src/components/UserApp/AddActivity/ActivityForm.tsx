@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useCallback} from 'react';
+import React, { Fragment, useState, useEffect, /*useCallback*/} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Container,
@@ -97,7 +97,7 @@ export const ActivityForm: React.FC<IActivityFormProps> = (props) => {
   const [submitted, setSubmitted] = useState(false);
   const [cookie] = useCookies(['user']);
 
-  const loadExistingValues = useCallback((cancelled: boolean) => {
+  /*const loadExistingValues = useCallback((cancelled: boolean) => {
     if (props.existingActivity && !cancelled) {
       const playground = playgrounds.find(p => p.name === props.playground);
       if (playground) {
@@ -114,37 +114,28 @@ export const ActivityForm: React.FC<IActivityFormProps> = (props) => {
         });
       }
     }
-  }, [props.existingActivity, playgrounds, categories, props.category, props.playground]);
+  }, [props.existingActivity, playgrounds, categories, props.category, props.playground]);*/
 
-  async function fetchData(cancelled: boolean) {
-      try {
-        const resCategories = await fetch(CATEGORIES_URL);
-        const categories: ICategory[] = await resCategories.json();
-        if (!cancelled) {
-          setCategories(categories); 
-        }
-      } catch (error) {
-        console.error(error);
-      }
-      try {
-        const resPlaygrounds = await fetch(PLAYGROUNDS_URL);
-        const playgrounds: IPlayground[] = await resPlaygrounds.json();
-        if (!cancelled) {
-          setPlaygrounds(playgrounds);
-        }
-      } catch (error) {
-        console.error(error);
-      }
+  async function fetchData() {
+    try {
+      const resCategories = await fetch(CATEGORIES_URL);
+      const categories: ICategory[] = await resCategories.json();
+      setCategories(categories);
+    } catch (error) {
+      console.error(error);
+    }
+    try {
+      const resPlaygrounds = await fetch(PLAYGROUNDS_URL);
+      const playgrounds: IPlayground[] = await resPlaygrounds.json();
+      setPlaygrounds(playgrounds);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   useEffect(() => {
-    let cancelled = false;
-    fetchData(cancelled);
-    loadExistingValues(cancelled);
-    return () => {
-      cancelled = true;
-    };
-  }, [loadExistingValues]);
+    fetchData();
+  }, []);
 
   const validateInputs = (): boolean => {
     if (category.value === '' || category.error !== '') {
@@ -216,7 +207,7 @@ export const ActivityForm: React.FC<IActivityFormProps> = (props) => {
     }
   };
 
-  const updateActivity = async (event: React.FormEvent<HTMLFormElement>) => {
+  /*const updateActivity = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!validateInputs()) {
@@ -250,13 +241,13 @@ export const ActivityForm: React.FC<IActivityFormProps> = (props) => {
       console.error(error);
     }
   };
-
+  */
   return (
     <Fragment>
       {(!cookie.user || submitted) && <Redirect to={ROUTES.Main} />}
       <Container component="main" maxWidth="xs">
         <Paper className={classes.paper}>
-          <form onSubmit={props.existingActivity ? updateActivity : addActivity}>
+          <form onSubmit={addActivity}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -394,6 +385,5 @@ export const ActivityForm: React.FC<IActivityFormProps> = (props) => {
         </Paper>
       </Container>
     </Fragment>
-    
   );
 }
