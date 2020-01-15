@@ -23,7 +23,7 @@ FRONT-END:
   
   
  BACK-END:
- - **Technologies:** ASP.NET Core 3, PostgreSQL, Entity Framework Core, Npgsql
+ - **Technologies:** ASP.NET Core 3, PostgreSQL, Entity Framework Core, Npgsql, SendGrid
  - **Deployment:** Azure App Service free tier Linux server, ElephantSQL
  
  [Full back-end documentation in Lithuanian](https://docs.google.com/document/d/1vQDvDbZ8ORLAiSoH73rEB2Gjn54BzVsju4YFRih8GZw/edit?usp=sharing)
