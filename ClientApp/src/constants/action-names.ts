@@ -6,3 +6,10 @@ export const LOAD_USER_REGISTERED_ACTIVITIES = 'LOAD_USER_ACTIVITIES';
 export const LOAD_ACTIVITY = 'LOAD_MY_ACTIVITY';
 export const LOAD_USER_CREATED_ACTIVITIES = 'LOAD_USER_CREATED_ACTIVITIES';
 export const SET_MY_ACTIVITIES_TAB_STATE = 'SET_MY_ACTIVITIES_TAB_STATE';
+
+export enum ActivitiesActionStatus {
+  LOADING = 'loading',
+  LOADED = 'loaded',
+  ERROR = 'error',
+  INIT = 'init'
+}
