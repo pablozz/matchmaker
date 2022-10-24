@@ -33,29 +33,26 @@ export const setLoadingActivities = (): IActivitiesAction => {
   };
 };
 
-export const setLoadedOrErrorActivities = async (): Promise<
-  IActivitiesAction
-> => {
-  const fData: IActivity[] | null = await fetch(ACTIVITIES_URL)
-    .then(response => response.json())
-    .then(data => {
-      return generateActivities(data);
-    })
-    .catch(() => {
-      return null;
-    });
-  if (fData) {
-    return {
-      type: LOADED_ACTIVITIES,
-      payload: { status: 'loaded', data: fData }
-    };
-  } else {
-    return {
-      type: LOADED_ACTIVITIES,
-      payload: { status: 'error', data: [] }
-    };
-  }
-};
+export const setLoadedOrErrorActivities =
+  async (): Promise<IActivitiesAction> => {
+    const fData: IActivity[] | null = await fetch(ACTIVITIES_URL)
+      .then(response => response.json())
+      .then(data => generateActivities(data))
+      .catch(() => {
+        return null;
+      });
+    if (fData) {
+      return {
+        type: LOADED_ACTIVITIES,
+        payload: { status: 'loaded', data: fData }
+      };
+    } else {
+      return {
+        type: LOADED_ACTIVITIES,
+        payload: { status: 'error', data: [] }
+      };
+    }
+  };
 
 export const setUserRegisteredActivities = async (
   loginToken: string
