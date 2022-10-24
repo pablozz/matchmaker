@@ -5,7 +5,8 @@ import {
   ERROR_ACTIVITIES,
   LOAD_USER_REGISTERED_ACTIVITIES,
   LOAD_ACTIVITY,
-  LOAD_USER_CREATED_ACTIVITIES
+  LOAD_USER_CREATED_ACTIVITIES,
+  ActivitiesActionStatus
 } from '../constants/action-names';
 
 export interface IActivity {
@@ -20,8 +21,6 @@ export interface IActivity {
   admin: string;
   users: number;
 }
-
-export type ActivitiesActionStatus = 'loading' | 'loaded' | 'error' | 'init';
 
 type ActivitiesActionTypes =
   | typeof INIT_ACTIVITIES
