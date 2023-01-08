@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Matchmaker.Data;
 using Matchmaker.Dtos;
+using Matchmaker.Helpers;
 using Matchmaker.Models;
 using Microsoft.AspNetCore.Authorization;
 using Matchmaker.Services;
@@ -103,7 +104,8 @@ namespace Matchmaker.Controllers
             var user = await _repo.ActivateUser(tokenId);
             if (user.Activated)
             {
-                return Redirect("https://sportmatchmaker.azurewebsites.net/login");
+                
+                return Redirect(Urls.LoginUrl);
             }
             return BadRequest("Wrong activation token");
         }
@@ -183,7 +185,7 @@ namespace Matchmaker.Controllers
                 return BadRequest("Wrong activation token");
             }
             
-            return Redirect("https://sportmatchmaker.azurewebsites.net/user/account");
+            return Redirect(Urls.UserAccountLink);
         }
         [Authorize]
         [HttpPost]

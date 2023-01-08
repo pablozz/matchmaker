@@ -149,12 +149,11 @@ namespace Matchmaker.Controllers
             bool alreadyRegistered = activity.UserActivities.Any(ua => ua.UserId == user.UserId && ua.ActivityId == id);
 
             if (!alreadyRegistered) return BadRequest("User is not registered to this activity");
-            {
-                user.UserActivities.Remove(activity.UserActivities.Single(ua => ua.UserId == user.UserId));
-                activity.RegisteredParticipants--;
-                await _context.SaveChangesAsync();
-                return Ok();
-            }
+            
+            user.UserActivities.Remove(activity.UserActivities.Single(ua => ua.UserId == user.UserId));
+            activity.RegisteredParticipants--;
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
         // PUT: api/Activities/5
@@ -241,14 +240,7 @@ namespace Matchmaker.Controllers
               .Include(p => p.SportsCenter)
               .Load();
             _context.Entry(activity).Reference(a => a.Category).Load();
-            
-            var sportsCenterDto = new SportsCenterDto()
-            {
-                Id = activity.Playground.SportsCenter.SportsCenterId,
-                Name = activity.Playground.SportsCenter.Name,
-                Address = activity.Playground.SportsCenter.Address
-            };
-            
+
             var activityDto = ActivityDto.FromActivity(activity);
             return CreatedAtAction(nameof(GetActivity), new { id = activity.ActivityId }, activityDto);
         }
