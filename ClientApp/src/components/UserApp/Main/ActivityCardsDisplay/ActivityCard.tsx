@@ -1,6 +1,6 @@
 import React, { useState, Fragment, Dispatch } from 'react';
 import { useDispatch } from 'react-redux';
-import { Paper, Typography, Grid, Link, Snackbar } from '@material-ui/core';
+import { Paper, Typography, Grid, Snackbar } from '@material-ui/core';
 import Icon from '@mdi/react';
 import { IIcon } from '../../../../types/icons';
 import {
@@ -23,6 +23,7 @@ import {
   setUserRegisteredActivities
 } from '../../../../actions/activities';
 import { getTimeString } from '../../../../scripts/datetime-formats';
+import { fontSize } from '@material-ui/system';
 
 const useStyles = makeStyles(theme => ({
   activity: {
@@ -36,7 +37,8 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1)
   },
   cardTextTime: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontSize: 24
   }
 }));
 
@@ -55,7 +57,8 @@ interface ICardProps {
 export const ActivityCard: React.FC<ICardProps> = props => {
   const classes = useStyles();
 
-  const userActivityDispatch: Dispatch<IUserRegisteredActivitiesAction> = useDispatch();
+  const userActivityDispatch: Dispatch<IUserRegisteredActivitiesAction> =
+    useDispatch();
   const activityDispatch: Dispatch<IActivitiesAction> = useDispatch();
 
   const [brightness, changeBrightness] = useState<string>('brightness(100%)');
@@ -75,7 +78,9 @@ export const ActivityCard: React.FC<ICardProps> = props => {
           }
         })
           .then(async () => {
-            userActivityDispatch(await setUserRegisteredActivities(cookie.user.token));
+            userActivityDispatch(
+              await setUserRegisteredActivities(cookie.user.token)
+            );
             activityDispatch(await setLoadedOrErrorActivities());
           })
           .then(() => {
@@ -95,18 +100,19 @@ export const ActivityCard: React.FC<ICardProps> = props => {
             Authorization: 'Bearer ' + cookie.user.token
           }
         })
-          .then(async (response) => {
+          .then(async response => {
             success = response.ok;
             if (success) {
-              userActivityDispatch(await setUserRegisteredActivities(cookie.user.token));
+              userActivityDispatch(
+                await setUserRegisteredActivities(cookie.user.token)
+              );
               activityDispatch(await setLoadedOrErrorActivities());
             }
           })
           .then(() => {
             if (success) {
               setSnackbarText('Registracija įvyko');
-            }
-            else {
+            } else {
               setSnackbarText('Veikla jau užpildyta');
             }
           })
@@ -126,9 +132,8 @@ export const ActivityCard: React.FC<ICardProps> = props => {
   const levelIcon: IIcon = pickLevelIcon(props.playerLevel);
   return (
     <Fragment>
-      <Link
+      <div
         className={classes.activity}
-        underline="none"
         onMouseOver={() => {
           changeBrightness('brightness(90%)');
           changeElevation(3);
@@ -151,7 +156,7 @@ export const ActivityCard: React.FC<ICardProps> = props => {
             <Grid item>
               <Grid container justify="space-between" alignItems="center">
                 <Grid item className={classes.cardElement}>
-                  <Typography variant="h5" className={classes.cardTextTime}>
+                  <Typography className={classes.cardTextTime}>
                     {getTimeString(props.date)}
                   </Typography>
                 </Grid>
@@ -185,7 +190,9 @@ export const ActivityCard: React.FC<ICardProps> = props => {
             <Grid item>
               <Grid container justify="space-between" alignItems="center">
                 <Grid item className={classes.cardElement}>
-                  <Typography variant="h6">{props.participantsIn}</Typography>
+                  <Typography variant="h6" component="p">
+                    {props.participantsIn}
+                  </Typography>
                 </Grid>
                 <Grid item className={classes.cardElement}>
                   <Typography>{props.playground}</Typography>
@@ -194,7 +201,7 @@ export const ActivityCard: React.FC<ICardProps> = props => {
             </Grid>
           </Grid>
         </Paper>
-      </Link>
+      </div>
       <Snackbar
         anchorOrigin={{
           vertical: 'top',
