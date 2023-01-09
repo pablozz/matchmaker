@@ -4,7 +4,8 @@ import {
   LOAD_USER_REGISTERED_ACTIVITIES,
   LOADED_ACTIVITIES,
   LOADING_ACTIVITIES,
-  LOAD_USER_CREATED_ACTIVITIES
+  LOAD_USER_CREATED_ACTIVITIES,
+  ActivitiesActionStatus
 } from '../constants/action-names';
 import {
   ACTIVITIES_URL,
@@ -18,44 +19,42 @@ import {
   IUserRegisteredActivitiesAction,
   IUserCreatedActivitiesAction
 } from '../types/activities';
+import { generateActivities } from '../utils/activities';
 
 export const setInitActivities = (): IActivitiesAction => {
   return {
     type: INIT_ACTIVITIES,
-    payload: { status: 'init', data: [] }
+    payload: { status: ActivitiesActionStatus.INIT, data: [] }
   };
 };
 
 export const setLoadingActivities = (): IActivitiesAction => {
   return {
     type: LOADING_ACTIVITIES,
-    payload: { status: 'loading', data: [] }
+    payload: { status: ActivitiesActionStatus.LOADING, data: [] }
   };
 };
 
-export const setLoadedOrErrorActivities = async (): Promise<
-  IActivitiesAction
-> => {
-  const fData: IActivity[] | null = await fetch(ACTIVITIES_URL)
-    .then(response => response.json())
-    .then(data => {
-      return generateActivities(data);
-    })
-    .catch(() => {
-      return null;
-    });
-  if (fData) {
-    return {
-      type: LOADED_ACTIVITIES,
-      payload: { status: 'loaded', data: fData }
-    };
-  } else {
-    return {
-      type: LOADED_ACTIVITIES,
-      payload: { status: 'error', data: [] }
-    };
-  }
-};
+export const setLoadedOrErrorActivities =
+  async (): Promise<IActivitiesAction> => {
+    const data: IActivity[] | null = await fetch(ACTIVITIES_URL)
+      .then(response => response.json())
+      .then(data => generateActivities(data))
+      .catch(() => {
+        return null;
+      });
+    if (data) {
+      return {
+        type: LOADED_ACTIVITIES,
+        payload: { status: ActivitiesActionStatus.LOADED, data }
+      };
+    } else {
+      return {
+        type: LOADED_ACTIVITIES,
+        payload: { status: ActivitiesActionStatus.ERROR, data: [] }
+      };
+    }
+  };
 
 export const setUserRegisteredActivities = async (
   loginToken: string
@@ -70,9 +69,7 @@ export const setUserRegisteredActivities = async (
       }
     )
       .then(response => response.text())
-      .then(data => {
-        return generateActivities(JSON.parse(data));
-      });
+      .then(data => generateActivities(JSON.parse(data)));
     if (userCreatedActivities.length) {
       return {
         type: LOAD_USER_REGISTERED_ACTIVITIES,
@@ -128,22 +125,4 @@ export const setUserCreatedActivities = async (
     type: LOAD_USER_CREATED_ACTIVITIES,
     payload: null
   };
-};
-
-//not an action
-const generateActivities = (data: IActivity[]) => {
-  return data.map((item: IActivity) => {
-    return {
-      id: item.id,
-      date: item.date,
-      gender: item.gender,
-      price: item.price,
-      numberOfParticipants: item.numberOfParticipants,
-      playground: item.playground,
-      playerLevel: item.playerLevel,
-      category: item.category,
-      admin: item.admin,
-      users: item.users
-    };
-  });
 };

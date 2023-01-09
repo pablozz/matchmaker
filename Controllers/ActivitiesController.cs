@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,27 +30,12 @@ namespace Matchmaker.Controllers
         [HttpGet]
         public async Task<List<ActivityDto>> GetActivities()
         {
-            var activities = await _context.Activities.Where(a => a.Date > DateTime.Now).Select(a => new ActivityDto()
-            {
-                Id = a.ActivityId,
-                Date = a.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
-                Gender = a.Gender,
-                Price = a.Price,
-                Users = a.RegisteredParticipants,
-                NumberOfParticipants = a.NumberOfParticipants,
-                PlayerLevel = a.PlayerLevel,
-                Playground = a.Playground.NameOfPlace,
-                SportsCenter = new SportsCenterDto()
-                {
-                    Id = a.Playground.SportsCenter.SportsCenterId,
-                    Name = a.Playground.SportsCenter.Name,
-                    Address = a.Playground.SportsCenter.Address
-                },
-                Category = a.Category.Name
-            }).ToListAsync();
-            var orderedActivities = activities.OrderBy(activity => activity.Date).ToList();
+            var activities = await _context.Activities.Where(a => a.Date > DateTime.Now)
+                .Select(a => ActivityDto.FromActivity(a))
+                .OrderBy(activity => activity.Date)
+                .ToListAsync();
 
-            return orderedActivities;
+            return activities;
         }
 
         // GET: api/Activities/5
@@ -58,24 +43,8 @@ namespace Matchmaker.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ActivityDto>> GetActivity(string id)
         {
-            var activity = await _context.Activities.Select(a => new ActivityDto()
-            {
-                Id = a.ActivityId,
-                Date = a.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
-                Gender = a.Gender,
-                Price = a.Price,
-                Users = a.RegisteredParticipants,
-                NumberOfParticipants = a.NumberOfParticipants,
-                PlayerLevel = a.PlayerLevel,
-                Playground = a.Playground.NameOfPlace,
-                SportsCenter = new SportsCenterDto()
-                {
-                    Id = a.Playground.SportsCenter.SportsCenterId,
-                    Name = a.Playground.SportsCenter.Name,
-                    Address = a.Playground.SportsCenter.Address
-                },
-                Category = a.Category.Name
-            }).SingleOrDefaultAsync(a => a.Id == id);
+            var activity = await _context.Activities.Select(a => ActivityDto.FromActivity(a))
+                .SingleOrDefaultAsync(a => a.Id == id);
 
             if (activity == null)
             {
@@ -92,27 +61,13 @@ namespace Matchmaker.Controllers
 
             var user = await _repo.GetCurrentUser(email);
 
-            var activities = await _context.Activities.Where(a => a.UserActivities.Any(u => u.UserId == user.UserId) && a.Date >= DateTime.Now).Select(a => new ActivityDto()
-            {
-                Id = a.ActivityId,
-                Date = a.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
-                Gender = a.Gender,
-                Price = a.Price,
-                Users = a.RegisteredParticipants,
-                NumberOfParticipants = a.NumberOfParticipants,
-                PlayerLevel = a.PlayerLevel,
-                Playground = a.Playground.NameOfPlace,
-                SportsCenter = new SportsCenterDto()
-                {
-                    Id = a.Playground.SportsCenter.SportsCenterId,
-                    Name = a.Playground.SportsCenter.Name,
-                    Address = a.Playground.SportsCenter.Address
-                },
-                Category = a.Category.Name
-            }).ToListAsync();
-            var orderedActivities = activities.OrderBy(activity => activity.Date);
+            var activities = await _context.Activities.Where(a =>
+                    a.UserActivities.Any(u => u.UserId == user.UserId) && a.Date >= DateTime.Now)
+                .Select(a => ActivityDto.FromActivity(a))
+                .OrderBy(activity => activity.Date)
+                .ToListAsync();
 
-            return orderedActivities;
+            return activities;
         }
         [Authorize]
         [HttpGet("created")]
@@ -122,27 +77,12 @@ namespace Matchmaker.Controllers
 
             var user = await _repo.GetCurrentUser(email);
 
-            var activities = await _context.Activities.Where(a => a.AdminId == user.UserId && a.Date >= DateTime.Now).Select(a => new ActivityDto()
-            {
-                Id = a.ActivityId,
-                Date = a.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
-                Gender = a.Gender,
-                Price = a.Price,
-                Users = a.RegisteredParticipants,
-                NumberOfParticipants = a.NumberOfParticipants,
-                PlayerLevel = a.PlayerLevel,
-                Playground = a.Playground.NameOfPlace,
-                SportsCenter = new SportsCenterDto()
-                {
-                    Id = a.Playground.SportsCenter.SportsCenterId,
-                    Name = a.Playground.SportsCenter.Name,
-                    Address = a.Playground.SportsCenter.Address
-                },
-                Category = a.Category.Name
-            }).ToListAsync();
-            var orderedActivities = activities.OrderBy(activity => activity.Date);
+            var activities = await _context.Activities.Where(a => a.AdminId == user.UserId && a.Date >= DateTime.Now)
+                .Select(a => ActivityDto.FromActivity(a))
+                .OrderBy(activity => activity.Date)
+                .ToListAsync();
 
-            return orderedActivities;
+            return activities;
         } 
 
         [Authorize]
@@ -150,30 +90,14 @@ namespace Matchmaker.Controllers
         public async Task<IEnumerable<ActivityDto>> GetUserActivitiesHistory()
         {
             var email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
-
             var user = await _repo.GetCurrentUser(email);
+            var activities = await _context.Activities.Where(a =>
+                    a.UserActivities.Any(u => u.UserId == user.UserId) && a.Date < DateTime.Now)
+                .Select(a => ActivityDto.FromActivity(a))
+                .OrderBy(activity => activity.Date)
+                .ToListAsync();
 
-            var activities = await _context.Activities.Where(a => a.UserActivities.Any(u => u.UserId == user.UserId) && a.Date < DateTime.Now).Select(a => new ActivityDto()
-            {
-                Id = a.ActivityId,
-                Date = a.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
-                Gender = a.Gender,
-                Price = a.Price,
-                Users = a.RegisteredParticipants,
-                NumberOfParticipants = a.NumberOfParticipants,
-                PlayerLevel = a.PlayerLevel,
-                Playground = a.Playground.NameOfPlace,
-                SportsCenter = new SportsCenterDto()
-                {
-                    Id = a.Playground.SportsCenter.SportsCenterId,
-                    Name = a.Playground.SportsCenter.Name,
-                    Address = a.Playground.SportsCenter.Address
-                },
-                Category = a.Category.Name
-            }).ToListAsync();
-            var orderedActivities = activities.OrderBy(activity => activity.Date);
-
-            return orderedActivities;
+            return activities;
         }
 
         [Authorize]
@@ -201,14 +125,12 @@ namespace Matchmaker.Controllers
 
 
             bool alreadyRegistered = activity.UserActivities.Any(ua => ua.UserId == user.UserId && ua.ActivityId == id);
-            if (!alreadyRegistered)
-            {
-                activity.UserActivities.Add(new UserActivity { Activity = activity, User = user });
-                activity.RegisteredParticipants++;
-                await _context.SaveChangesAsync();
-                return Ok();
-            }
-            return StatusCode(403, "User is already registered to this activity");
+
+            if (alreadyRegistered) return StatusCode(403, "User is already registered to this activity");
+            activity.UserActivities.Add(new UserActivity { Activity = activity, User = user });
+            activity.RegisteredParticipants++;
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
         [Authorize]
@@ -225,14 +147,13 @@ namespace Matchmaker.Controllers
                 return BadRequest("Activity with such an id does not exist.");
             }
             bool alreadyRegistered = activity.UserActivities.Any(ua => ua.UserId == user.UserId && ua.ActivityId == id);
-            if (alreadyRegistered)
-            {
-                user.UserActivities.Remove(activity.UserActivities.Single(ua => ua.UserId == user.UserId));
-                activity.RegisteredParticipants--;
-                await _context.SaveChangesAsync();
-                return Ok();
-            }
-            return BadRequest("User is not registered to this activity");
+
+            if (!alreadyRegistered) return BadRequest("User is not registered to this activity");
+            
+            user.UserActivities.Remove(activity.UserActivities.Single(ua => ua.UserId == user.UserId));
+            activity.RegisteredParticipants--;
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
         // PUT: api/Activities/5
@@ -270,10 +191,8 @@ namespace Matchmaker.Controllers
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
 
             return NoContent();
@@ -298,7 +217,6 @@ namespace Matchmaker.Controllers
             {
                 return BadRequest("Category with specified ID not found");
             }
-
             var activity = new Activity()
             {
                 ActivityId = Guid.NewGuid().ToString(),
@@ -315,7 +233,7 @@ namespace Matchmaker.Controllers
             
             _context.Activities.Add(activity);
             await _context.SaveChangesAsync();
-
+            
             _context.Entry(activity)
               .Reference(a => a.Playground)
               .Query()
@@ -323,26 +241,7 @@ namespace Matchmaker.Controllers
               .Load();
             _context.Entry(activity).Reference(a => a.Category).Load();
 
-            var sportsCenterDto = new SportsCenterDto()
-            {
-                Id = activity.Playground.SportsCenter.SportsCenterId,
-                Name = activity.Playground.SportsCenter.Name,
-                Address = activity.Playground.SportsCenter.Address
-            };
-
-            var activityDto = new ActivityDto()
-            {
-                Id = activity.ActivityId,
-                Date = activity.Date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds,
-                Gender = activity.Gender,
-                Price = activity.Price,
-                Users = activity.RegisteredParticipants,
-                NumberOfParticipants = activity.NumberOfParticipants,
-                PlayerLevel = activity.PlayerLevel,
-                Playground = activity.Playground.NameOfPlace,
-                SportsCenter = sportsCenterDto,
-                Category = activity.Category.Name
-            };
+            var activityDto = ActivityDto.FromActivity(activity);
             return CreatedAtAction(nameof(GetActivity), new { id = activity.ActivityId }, activityDto);
         }
 
