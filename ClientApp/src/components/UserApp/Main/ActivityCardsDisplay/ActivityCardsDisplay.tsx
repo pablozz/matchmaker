@@ -69,7 +69,9 @@ export const ActivityCardsDisplay: React.FC<ICardsDisplayProps> = props => {
         {dates.map((date: number, index: number) => {
           return (
             <Fragment key={index}>
-              <Typography variant="h5">{getMonthDayString(date)}</Typography>
+              <Typography variant="h5" component="h2">
+                {getMonthDayString(date)}
+              </Typography>
               {activities.data.map((activity: IActivity) => {
                 return getYear(date) === getYear(activity.date) &&
                   getMonth(date) === getMonth(activity.date) &&

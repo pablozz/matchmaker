@@ -41,42 +41,39 @@ export const getWeekday = (secs: number) => {
 };
 
 export const getMonthDayString = (secs: number) => {
-  let m: string;
-  let d: string;
-
   const today = new Date();
+  const month = getMonth(secs);
+  const day = getDay(secs);
 
   // checks if maybe the date will be today or tomorrow
-  if (
-    today.getFullYear() === getYear(secs) &&
-    today.getMonth() + 1 === getMonth(secs)
-  ) {
-    if (today.getDate() === getDay(secs)) return 'Šiandien';
-    else if (today.getDate() + 1 === getDay(secs)) return 'Rytoj';
+  if (today.getFullYear() === getYear(secs) && today.getMonth() + 1 === month) {
+    if (today.getDate() === day) return 'Šiandien';
+    else if (today.getDate() + 1 === day) return 'Rytoj';
   }
 
-  getMonth(secs) >= 10
-    ? (m = getMonth(secs).toString())
-    : (m = '0' + getMonth(secs));
-  getDay(secs) >= 10 ? (d = getDay(secs).toString()) : (d = '0' + getDay(secs));
+  const m = month >= 10 ? month.toString() : '0' + month;
+  const d = day >= 10 ? day.toString() : '0' + day;
+
   return m + '-' + d + ', ' + getWeekday(secs);
 };
 
 export const getFullDate = (secs: number) => {
-  const m =
-    getMonth(secs) >= 10 ? getMonth(secs).toString() : '0' + getMonth(secs);
-  const d = getDay(secs) >= 10 ? getDay(secs).toString() : '0' + getDay(secs);
+  const month = getMonth(secs);
+  const day = getDay(secs);
+
+  const m = month >= 10 ? month.toString() : '0' + month;
+  const d = day >= 10 ? day.toString() : '0' + day;
+
   return getYear(secs) + '-' + m + '-' + d;
 };
 
 export const getTimeString = (secs: number) => {
   const t = new Date(secs * 1000);
-  let h, m;
-  t.getHours() >= 10
-    ? (h = t.getHours().toString())
-    : (h = '0' + t.getHours().toString());
-  t.getMinutes() >= 10
-    ? (m = t.getMinutes().toString())
-    : (m = '0' + t.getMinutes().toString());
+  const tHours = t.getHours();
+  const tMinutes = t.getMinutes();
+
+  const h = tHours >= 10 ? tHours.toString() : '0' + tHours.toString();
+  const m = tMinutes >= 10 ? tMinutes.toString() : '0' + tMinutes.toString();
+
   return h + ':' + m;
 };
